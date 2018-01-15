@@ -3,19 +3,23 @@
     <el-menu default-active="1" mode="horizontal" @select="handleSelect">
       <el-menu-item index="1">
         <i class="el-icon-star-off"></i>
-        <span slot="title">首页</span>
+        <span>首页</span>
       </el-menu-item>
       <el-menu-item index="2">
         <i class="el-icon-picture-outline"></i>
+        <span>产品图册</span>
       </el-menu-item>
       <el-menu-item index="3">
         <i class="el-icon-document"></i>
+        <span>当前订单</span>
       </el-menu-item>
       <el-menu-item index="4">
         <i class="el-icon-goods"></i>
+        <span>订单管理</span>
       </el-menu-item>
       <el-menu-item index="5">
         <i class="el-icon-setting"></i>
+        <span>我的</span>
       </el-menu-item>
     </el-menu>
   </div>
@@ -37,17 +41,44 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style lang="scss" scoped>
+@import 'src/style/config';
 .foot-guide {
-  position: absolute;
-  bottom: 0px;
-}
-
-.el-menu--horizontal {
-  border-bottom: none;
-}
-
-.el-menu--horizontal>.el-menu-item.is-active {
-  border-bottom: none;
+  position: fixed;
+  z-index: 100;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-top: 1px solid $borcd;
+  .el-menu--horizontal {
+    display: flex;
+    justify-content: space-around;
+    border-bottom: none;
+    margin-top: 5px;
+    .el-menu-item {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      @include font(12px, 20px);
+      @include wh(100%, 40px);
+      border-bottom: none;
+      i {
+        @include wh(100%, 100%);
+        margin-right: 0px;
+      }
+      span {
+        color: $grey;
+      }
+    }
+    .is-active {
+      border-bottom: none;
+      span {
+        color: $blue;
+      }
+      i {
+        color: $blue;
+      }
+    }
+  }
 }
 </style>
