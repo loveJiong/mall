@@ -2,7 +2,9 @@
   <div class="home">
     <div class="home-title">
       我的商家
-      <button type="button">添加商家</button>
+      <router-link to="/addCompany">
+        <el-button type="primary">添加商家</el-button>
+      </router-link>
     </div>
     <div class="companyList">
       <ul>
@@ -17,7 +19,7 @@
             </div>
           </div>
           <div class="description">
-
+            <span>{{company.description}}</span>
           </div>
         </li>
       </ul>
@@ -70,7 +72,7 @@ $imgMargin: 20px;
     button {
       position: absolute;
       right: 20px;
-      top: 12px;
+      top: 14px;
       padding: 5px;
       @include sc(12px, $white);
       border-radius: 5px;
@@ -107,6 +109,18 @@ $imgMargin: 20px;
         .mobile {
           @include sc(12px, #aaaaaa);
         }
+      }
+    }
+    .description {
+      @include sc(12px, #575757);
+      padding: 5px;
+      span {
+        height: 48px;
+        display: -webkit-box;               // 将对象作为弹性伸缩盒子模型显示 。
+        text-overflow: ellipsis;            // 可以用来多行文本的情况下，用省略号“...”隐藏超出范围的文本 。
+        -webkit-box-orient: vertical;       // 设置或检索伸缩盒对象的子元素的排列方式 。
+        -webkit-line-clamp: 3;
+        overflow: hidden;
       }
     }
   }
