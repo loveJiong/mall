@@ -54,11 +54,12 @@ export default {
     display: flex;
     justify-content: space-around;
     border-bottom: none;
-    margin-top: 5px;
+    padding-top: 5px;
     .el-menu-item {
       display: flex;
       flex-direction: column;
       justify-content: center;
+      padding: 0;
       @include font(12px, 20px);
       @include wh(100%, 40px);
       border-bottom: none;
@@ -67,7 +68,8 @@ export default {
         margin-right: 0px;
       }
       span {
-        color: $grey;
+        text-align: center;
+        color: $fc;
       }
     }
     .is-active {
