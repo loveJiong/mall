@@ -1,11 +1,11 @@
 <template>
   <div class="foot-guide">
-    <el-menu default-active="1" mode="horizontal" @select="handleSelect">
-      <el-menu-item index="1">
+    <el-menu :default-active="path" mode="horizontal" :router="isRouter">
+      <el-menu-item index="/">
         <i class="el-icon-star-off"></i>
         <span>首页</span>
       </el-menu-item>
-      <el-menu-item index="2">
+      <el-menu-item index="/productPictures">
         <i class="el-icon-picture-outline"></i>
         <span>产品图册</span>
       </el-menu-item>
@@ -29,12 +29,8 @@
 export default {
   data () {
     return {
-      isCollapse: true
-    }
-  },
-  methods: {
-    handleSelect (key, keyPath) {
-      console.log(key, keyPath)
+      isRouter: true,
+      path: this.$route.path
     }
   }
 }
