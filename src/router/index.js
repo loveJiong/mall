@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import home from '@/components/home'
 import addCompany from '@/components/addCompany'
 import productPictures from '@/components/productPictures'
+import groupDetail from '@/components/groupDetail'
 
 Vue.use(Router)
 
@@ -22,6 +23,11 @@ export default new Router({
       path: '/productPictures',
       name: 'productPictures',
       component: productPictures
+    },
+    {
+      path: '/productPictures/groupDetail',
+      name: 'groupDetail',
+      component: groupDetail
     }
   ]
 })
