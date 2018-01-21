@@ -9,7 +9,7 @@
         <i class="el-icon-picture-outline"></i>
         <span>产品图册</span>
       </el-menu-item>
-      <el-menu-item index="3">
+      <el-menu-item index="/shoppingCart">
         <i class="el-icon-document"></i>
         <span>当前订单</span>
       </el-menu-item>

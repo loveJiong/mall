@@ -68,7 +68,7 @@ $imgMargin: 20px;
     border-bottom: 1px solid $borcd;
     color: $fc;
     background-color: $white;
-    @include font(16px, 50px);
+    @include font(16px, 49px);
     button {
       position: absolute;
       right: 20px;

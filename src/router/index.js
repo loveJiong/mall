@@ -4,6 +4,7 @@ import home from '@/components/home'
 import addCompany from '@/components/addCompany'
 import productPictures from '@/components/productPictures'
 import groupDetail from '@/components/groupDetail'
+import shoppingCart from '@/components/shoppingCart'
 
 Vue.use(Router)
 
@@ -28,6 +29,11 @@ export default new Router({
       path: '/productPictures/groupDetail',
       name: 'groupDetail',
       component: groupDetail
+    },
+    {
+      path: '/shoppingCart',
+      name: 'shoppingCart',
+      component: shoppingCart
     }
   ]
 })

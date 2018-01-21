@@ -1,26 +1,26 @@
 <template>
-  <div class="group-detail">
-        <div class="header">
+    <div class="group-detail">
+        <div class="header" v-on:click.stop="''">
             <router-link to="/productPictures" class="el-icon-arrow-left"></router-link>
-            <div class="title" v-on:click="menuToggle">
+            <div class="title" v-on:click.stop="menuToggle">
                 <span class="bigGroup-name">{{bigGroupName}}</span>
                 <span>{{smallGroupName}}</span>
                 <i v-show="menuShow" class="el-icon-caret-top"></i>
                 <i v-show="!menuShow" class="el-icon-caret-bottom"></i>
             </div>
             <div class="header-icons">
-                <router-link to="/productPictures" class="el-icon-goods"></router-link>
+                <router-link to="/shoppingCart" class="el-icon-goods"></router-link>
                 <i class="el-icon-search"></i>
             </div>
             <div class="header-menu" v-show="menuShow">
                 <ul class="bigGroupList">
-                    <li v-for="(bigGroup, index) in bigGroupList" v-bind:key="index" v-bind:class="{ active: bigGroup.isActive}" v-on:click="bigChoose(bigGroup)">
+                    <li v-for="(bigGroup, index) in bigGroupList" v-bind:key="index" v-bind:class="{ active: bigGroup.isActive}" v-on:click.stop="bigChoose(bigGroup)">
                         <span>{{bigGroup.title}}</span>
                         <i class="el-icon-arrow-right"></i>
                     </li>
                 </ul>
                 <ul class="smallGroupList">
-                    <li v-for="(smallGroup, index) in smallGroupList" v-bind:key="index">
+                    <li v-for="(smallGroup, index) in smallGroupList" v-bind:key="index" v-on:click.stop="smallChoose(smallGroup)">
                         <img v-bind:src="smallGroup.imgSrc" alt="图片">
                         <span>{{smallGroup.title}}</span>
                     </li>
@@ -178,9 +178,11 @@ export default {
     },
     beforeDestroy () {
         document.querySelector('body').setAttribute('style', '')
+        document.removeEventListener('click', this.menuHide)
     },
     mounted () {
         this.bigActive = this.bigGroupList[0]
+        document.addEventListener('click', this.menuHide)
     },
     methods: {
         menuToggle () {
@@ -191,16 +193,24 @@ export default {
                 document.querySelector('body').setAttribute('style', 'overflow:auto')
             }
         },
+        menuHide () {
+            if (this.menuShow) {
+                this.menuShow = false
+                document.querySelector('body').setAttribute('style', 'overflow:auto')
+            }
+        },
         preventTouchmove (event) {
             if (this.menuShow) {
                 event.preventDefault()
             }
         },
         bigChoose (bigGroup) {
-            console.log(123)
             this.bigActive.isActive = false
             bigGroup.isActive = true
             this.bigActive = bigGroup
+        },
+        smallChoose (smallGroup) {
+            this.menuShow = false
         }
     }
 }
@@ -210,15 +220,6 @@ export default {
 <style lang="scss" scoped>
 @import 'src/style/config';
 .group-detail {
-    .box {
-        position:fixed;
-        top:0;
-        bottom:0;
-        left:0;
-        right:0;
-        background:#000;
-        opacity:0.4;
-    }
     .header {
         display: flex;
         align-items: center;
