@@ -14,7 +14,7 @@
             </div>
             <div class="header-menu" v-show="menuShow">
                 <ul class="bigGroupList">
-                    <li v-for="(bigGroup, index) in bigGroupList" v-bind:key="index" v-bind:class="{ active: bigGroup.isActive}">
+                    <li v-for="(bigGroup, index) in bigGroupList" v-bind:key="index" v-bind:class="{ active: bigGroup.isActive}" v-on:click="bigChoose(bigGroup)">
                         <span>{{bigGroup.title}}</span>
                         <i class="el-icon-arrow-right"></i>
                     </li>
@@ -37,7 +37,7 @@
                 </div>
             </li>
         </ul>
-        <div class="box" v-show="menuShow"></div>
+        <div class="box" v-show="menuShow" v-on:touchmove="preventTouchmove"></div>
     </div>
 </template>
 
@@ -167,7 +167,8 @@ export default {
                     imgSrc: '/static/img/bigGroup1.jpg',
                     title: 'A-季节系列'
                 }
-            ]
+            ],
+            bigActive: {}
         }
     },
     components: {
@@ -178,11 +179,28 @@ export default {
     beforeDestroy () {
         document.querySelector('body').setAttribute('style', '')
     },
-    created () {
+    mounted () {
+        this.bigActive = this.bigGroupList[0]
     },
     methods: {
         menuToggle () {
             this.menuShow = !this.menuShow
+            if (this.menuShow) {
+                document.querySelector('body').setAttribute('style', 'overflow:hidden')
+            } else {
+                document.querySelector('body').setAttribute('style', 'overflow:auto')
+            }
+        },
+        preventTouchmove (event) {
+            if (this.menuShow) {
+                event.preventDefault()
+            }
+        },
+        bigChoose (bigGroup) {
+            console.log(123)
+            this.bigActive.isActive = false
+            bigGroup.isActive = true
+            this.bigActive = bigGroup
         }
     }
 }
@@ -193,7 +211,7 @@ export default {
 @import 'src/style/config';
 .group-detail {
     .box {
-        position:absolute;
+        position:fixed;
         top:0;
         bottom:0;
         left:0;
