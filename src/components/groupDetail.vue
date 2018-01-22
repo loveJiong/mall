@@ -53,37 +53,37 @@ export default {
             menuShow: false,
             goods: [
                 {
-                    imgSrc: '/static/img/bigGroup1.jpg',
+                    imgSrc: require('../../static/img/bigGroup1.jpg'),
                     title: ' 灭蚊灯灭蚊灯灭蚊灯灭蚊灯灭蚊灯灭蚊灯',
                     price: '2.38$'
                 },
                 {
-                    imgSrc: '/static/img/bigGroup2.jpg',
+                    imgSrc: require('../../static/img/bigGroup2.jpg'),
                     title: ' 灭蚊灯灭蚊灯灭蚊灯灭蚊灯灭蚊灯灭蚊灯',
                     price: '3.38$'
                 },
                 {
-                    imgSrc: '/static/img/bigGroup3.jpg',
+                    imgSrc: require('../../static/img/bigGroup3.jpg'),
                     title: ' 灭蚊灯灭蚊灯灭蚊灯灭蚊灯灭蚊灯灭蚊灯',
                     price: '3.38$'
                 },
                 {
-                    imgSrc: '/static/img/bigGroup3.jpg',
+                    imgSrc: require('../../static/img/bigGroup1.jpg'),
                     title: ' 灭蚊灯灭蚊灯灭蚊灯灭蚊灯灭蚊灯灭蚊灯',
                     price: '3.38$'
                 },
                 {
-                    imgSrc: '/static/img/bigGroup3.jpg',
+                    imgSrc: require('../../static/img/bigGroup1.jpg'),
                     title: ' 灭蚊灯灭蚊灯灭蚊灯灭蚊灯灭蚊灯灭蚊灯',
                     price: '3.38$'
                 },
                 {
-                    imgSrc: '/static/img/bigGroup3.jpg',
+                    imgSrc: require('../../static/img/bigGroup1.jpg'),
                     title: ' 灭蚊灯灭蚊灯灭蚊灯灭蚊灯灭蚊灯灭蚊灯',
                     price: '3.38$'
                 },
                 {
-                    imgSrc: '/static/img/bigGroup3.jpg',
+                    imgSrc: require('../../static/img/bigGroup1.jpg'),
                     title: ' 灭蚊灯灭蚊灯灭蚊灯灭蚊灯灭蚊灯灭蚊灯',
                     price: '3.38$'
                 }
@@ -136,35 +136,35 @@ export default {
             ],
             smallGroupList: [
                 {
-                    imgSrc: '/static/img/bigGroup1.jpg',
+                    imgSrc: require('../../static/img/bigGroup1.jpg'),
                     title: 'A-季节系列'
                 },
                 {
-                    imgSrc: '/static/img/bigGroup1.jpg',
+                    imgSrc: require('../../static/img/bigGroup1.jpg'),
                     title: 'A-季节系列'
                 },
                 {
-                    imgSrc: '/static/img/bigGroup1.jpg',
+                    imgSrc: require('../../static/img/bigGroup1.jpg'),
                     title: 'A-季节系列'
                 },
                 {
-                    imgSrc: '/static/img/bigGroup1.jpg',
+                    imgSrc: require('../../static/img/bigGroup1.jpg'),
                     title: 'A-季节系列'
                 },
                 {
-                    imgSrc: '/static/img/bigGroup1.jpg',
+                    imgSrc: require('../../static/img/bigGroup1.jpg'),
                     title: 'A-季节系列'
                 },
                 {
-                    imgSrc: '/static/img/bigGroup1.jpg',
+                    imgSrc: require('../../static/img/bigGroup1.jpg'),
                     title: 'A-季节系列'
                 },
                 {
-                    imgSrc: '/static/img/bigGroup1.jpg',
+                    imgSrc: require('../../static/img/bigGroup1.jpg'),
                     title: 'A-季节系列'
                 },
                 {
-                    imgSrc: '/static/img/bigGroup1.jpg',
+                    imgSrc: require('../../static/img/bigGroup1.jpg'),
                     title: 'A-季节系列'
                 }
             ],

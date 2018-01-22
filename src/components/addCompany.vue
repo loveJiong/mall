@@ -6,7 +6,7 @@
     </div>
     <div class="container">
       <div class="phone-img">
-        <img src="/static/img/addComapny.png" alt="icon">
+        <img v-bind:src="addCompanyImg" alt="icon">
       </div>
       <div class="company-info">
         <div class="company-input">
@@ -30,6 +30,7 @@ export default {
   name: 'addCompany',
   data () {
     return {
+      addCompanyImg: require('../../static/img/addComapny.png'),
       companyList: []
     }
   },

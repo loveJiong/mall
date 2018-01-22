@@ -2,7 +2,7 @@
   <div class="product-pictures">
     <div class="header">
       <div class="search">
-        <img src="/static/img/company1.png" alt="icon">
+        <img v-bind:src="companyImg" alt="icon">
         <el-input v-model="searchText" prefix-icon="el-icon-search"  size="small" placeholder="产品的名称/编号/条形码"></el-input>
           <i class="el-icon-share"></i>
         </div>
@@ -32,39 +32,40 @@ export default {
   data () {
     return {
       searchText: '',
+      companyImg: require('../../static/img/company1.png'),
       buttonList: [
           {
-              imgSrc: '/static/img/new-product.jpg',
+              imgSrc: require('../../static/img/new-product.jpg'),
               title: '新到产品'
           },
           {
-              imgSrc: '/static/img/recommended-product.jpg',
+              imgSrc: require('../../static/img/recommended-product.jpg'),
               title: '推荐产品'
           },
           {
-              imgSrc: '/static/img/sales-product.jpg',
+              imgSrc: require('../../static/img/sales-product.jpg'),
               title: '促销产品'
           },
           {
-              imgSrc: '/static/img/order-history.jpg',
+              imgSrc: require('../../static/img/order-history.jpg'),
               title: '历史订购'
           }
       ],
       bigGroupList: [
         {
-          imgSrc: '/static/img/bigGroup1.jpg',
+          imgSrc: require('../../static/img/bigGroup1.jpg'),
           title: 'A-季节系列'
         },
         {
-          imgSrc: '/static/img/bigGroup2.jpg',
+          imgSrc: require('../../static/img/bigGroup2.jpg'),
           title: 'AAA-圣诞系列'
         },
         {
-          imgSrc: '/static/img/bigGroup3.jpg',
+          imgSrc: require('../../static/img/bigGroup3.jpg'),
           title: 'B1-五金系列'
         },
         {
-          imgSrc: '/static/img/bigGroup4.jpg',
+          imgSrc: require('../../static/img/bigGroup4.jpg'),
           title: 'B2-园林工具系列'
         }
       ]
