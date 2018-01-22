@@ -1,31 +1,31 @@
 <template>
-  <div class="home">
-    <div class="home-title">
-      我的商家
-      <router-link to="/addCompany">
-        <el-button type="primary">添加商家</el-button>
-      </router-link>
-    </div>
-    <div class="companyList">
-      <ul>
-        <li class="company" v-for="(company, index) in companyList" :key="index">
-          <div class="information">
-            <div class="icon">
-              <img v-bind:src="company.icon" alt="icon">
-            </div>
-            <div class="detail">
-              <span class="name" v-bind:title="company.name">{{company.name}}</span>
-              <span class="mobile">电话：{{company.mobile}}</span>
-            </div>
-          </div>
-          <div class="description">
-            <span>{{company.description}}</span>
-          </div>
-        </li>
-      </ul>
-    </div>
-    <foot-guide></foot-guide>
+<div class="home">
+  <div class="home-title">
+    我的商家
+    <router-link to="/addCompany">
+      <el-button type="primary">添加商家</el-button>
+    </router-link>
   </div>
+  <div class="companyList">
+    <ul>
+      <li class="company" v-for="(company, index) in companyList" :key="index">
+        <div class="information">
+          <div class="icon">
+            <img v-bind:src="company.icon" alt="icon">
+          </div>
+          <div class="detail">
+            <span class="name" v-bind:title="company.name">{{company.name}}</span>
+            <span class="mobile">电话：{{company.mobile}}</span>
+          </div>
+        </div>
+        <div class="description">
+          <span>{{company.description}}</span>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <foot-guide></foot-guide>
+</div>
 </template>
 
 <script>
@@ -49,7 +49,6 @@ export default {
       let comanyListRes = await getComanyList()
       if (comanyListRes.success) {
         this.companyList = comanyListRes.data
-        console.log(this.companyList)
       }
     }
   }

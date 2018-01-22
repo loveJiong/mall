@@ -13,11 +13,11 @@
         <i class="el-icon-document"></i>
         <span>当前订单</span>
       </el-menu-item>
-      <el-menu-item index="4">
+      <el-menu-item index="/orderManagement">
         <i class="el-icon-goods"></i>
         <span>订单管理</span>
       </el-menu-item>
-      <el-menu-item index="5">
+      <el-menu-item index="/mine">
         <i class="el-icon-setting"></i>
         <span>我的</span>
       </el-menu-item>

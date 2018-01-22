@@ -5,6 +5,8 @@ import addCompany from '@/components/addCompany'
 import productPictures from '@/components/productPictures'
 import groupDetail from '@/components/groupDetail'
 import shoppingCart from '@/components/shoppingCart'
+import orderManagement from '@/components/orderManagement'
+import mine from '@/components/mine'
 
 Vue.use(Router)
 
@@ -34,6 +36,16 @@ export default new Router({
       path: '/shoppingCart',
       name: 'shoppingCart',
       component: shoppingCart
+    },
+    {
+      path: '/orderManagement',
+      name: 'orderManagement',
+      component: orderManagement
+    },
+    {
+      path: '/mine',
+      name: 'mine',
+      component: mine
     }
   ]
 })
