@@ -6,7 +6,7 @@
         </div>
         <div class="container">
             <ul class="menus green-menus">
-                <li>
+                <li v-on:click="toAddress">
                     <i class="el-icon-location"></i>
                     <span>我的收货地址</span>
                     <i class="el-icon-arrow-right"></i>
@@ -50,6 +50,9 @@ export default {
         footGuide
     },
     methods: {
+        toAddress () {
+            this.$router.push('/mine/myAddress')
+        }
     }
 }
 </script>

@@ -247,15 +247,6 @@ export default {
                 font-size: 14px;
             }
         }
-        .header-icons {
-            .el-icon-goods {
-                color: #000000;
-                margin-right: 5px;
-            }
-            .el-icon-goods:active {
-                color: #000000;
-            }
-        }
         .header-menu {
             display: flex;
             position: absolute;
