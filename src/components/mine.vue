@@ -20,14 +20,14 @@
             <ul class="menus yellow-menus">
                 <li>
                     <i class="el-icon-share"></i>
-                    <span>我的收货地址</span>
+                    <span>把友购分享给朋友</span>
                     <i class="el-icon-arrow-right"></i>
                 </li>
             </ul>
             <ul class="menus red-menus">
                 <li>
                     <i class="el-icon-message"></i>
-                    <span>我的收货地址</span>
+                    <span>意见反馈</span>
                     <i class="el-icon-arrow-right"></i>
                 </li>
             </ul>
