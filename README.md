@@ -1,30 +1,78 @@
-# mall
+# 项目简介
 
-> A Vue.js project
+> 传统电商app
 
-## Build Setup
+## 技术栈
 
-``` bash
-# install dependencies
+> vue2 + vuex + vue-router + webpack + ES6 + sass + flex
+
+## 项目运行
+```
+git clone https://github.com/loveJiong/mall.git
+
+cd mall
+
 npm install
 
-# serve with hot reload at localhost:8080
 npm run dev
-
-# build for production with minification
-npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
-
-# run unit tests
-npm run unit
-
-# run e2e tests
-npm run e2e
-
-# run all tests
-npm test
 ```
 
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+## 说明
+服务端还在开发中，目前数据和交互都还未实现
+
+## 目标功能
+- [x] 我的商家(首页) -- 完成
+- [x] 添加商家 -- 完成
+- [x] 产品图册-- 完成
+- [x] 产品类别 -- 完成
+- [ ] 购物车 -- 3月4日
+- [ ] 订单管理 -- 缺少设计稿
+- [x] 我的 -- 完成
+- [ ] 我的收货地址 -- 缺少设计稿
+- [x] 添加收货地址 -- 完成
+- [x] 单个食品详情页面 -- 完成
+- [ ] 我的商家(我的) -- 未完成
+- [ ] 意见反馈 -- 未完成
+- [ ] 分享 -- 没接触过，需要研究
+- [ ] 搜索商品 -- 未完成
+
+# 项目布局
+
+```
+.
+├── build                                       // webpack配置文件
+├── config                                      // 项目打包路径
+├── src                                         // 源码目录
+│   ├── components                              // 组件
+│   │   ├── addAddress                          // 添加地址
+│   │   ├── addCompany                          // 添加商家
+│   │   ├── footGuide                           // 底部导航
+│   │   ├── groupDetail                         // 系列详情
+│   │   ├── home                                // 首页
+│   │   ├── mine                                // 我的
+│   │   ├── myAddress                           // 我的地址
+│   │   ├── orderManagement                     // 订单管理
+│   │   ├── productPictures                     // 产品图册
+│   │   ├── shoppingCart                        // 购物车
+│   ├── config                                  // 基本配置
+│   │   ├── env.js                              // 环境切换配置
+│   │   ├── fetch.js                            // 获取数据
+│   │   ├── mUtils.js                           // 常用的js方法
+│   │   └── rem.js                              // px转换rem
+│   ├── router
+│   │   └── router.js                           // 路由配置
+│   ├── service                                 // 数据交互统一调配
+│   │   ├── getData.js                          // 获取数据的统一调配文件，对接口进行统一管理
+│   ├── store                                   // vuex的状态管理
+│   │   ├── action.js                           // 配置actions
+│   │   ├── index.js                            // 引用vuex，创建store
+│   │   ├── mutation-types.js                   // 定义常量muations名
+│   │   └── mutations.js                        // 配置mutations
+│   └── style
+│       ├── common.scss                         // 公共样式文件
+│       ├── config.scss                         // 样式配置文件
+│   ├── App.vue                                 // 页面入口文件
+│   ├── main.js                                 // 程序入口文件，加载各种公共组件
+│   ├── mock.js                                 // 模拟服务器响应（只模拟了一个）
+├── static                                      // 静态文件目录
+├── index.html                                  // 入口html文件
