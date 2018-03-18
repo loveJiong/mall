@@ -1,7 +1,7 @@
 <template>
   <div class="addCompany">
     <div class="addCompany-title">
-      <router-link to="/" class="el-icon-arrow-left"></router-link>
+      <router-link to="/home" class="el-icon-arrow-left"></router-link>
       添加商家
     </div>
     <div class="container">

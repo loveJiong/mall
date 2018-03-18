@@ -1,17 +1,20 @@
 <template>
   <div class="product-pictures">
-    <div class="header">
-      <div class="search">
-        <img v-bind:src="companyImg" alt="icon">
-        <el-input v-model="searchText" prefix-icon="el-icon-search"  size="small" placeholder="产品的名称/编号/条形码"></el-input>
-          <i class="el-icon-share"></i>
+    <div class="company-switch">
+      <div class="company-menu">
+        <div class="company-active" v-on:click.stop="menuToggle">
+          <img class="company-img" v-bind:src="active.icon" alt="icon">
+          <span>{{active.name}}</span>
+          <i v-show="menuShow" class="el-icon-caret-top"></i>
+          <i v-show="!menuShow" class="el-icon-caret-bottom"></i>
         </div>
-        <ul class="button-list">
-            <li v-for="button in buttonList" :key="button.title">
-                <img v-bind:src="button.imgSrc" alt="button">
-                <span>{{button.title}}</span>
-            </li>
+        <ul v-show="menuShow" class="companyList">
+          <li v-for="(company, index) in companyList" v-bind:key="index" v-bind:class="{ active: company.isActive}" v-on:click.stop="companyChoose(company)">
+            <img class="company-img" v-bind:src="company.icon" alt="icon">
+            <span class="company-name">{{company.name}}</span>
+          </li>
         </ul>
+      </div>
     </div>
     <ul class="container">
       <li v-for="bigGroup in bigGroupList" :key="bigGroup.title" v-on:click="gotoDeatile()">
@@ -21,6 +24,7 @@
       </li>
     </ul>
     <foot-guide></foot-guide>
+    <div class="box" v-show="menuShow" v-on:touchmove="preventTouchmove"></div>
   </div>
 </template>
 
@@ -31,26 +35,20 @@ export default {
   name: 'productPictures',
   data () {
     return {
-      searchText: '',
-      companyImg: require('../../static/img/company1.png'),
-      buttonList: [
-          {
-              imgSrc: require('../../static/img/new-product.jpg'),
-              title: '新到产品'
-          },
-          {
-              imgSrc: require('../../static/img/recommended-product.jpg'),
-              title: '推荐产品'
-          },
-          {
-              imgSrc: require('../../static/img/sales-product.jpg'),
-              title: '促销产品'
-          },
-          {
-              imgSrc: require('../../static/img/order-history.jpg'),
-              title: '历史订购'
-          }
+      companyList: [
+        {
+          name: '国贸城集团',
+          isActive: true,
+          icon: require('../../static/img/company1.png')
+
+        },
+        {
+          name: '中汇文具',
+          isActive: false,
+          icon: require('../../static/img/company1.png')
+        }
       ],
+      companyImg: require('../../static/img/company1.png'),
       bigGroupList: [
         {
           imgSrc: require('../../static/img/bigGroup1.jpg'),
@@ -68,15 +66,49 @@ export default {
           imgSrc: require('../../static/img/bigGroup4.jpg'),
           title: 'B2-园林工具系列'
         }
-      ]
+      ],
+      menuShow: false,
+      active: {}
     }
   },
   components: {
     footGuide
   },
+  mounted () {
+    this.active = this.companyList[0]
+    document.addEventListener('click', this.menuHide)
+  },
+  beforeDestroy () {
+    document.removeEventListener('click', this.menuHide)
+  },
   methods: {
     gotoDeatile () {
       this.$router.push('/productPictures/groupDetail')
+    },
+    menuToggle () {
+    this.menuShow = !this.menuShow
+    if (this.menuShow) {
+      document.querySelector('body').setAttribute('style', 'overflow:hidden')
+    } else {
+      document.querySelector('body').setAttribute('style', 'overflow:auto')
+    }
+    },
+    menuHide () {
+      if (this.menuShow) {
+      this.menuShow = false
+      document.querySelector('body').setAttribute('style', 'overflow:auto')
+      }
+    },
+    companyChoose (company) {
+      this.active.isActive = false
+      company.isActive = true
+      this.active = company
+      this.menuShow = false
+    },
+    preventTouchmove (event) {
+      if (this.menuShow) {
+        event.preventDefault()
+      }
     }
   }
 }
@@ -86,44 +118,53 @@ export default {
 <style lang="scss" scoped>
 @import 'src/style/config';
 .product-pictures {
-  .header {
-    .search {
-      display: flex;
-      padding: 0 15px;
-      align-items: center;
-      height: $headH;
-      background-color: $white;
-      border-bottom: 1px solid $borcd;
-      img {
-        @include wh(40px, 40px);
-      }
-      .el-input {
-        margin: 0 14px;
-        .el-input_inner {
-          background-color: #f0f0f0;
-        }
-      }
-    }
-    .button-list {
+  .company-switch {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: $headH;
+    background-color: $white;
+    border-bottom: 1px solid $borcd;
+    z-index: 1;
+    .company-menu {
+      width: 100%;
+      .company-active {
         display: flex;
-        height: 90px;
         align-items: center;
-        justify-content: space-around;
+        justify-content: center;
+        width: 100%;
+        text-align: center;
         background-color: $white;
-        border-bottom: 1px solid #e3e0df;
-        @include sc(12px, #555555);
+        @include sc(14px, #e45c28);
+      }
+      .companyList {
+        position: absolute;
+        top: $headH;
+        width: 100%;
+        background-color: $white;
+        padding-bottom: 10px;
         li {
-            display: flex;
-            flex-direction: column;
-            img {
-                @include wh(50px, 50px);
-            }
-            span {
-                text-align: center;
-                margin-top: 5px;
-            }
+          display: flex;
+          justify-content: space-between;
+          border-bottom: 1px solid #dbdbdb;
+          font-size: 14px;
+          padding: 10px 20px;
+          background-color: #f5f5f5;
+          .company-name {
+            color: #333333;
+          }
         }
+        .active {
+          background-color: $white;
+          .company-name {
+            color: #e45c28;
+          }
+        }
+      }
     }
+  }
+  .company-img {
+    @include wh(25px, 25px);
   }
   .container {
     display: flex;

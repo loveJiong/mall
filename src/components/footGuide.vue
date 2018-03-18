@@ -1,7 +1,7 @@
 <template>
   <div class="foot-guide">
     <el-menu :default-active="path" mode="horizontal" :router="isRouter">
-      <el-menu-item index="/">
+      <el-menu-item index="/home">
         <i class="el-icon-star-off"></i>
         <span>首页</span>
       </el-menu-item>
