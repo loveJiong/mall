@@ -6,13 +6,14 @@
             <img src="../../static/img/login-icon.jpg" alt="图标">
             <el-form ref="loginForm" :model="loginForm">
                 <el-form-item>
-                    <el-input v-model="loginForm.name" placeholder="账户"></el-input>
+                    <el-input v-model="loginForm.customerName" placeholder="账户"></el-input>
                 </el-form-item>
                 <el-form-item>
                     <el-input type="password" placeholder="密码" v-model="loginForm.password"></el-input>
                 </el-form-item>
+                <span class="error-text">{{errorText}}</span>
                 <el-form-item>
-                    <el-button round type="primary" @click="onSubmit">登录</el-button>
+                    <el-button round type="primary" @click="login">登录</el-button>
                 </el-form-item>
             </el-form>
         </div>
@@ -21,21 +22,47 @@
 </template>
 
 <script>
+import {accountLogin, getComanyList} from './../service/getData'
 export default {
     name: 'login',
     data () {
         return {
             loginForm: {
-                name: '',
+                customerName: '',
                 password: ''
-            }
+            },
+            errorText: ''
         }
     },
     components: {
     },
     methods: {
-        onSubmit () {
-            this.$router.push('/home')
+        async login () {
+            let loginRes = await accountLogin(this.loginForm)
+            if (loginRes.success) {
+                this.$store.commit('setUserInfo', loginRes.data)
+                let customerId = loginRes.data.id
+                let comanyListRes = await getComanyList(customerId)
+                if (comanyListRes.success) {
+                    this.$store.commit('setCompanyList', comanyListRes.data)
+                    console.log(comanyListRes.data)
+                }
+                this.$router.push('/home')
+            } else {
+                this.errorText = loginRes.msg
+                // this.$store.commit('setUserInfo', {
+                //     id: 1,
+                //     name: 'thb'
+                // })
+                // this.$store.commit('setCompanyList', [{
+                //     companyDisplayName: '大地',
+                //     companyId: 1,
+                //     companyName: 'dadisoft',
+                //     companyScope: '汽车配件、五金',
+                //     companyLogo: 'http://jesusl.cn:8080/dadi/dadisoft/dadisoft_logo.jpg'
+                // }])
+                // this.$router.push('/home')
+            }
         }
     }
 }

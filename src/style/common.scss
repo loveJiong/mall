@@ -44,3 +44,21 @@ a {
 a:active {
     color: #000000;
 }
+
+::-webkit-input-placeholder { /* WebKit browsers */ 
+    color: #c7c7cc; 
+} 
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */ 
+    color: #c7c7cc; 
+} 
+::-moz-placeholder { /* Mozilla Firefox 19+ */ 
+    color: #c7c7cc; 
+} 
+:-ms-input-placeholder { /* Internet Explorer 10+ */ 
+    color: #c7c7cc; 
+}
+
+.error-text {
+    color: red;
+    font-size: 14px;
+}
