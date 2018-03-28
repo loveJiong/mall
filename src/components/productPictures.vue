@@ -17,9 +17,9 @@
 			</div>
 		</div>
 		<ul class="container">
-			<li v-for="bigGroup in bigGroupList" :key="bigGroup.title" v-on:click="gotoDeatile()">
+			<li v-for="bigGroup in bigGroupList" :key="bigGroup.name" v-on:click="gotoDeatile(bigGroup.guid)">
 				<img v-bind:src="bigGroup.imgSrc" alt="img">
-				<span>{{bigGroup.title}}</span>
+				<span>{{bigGroup.name}}</span>
 				<i class="el-icon-arrow-right"></i>
 			</li>
 		</ul>
@@ -30,7 +30,7 @@
 
 <script>
 import footGuide from './footGuide'
-// import {getComanyList} from './../service/getData'
+import {getBigGroupList} from './../service/getData'
 export default {
 	name: 'productPictures',
 	data () {
@@ -50,22 +50,22 @@ export default {
 			// ],
 			companyImg: require('../../static/img/company1.png'),
 			bigGroupList: [
-				{
-					imgSrc: require('../../static/img/bigGroup1.jpg'),
-					title: 'A-季节系列'
-				},
-				{
-					imgSrc: require('../../static/img/bigGroup2.jpg'),
-					title: 'AAA-圣诞系列'
-				},
-				{
-					imgSrc: require('../../static/img/bigGroup3.jpg'),
-					title: 'B1-五金系列'
-				},
-				{
-					imgSrc: require('../../static/img/bigGroup4.jpg'),
-					title: 'B2-园林工具系列'
-				}
+				// {
+				// 	imgSrc: require('../../static/img/bigGroup1.jpg'),
+				// 	title: 'A-季节系列'
+				// },
+				// {
+				// 	imgSrc: require('../../static/img/bigGroup2.jpg'),
+				// 	title: 'AAA-圣诞系列'
+				// },
+				// {
+				// 	imgSrc: require('../../static/img/bigGroup3.jpg'),
+				// 	title: 'B1-五金系列'
+				// },
+				// {
+				// 	imgSrc: require('../../static/img/bigGroup4.jpg'),
+				// 	title: 'B2-园林工具系列'
+				// }
 			],
 			menuShow: false,
 			active: {}
@@ -87,14 +87,21 @@ export default {
 		footGuide
     },
 	mounted () {
-		this.active = this.companyList[0]
+        this.initData()
 		document.addEventListener('click', this.menuHide)
 	},
 	beforeDestroy () {
 		document.removeEventListener('click', this.menuHide)
 	},
 	methods: {
-		gotoDeatile () {
+        async initData () {
+            this.active = this.companyList[0]
+            let bigGroupListRes = await getBigGroupList(this.active.companyId)
+            if (bigGroupListRes.success) {
+                this.bigGroupList = bigGroupListRes.data
+            }
+        },
+		gotoDeatile (guid) {
 			this.$router.push('/productPictures/groupDetail')
 		},
 		menuToggle () {

@@ -32,16 +32,18 @@ async function http (url, method = 'GET', headers, data = {}) {
     }
     try {
         const res = await axios(reqConfig)
+        const resObj = res.data
+        console.log(res)
         let result
-        if (res.status === successCode) {
+        if (resObj.status === successCode) {
             result = {
-                data: res.data,
+                data: resObj.data,
                 success: true
             }
         } else {
             result = {
-                code: res.messageCode,
-                msg: res.message,
+                code: resObj.messageCode,
+                msg: resObj.message,
                 success: false
             }
         }
@@ -58,3 +60,5 @@ async function http (url, method = 'GET', headers, data = {}) {
 export const getComanyList = (customerId) => http('/companyinfo/compnayList', 'GET', headers, {customerId})
 
 export const accountLogin = (loginInfo) => http('/customer/login', 'GET', headers, loginInfo)
+
+export const getBigGroupList = (companyId) => http('/goods/category', 'GET', headers, {companyId})
