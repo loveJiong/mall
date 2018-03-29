@@ -10,7 +10,7 @@ switch (process.env.NODE_ENV) {
         baseUrl = 'http://jesusl.cn:8080/dadi'
         break
     case 'production':
-        baseUrl = ''
+        baseUrl = 'http://jesusl.cn:8080/dadi'
         break
     default:
         baseUrl = ''
@@ -38,6 +38,7 @@ async function http (url, method = 'GET', headers, data = {}) {
         if (resObj.status === successCode) {
             result = {
                 data: resObj.data,
+                offset: resObj.offset,
                 success: true
             }
         } else {
@@ -61,4 +62,6 @@ export const getComanyList = (customerId) => http('/companyinfo/compnayList', 'G
 
 export const accountLogin = (loginInfo) => http('/customer/login', 'GET', headers, loginInfo)
 
-export const getBigGroupList = (companyId) => http('/goods/category', 'GET', headers, {companyId})
+export const getCategoryList = (companyId) => http('/goods/category', 'GET', headers, {companyId})
+
+export const getGoods = (companyId, categoryId, offset = 0) => http('/goods/list', 'GET', headers, {companyId, categoryId, offset})

@@ -3,8 +3,8 @@
 		<div class="company-switch">
 			<div class="company-menu">
 				<div class="company-active" v-on:click.stop="menuToggle">
-					<img class="company-img" v-bind:src="active.companyLogo" alt="icon">
-					<span>{{active.companyDisplayName}}</span>
+					<img class="company-img" v-bind:src="activeCompany.companyLogo" alt="icon">
+					<span>{{activeCompany.companyDisplayName}}</span>
 					<i v-show="menuShow" class="el-icon-caret-top"></i>
 					<i v-show="!menuShow" class="el-icon-caret-bottom"></i>
 				</div>
@@ -17,9 +17,9 @@
 			</div>
 		</div>
 		<ul class="container">
-			<li v-for="bigGroup in bigGroupList" :key="bigGroup.name" v-on:click="gotoDeatile(bigGroup.guid)">
-				<img v-bind:src="bigGroup.imgSrc" alt="img">
-				<span>{{bigGroup.name}}</span>
+			<li v-for="category in categoryList" :key="category.guid" v-on:click="gotoDeatile(category)">
+				<img v-bind:src="category.url" alt="img">
+				<span>{{category.name}}</span>
 				<i class="el-icon-arrow-right"></i>
 			</li>
 		</ul>
@@ -30,78 +30,58 @@
 
 <script>
 import footGuide from './footGuide'
-import {getBigGroupList} from './../service/getData'
+import {getCategoryList} from './../service/getData'
 export default {
 	name: 'productPictures',
 	data () {
 		return {
-			// companyList: [
-			// 	{
-			// 		name: '国贸城集团',
-			// 		isActive: true,
-			// 		icon: require('../../static/img/company1.png')
-
-			// 	},
-			// 	{
-			// 		name: '中汇文具',
-			// 		isActive: false,
-			// 		icon: require('../../static/img/company1.png')
-			// 	}
-			// ],
-			companyImg: require('../../static/img/company1.png'),
-			bigGroupList: [
-				// {
-				// 	imgSrc: require('../../static/img/bigGroup1.jpg'),
-				// 	title: 'A-季节系列'
-				// },
-				// {
-				// 	imgSrc: require('../../static/img/bigGroup2.jpg'),
-				// 	title: 'AAA-圣诞系列'
-				// },
-				// {
-				// 	imgSrc: require('../../static/img/bigGroup3.jpg'),
-				// 	title: 'B1-五金系列'
-				// },
-				// {
-				// 	imgSrc: require('../../static/img/bigGroup4.jpg'),
-				// 	title: 'B2-园林工具系列'
-				// }
+			categoryList: [
 			],
-			menuShow: false,
-			active: {}
+			menuShow: false
 		}
 	},
     computed: {
 		companyList () {
             return this.$store.state.companyList.map((company, index) => {
-                if (index === 0) {
-                    company.isActive = true
-                } else {
+				if (this.$store.state.activeCompany && this.$store.state.activeCompany.companyId === company.companyId) {
+					company.isActive = true
+				} else if (!this.$store.state.activeCompany && index === 0) {
+					company.isActive = true
+				} else {
                     company.isActive = false
                 }
                 return company
             })
-        }
+		},
+		activeCompany () {
+			console.log(this.companyList)
+			if (!this.$store.state.activeCompany) {
+				this.$store.commit('setActiveCompany', this.companyList[0])
+			}
+			return this.$store.state.activeCompany
+		}
 	},
 	components: {
 		footGuide
     },
 	mounted () {
-        this.initData()
+        this.getCategoryList()
 		document.addEventListener('click', this.menuHide)
 	},
 	beforeDestroy () {
 		document.removeEventListener('click', this.menuHide)
 	},
 	methods: {
-        async initData () {
-            this.active = this.companyList[0]
-            let bigGroupListRes = await getBigGroupList(this.active.companyId)
-            if (bigGroupListRes.success) {
-                this.bigGroupList = bigGroupListRes.data
+        async getCategoryList () {
+            let categoryListRes = await getCategoryList(this.activeCompany.companyId)
+            if (categoryListRes.success) {
+				this.$store.commit('setCategoryList', categoryListRes.data)
+				this.categoryList = this.$store.state.categoryList
+				console.log(this.categoryList)
             }
         },
-		gotoDeatile (guid) {
+		gotoDeatile (category) {
+			this.$store.commit('setActiveCategory', category)
 			this.$router.push('/productPictures/groupDetail')
 		},
 		menuToggle () {
@@ -119,10 +99,9 @@ export default {
 			}
 		},
 		companyChoose (company) {
-			this.active.isActive = false
-			company.isActive = true
-			this.active = company
+			this.$store.commit('setActiveCompany', company)
 			this.menuShow = false
+			this.getCategoryList()
 		},
 		preventTouchmove (event) {
 			if (this.menuShow) {
@@ -188,7 +167,8 @@ export default {
 	.container {
 		display: flex;
 		flex-direction: column;
-		margin-top: 10px;
+        margin-top: 10px;
+        margin-bottom: 45px;
 		li {
 			display: flex;
 			align-items: center;

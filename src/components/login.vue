@@ -50,18 +50,6 @@ export default {
                 this.$router.push('/home')
             } else {
                 this.errorText = loginRes.msg
-                // this.$store.commit('setUserInfo', {
-                //     id: 1,
-                //     name: 'thb'
-                // })
-                // this.$store.commit('setCompanyList', [{
-                //     companyDisplayName: '大地',
-                //     companyId: 1,
-                //     companyName: 'dadisoft',
-                //     companyScope: '汽车配件、五金',
-                //     companyLogo: 'http://jesusl.cn:8080/dadi/dadisoft/dadisoft_logo.jpg'
-                // }])
-                // this.$router.push('/home')
             }
         }
     }

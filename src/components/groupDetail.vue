@@ -1,10 +1,11 @@
 <template>
+    <pull-to :bottom-load-method="refresh" :bottom-config="{failText: '没有更多'}">
     <div class="group-detail">
         <div class="header" v-on:click.stop="''">
             <router-link to="/productPictures" class="el-icon-arrow-left"></router-link>
             <div class="title" v-on:click.stop="menuToggle">
-                <span class="bigGroup-name">{{bigGroupName}}</span>
-                <span>{{smallGroupName}}</span>
+                <span class="category-name">{{activeCategory.name}}</span>
+                <span v-if="activeSecondary">{{activeSecondary.name}}</span>
                 <i v-show="menuShow" class="el-icon-caret-top"></i>
                 <i v-show="!menuShow" class="el-icon-caret-bottom"></i>
             </div>
@@ -13,24 +14,24 @@
                 <i class="el-icon-search"></i>
             </div>
             <div class="header-menu" v-show="menuShow">
-                <ul class="bigGroupList">
-                    <li v-for="(bigGroup, index) in bigGroupList" v-bind:key="index" v-bind:class="{ active: bigGroup.isActive}" v-on:click.stop="bigChoose(bigGroup)">
-                        <span>{{bigGroup.title}}</span>
+                <ul class="categoryList">
+                    <li v-for="(category, index) in categoryList" v-bind:key="index" v-bind:class="{ active: category.isActive}" v-on:click.stop="categoryChoose(category)">
+                        <span>{{category.name}}</span>
                         <i class="el-icon-arrow-right"></i>
                     </li>
                 </ul>
-                <ul class="smallGroupList">
-                    <li v-for="(smallGroup, index) in smallGroupList" v-bind:key="index" v-on:click.stop="smallChoose(smallGroup)">
-                        <img v-bind:src="smallGroup.imgSrc" alt="图片">
-                        <span>{{smallGroup.title}}</span>
+                <ul class="secondaryList">
+                    <li v-for="(secondary, index) in secondaryList" v-bind:key="index" v-on:click.stop="secondaryChoose(secondary)">
+                        <img v-bind:src="secondary.imgSrc" alt="图片">
+                        <span>{{secondary.name}}</span>
                     </li>
                 </ul>
             </div>
         </div>
         <ul class="container">
             <li v-for="(good, index) in goods" v-bind:key="index">
-                <img v-bind:src="good.imgSrc" alt="图片">
-                <span>{{good.title}}</span>
+                <img v-bind:src="good.url" alt="图片">
+                <span>{{good.name}}</span>
                 <div>
                     <span class="price">{{good.price}}</span>
                     <i class="el-icon-circle-plus-outline"></i>
@@ -39,152 +40,97 @@
         </ul>
         <div class="box" v-show="menuShow" v-on:touchmove="preventTouchmove"></div>
     </div>
+    </pull-to>
 </template>
 
 <script>
-// import {getComanyList} from './../service/getData'
+import {getGoods} from './../service/getData'
+import PullTo from 'vue-pull-to'
 export default {
     name: 'groupDetail',
+    components: {
+        PullTo
+    },
     data () {
         return {
             tabPosition: 'left',
-            bigGroupName: 'A-季节系列',
-            smallGroupName: 'B01-电扇，灭蚊灯系列',
             menuShow: false,
-            goods: [
-                {
-                    imgSrc: require('../../static/img/bigGroup1.jpg'),
-                    title: ' 灭蚊灯灭蚊灯灭蚊灯灭蚊灯灭蚊灯灭蚊灯',
-                    price: '2.38$'
-                },
-                {
-                    imgSrc: require('../../static/img/bigGroup2.jpg'),
-                    title: ' 灭蚊灯灭蚊灯灭蚊灯灭蚊灯灭蚊灯灭蚊灯',
-                    price: '3.38$'
-                },
-                {
-                    imgSrc: require('../../static/img/bigGroup3.jpg'),
-                    title: ' 灭蚊灯灭蚊灯灭蚊灯灭蚊灯灭蚊灯灭蚊灯',
-                    price: '3.38$'
-                },
-                {
-                    imgSrc: require('../../static/img/bigGroup1.jpg'),
-                    title: ' 灭蚊灯灭蚊灯灭蚊灯灭蚊灯灭蚊灯灭蚊灯',
-                    price: '3.38$'
-                },
-                {
-                    imgSrc: require('../../static/img/bigGroup1.jpg'),
-                    title: ' 灭蚊灯灭蚊灯灭蚊灯灭蚊灯灭蚊灯灭蚊灯',
-                    price: '3.38$'
-                },
-                {
-                    imgSrc: require('../../static/img/bigGroup1.jpg'),
-                    title: ' 灭蚊灯灭蚊灯灭蚊灯灭蚊灯灭蚊灯灭蚊灯',
-                    price: '3.38$'
-                },
-                {
-                    imgSrc: require('../../static/img/bigGroup1.jpg'),
-                    title: ' 灭蚊灯灭蚊灯灭蚊灯灭蚊灯灭蚊灯灭蚊灯',
-                    price: '3.38$'
-                }
-            ],
-            bigGroupList: [
-                {
-                    isActive: true,
-                    title: 'A-季节系列'
-                },
-                {
-                    isActive: false,
-                    title: 'A-季节系列'
-                },
-                {
-                    isActive: false,
-                    title: 'A-季节系列'
-                },
-                {
-                    isActive: false,
-                    title: 'A-季节系列'
-                },
-                {
-                    isActive: false,
-                    title: 'A-季节系列'
-                },
-                {
-                    isActive: false,
-                    title: 'A-季节系列'
-                },
-                {
-                    isActive: false,
-                    title: 'A-季节系列'
-                },
-                {
-                    isActive: false,
-                    title: 'A-季节系列'
-                },
-                {
-                    isActive: false,
-                    title: 'A-季节系列'
-                },
-                {
-                    isActive: false,
-                    title: 'A-季节系列'
-                },
-                {
-                    isActive: false,
-                    title: 'A-季节系列'
-                }
-            ],
-            smallGroupList: [
-                {
-                    imgSrc: require('../../static/img/bigGroup1.jpg'),
-                    title: 'A-季节系列'
-                },
-                {
-                    imgSrc: require('../../static/img/bigGroup1.jpg'),
-                    title: 'A-季节系列'
-                },
-                {
-                    imgSrc: require('../../static/img/bigGroup1.jpg'),
-                    title: 'A-季节系列'
-                },
-                {
-                    imgSrc: require('../../static/img/bigGroup1.jpg'),
-                    title: 'A-季节系列'
-                },
-                {
-                    imgSrc: require('../../static/img/bigGroup1.jpg'),
-                    title: 'A-季节系列'
-                },
-                {
-                    imgSrc: require('../../static/img/bigGroup1.jpg'),
-                    title: 'A-季节系列'
-                },
-                {
-                    imgSrc: require('../../static/img/bigGroup1.jpg'),
-                    title: 'A-季节系列'
-                },
-                {
-                    imgSrc: require('../../static/img/bigGroup1.jpg'),
-                    title: 'A-季节系列'
-                }
-            ],
-            bigActive: {}
+            goods: [],
+            activeSecondary: null,
+            offset: 0,
+            index: -1
         }
     },
-    components: {
+    computed: {
+        activeCategory () {
+            return this.$store.state.activeCategory
+        },
+        categoryList () {
+            return this.$store.state.categoryList.map((category) => {
+                if (category.guid === this.activeCategory.guid) {
+                    category.isActive = true
+                } else {
+                    category.isActive = false
+                }
+                return category
+            })
+        },
+        secondaryList () {
+            return this.activeCategory.secondaryList.map((secondary) => {
+                if (secondary.level === 1) return secondary
+            })
+        },
+        activeCompany () {
+            return this.$store.state.activeCompany
+        }
     },
     beforeCreate () {
         document.querySelector('body').setAttribute('style', 'background:#ffffff')
+        document.addEventListener('click', this.menuHide)
     },
     beforeDestroy () {
         document.querySelector('body').setAttribute('style', '')
         document.removeEventListener('click', this.menuHide)
     },
     mounted () {
-        this.bigActive = this.bigGroupList[0]
-        document.addEventListener('click', this.menuHide)
+        if (this.secondaryList.length > 0) {
+            this.activeSecondary = this.secondaryList[0]
+        }
+        this.getGoods()
     },
     methods: {
+        async getGoods () {
+            if (this.activeSecondary) {
+                let index = this.getSecondaryIndex(this.activeSecondary)
+                let goodsRes = await getGoods(this.activeCompany.companyId, this.activeSecondary.guid)
+                if (goodsRes.success && goodsRes.data.length > 0) {
+                    this.goods = goodsRes.data
+                    this.offset = goodsRes.offset
+                    this.index = index
+                } else if (goodsRes.success) {
+                    for (++index; index < this.activeCategory.secondaryList.length; index++) {
+                        goodsRes = await getGoods(this.activeCompany.companyId, this.activeCategory.secondaryList[index].guid)
+                        if (goodsRes.success && goodsRes.data.length > 0) {
+                            this.goods = goodsRes.data
+                            this.offset = goodsRes.offset
+                            this.index = index
+                            break
+                        }
+                    }
+                }
+            } else {
+                let goodsRes = await getGoods(this.activeCompany.companyId, this.activeCategory.guid)
+                console.log(goodsRes)
+                if (goodsRes.success) {
+                    this.goods = goodsRes.data
+                    this.offset = goodsRes.offset
+                    this.index = -1
+                }
+            }
+        },
+        getSecondaryIndex (secondary) {
+            return this.activeCategory.secondaryList.indexOf(secondary)
+        },
         menuToggle () {
             this.menuShow = !this.menuShow
             if (this.menuShow) {
@@ -204,13 +150,59 @@ export default {
                 event.preventDefault()
             }
         },
-        bigChoose (bigGroup) {
-            this.bigActive.isActive = false
-            bigGroup.isActive = true
-            this.bigActive = bigGroup
+        categoryChoose (category) {
+            this.$store.commit('setActiveCategory', category)
+            if (this.secondaryList.length > 0) {
+                this.activeSecondary = this.secondaryList[0]
+            } else {
+                this.activeSecondary = null
+            }
+            this.getGoods()
         },
-        smallChoose (smallGroup) {
+        secondaryChoose (secondary) {
             this.menuShow = false
+            this.activeSecondary = secondary
+            this.getGoods()
+            document.querySelector('body').setAttribute('style', 'overflow:auto')
+        },
+        async refresh (loaded) {
+            let index = this.index
+            if (index >= 0) {
+                let goodsRes = await getGoods(this.activeCompany.companyId, this.activeCategory.secondaryList[index].guid, this.offset)
+                console.log(goodsRes)
+                if (goodsRes.success && goodsRes.data.length > 0) {
+                    this.goods.push(...goodsRes.data)
+                    this.offset = goodsRes.offset
+                    loaded('done')
+                } else if (goodsRes.success) {
+                    for (++index; index < this.activeCategory.secondaryList.length; index++) {
+                        goodsRes = await getGoods(this.activeCompany.companyId, this.activeCategory.secondaryList[index].guid)
+                        if (goodsRes.success && goodsRes.data.length > 0) {
+                            this.goods.push(...goodsRes.data)
+                            this.offset = goodsRes.offset
+                            this.index = index
+                            if (this.activeCategory.secondaryList[index].level === 1) {
+                                this.activeSecondary = this.activeCategory.secondaryList[index]
+                            }
+                            break
+                        }
+                    }
+                    loaded('done')
+                } else {
+                    loaded('fail')
+                }
+            } else {
+                let goodsRes = await getGoods(this.activeCompany.companyId, this.activeCategory.guid, this.offset)
+                console.log(goodsRes)
+                if (goodsRes.success && goodsRes.data.length > 0) {
+                    this.goods.push(...goodsRes.data)
+                    this.offset = goodsRes.offset
+                    this.index = -1
+                    loaded('done')
+                } else {
+                    loaded('fail')
+                }
+            }
         }
     }
 }
@@ -243,7 +235,7 @@ export default {
                 position: absolute;
                 right: 10px;
             }
-            .bigGroup-name {
+            .category-name {
                 font-size: 14px;
             }
         }
@@ -256,7 +248,7 @@ export default {
             top: 50px;
             padding-bottom: 10px;
             z-index: 100;
-            .bigGroupList {
+            .categoryList {
                 height: 100%;
                 background-color: #f8f8f8;
                 width: 177px;
@@ -285,7 +277,7 @@ export default {
                     }
                 }
             }
-            .smallGroupList {
+            .secondaryList {
                 @include wh(100%, 100%);
                 overflow-x: hidden;
                 overflow-y: auto;
