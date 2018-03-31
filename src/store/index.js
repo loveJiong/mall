@@ -2,10 +2,14 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 Vue.use(Vuex)
 
+let userInfo = localStorage.userInfo ? JSON.parse(localStorage.userInfo) : null
+console.log(JSON.parse(localStorage.companyList))
+let companyList = localStorage.companyList ? JSON.parse(localStorage.companyList) : []
+
 export default new Vuex.Store({
     state: {
-        userInfo: null,
-        companyList: [],
+        userInfo,
+        companyList,
         activeCompany: null,
         categoryList: [],
         activeCategory: null
@@ -13,9 +17,11 @@ export default new Vuex.Store({
     mutations: {
         setUserInfo (state, userInfo) {
             state.userInfo = userInfo
+            localStorage.userInfo = JSON.stringify(state.userInfo)
         },
         setCompanyList (state, companyList) {
             state.companyList = companyList
+            localStorage.companyList = JSON.stringify(state.companyList)
         },
         setActiveCompany (state, company) {
             if (state.activeCompany) {
@@ -26,6 +32,7 @@ export default new Vuex.Store({
         },
         pushCompany (state, company) {
             state.companyList.push(company)
+            localStorage.userInfo = JSON.stringify(state.companyList)
         },
         setCategoryList (state, categoryList) {
             state.categoryList = []

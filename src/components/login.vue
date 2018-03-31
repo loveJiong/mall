@@ -3,7 +3,7 @@
         <div class="loing-bg">
         </div>
         <div class="login-form">
-            <img src="../../static/img/login-icon.jpg" alt="图标">
+            <img src="../../static/img/login-icon.png" alt="图标">
             <el-form ref="loginForm" :model="loginForm">
                 <el-form-item>
                     <el-input v-model="loginForm.customerName" placeholder="账户"></el-input>
@@ -34,7 +34,20 @@ export default {
             errorText: ''
         }
     },
-    components: {
+    computed: {
+        userInfo () {
+            return this.$store.state.userInfo
+        },
+        companyList () {
+            return this.$store.state.companyList
+        }
+    },
+    mounted () {
+        if (this.userInfo && this.companyList.length > 0) {
+            this.$router.push('/home')
+        } else {
+            this.getComanyList()
+        }
     },
     methods: {
         async login () {
@@ -42,14 +55,19 @@ export default {
             if (loginRes.success) {
                 this.$store.commit('setUserInfo', loginRes.data)
                 let customerId = loginRes.data.id
-                let comanyListRes = await getComanyList(customerId)
-                if (comanyListRes.success) {
-                    this.$store.commit('setCompanyList', comanyListRes.data)
-                    console.log(comanyListRes.data)
-                }
+                this.getComanyList(customerId)
+            } else {
+                this.$message.error(loginRes.msg)
+            }
+        },
+        async getComanyList (customerId) {
+            let companyListRes = await getComanyList(customerId)
+            if (companyListRes.success) {
+                this.$store.commit('setCompanyList', companyListRes.data)
+                console.log(companyListRes.data)
                 this.$router.push('/home')
             } else {
-                this.errorText = loginRes.msg
+                this.$message.error(companyListRes.msg)
             }
         }
     }
@@ -63,7 +81,7 @@ export default {
     height: 100%;
     .loing-bg {
         height: 100%;
-        background: url('../../static/img/login-bg.jpg') center 0px no-repeat;
+        background: url('/static/img/login-bg.jpg') center 0px no-repeat;
         filter: blur(5px);
     }
     .login-form {

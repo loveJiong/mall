@@ -4,7 +4,7 @@
             订单管理
         </div>
         <ul class="tabs">
-            <li v-for="(item, index) in tabs" v-bind:key="index" class="tab-item" v-bind:class="{ active: item.isActive}" v-on:click="tabSwitch(item)">{{item.name}}</li>
+            <li v-for="(item, index) in tabs" v-bind:key="index" class="tab-item" v-bind:class="{ active: item.isActive}" @click="tabSwitch(item)">{{item.name}}</li>
         </ul>
         <foot-guide></foot-guide>
     </div>

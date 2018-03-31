@@ -52,7 +52,7 @@ async function http (url, method = 'GET', headers, data = {}) {
     } catch (error) {
         return {
             code: '999',
-            msg: '服务器繁忙！',
+            msg: '服务器繁忙，请稍后重试。',
             success: false
         }
     }
@@ -65,3 +65,11 @@ export const accountLogin = (loginInfo) => http('/customer/login', 'GET', header
 export const getCategoryList = (companyId) => http('/goods/category', 'GET', headers, {companyId})
 
 export const getGoods = (companyId, categoryId, offset = 0) => http('/goods/list', 'GET', headers, {companyId, categoryId, offset})
+
+export const bindCustomer = (customerId, companyCode, customerCode) => http('/PMBOX/companyinfo/bindCustomer', 'GET', headers, {customerId, companyCode, customerCode})
+
+export const getAddress = (customerId) => http('/customer/address/list', 'GET', headers, {customerId})
+
+export const newAddress = (data) => http('/customer/address/add', 'POST', headers, data)
+
+export const updateAddress = (data) => http('/customer/address/update', 'POST', headers, data)

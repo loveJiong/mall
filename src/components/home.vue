@@ -8,7 +8,7 @@
         </div>
         <div class="companyList">
             <ul>
-                <li class="company" v-for="(company, index) in companyList" :key="index">
+                <li class="company" v-for="(company, index) in companyList" :key="index" v-bind:class="{ active: company.isActive}" @click="toProductPictures(company)">
                     <div class="information">
                         <div class="icon">
                             <img v-bind:src="company.companyLogo" alt="icon">
@@ -41,10 +41,15 @@ export default {
 	},
 	computed: {
 		companyList () {
+			console.log(this.$store.state.companyList)
             return this.$store.state.companyList
         }
 	},
 	methods: {
+		toProductPictures (company) {
+			this.$store.commit('setActiveCompany', company)
+			this.$router.push('/productPictures')
+		}
 	}
 }
 </script>
@@ -77,6 +82,7 @@ $imgMargin: 20px;
 		background-color: $white;
 		margin: 10px;
 		padding: 10px 5px 10px 5px;
+		border-radius: 10px;
 		.information {
 			display: flex;
 			border-bottom: 1px solid #efeff4;
@@ -117,6 +123,9 @@ $imgMargin: 20px;
 				overflow: hidden;
 			}
 		}
+	}
+	.active {
+		border: 1px solid #e45c28;
 	}
 }
 </style>

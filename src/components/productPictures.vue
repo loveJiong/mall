@@ -2,14 +2,14 @@
 	<div class="product-pictures">
 		<div class="company-switch">
 			<div class="company-menu">
-				<div class="company-active" v-on:click.stop="menuToggle">
+				<div class="company-active" @click.stop="menuToggle">
 					<img class="company-img" v-bind:src="activeCompany.companyLogo" alt="icon">
 					<span>{{activeCompany.companyDisplayName}}</span>
 					<i v-show="menuShow" class="el-icon-caret-top"></i>
 					<i v-show="!menuShow" class="el-icon-caret-bottom"></i>
 				</div>
 				<ul v-show="menuShow" class="companyList">
-					<li v-for="(company, index) in companyList" v-bind:key="index" v-bind:class="{ active: company.isActive}" v-on:click.stop="companyChoose(company)">
+					<li v-for="(company, index) in companyList" v-bind:key="index" v-bind:class="{ active: company.isActive}" @click.stop="companyChoose(company)">
 						<img class="company-img" v-bind:src="company.companyLogo" alt="icon">
 						<span class="company-name">{{company.companyDisplayName}}</span>
 					</li>
@@ -17,14 +17,14 @@
 			</div>
 		</div>
 		<ul class="container">
-			<li v-for="category in categoryList" :key="category.guid" v-on:click="gotoDeatile(category)">
+			<li v-for="category in categoryList" :key="category.guid" @click="gotoDeatile(category)">
 				<img v-bind:src="category.url" alt="img">
 				<span>{{category.name}}</span>
 				<i class="el-icon-arrow-right"></i>
 			</li>
 		</ul>
 		<foot-guide></foot-guide>
-		<div class="box" v-show="menuShow" v-on:touchmove="preventTouchmove"></div>
+		<div class="box" v-show="menuShow" @touchmove="preventTouchmove"></div>
 	</div>
 </template>
 

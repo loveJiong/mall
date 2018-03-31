@@ -2,11 +2,11 @@
     <div class="mine">
         <div class="header">
             <i class="el-icon-info"></i>
-            <span>{{id}}</span>
+            <span>{{this.userInfo.name}}</span>
         </div>
         <div class="container">
             <ul class="menus green-menus">
-                <li v-on:click="toAddress">
+                <li @click="toAddress">
                     <i class="el-icon-location"></i>
                     <span>我的收货地址</span>
                     <i class="el-icon-arrow-right"></i>
@@ -43,7 +43,11 @@ export default {
     name: 'mine',
     data () {
         return {
-            id: '+3412321321321321'
+        }
+    },
+    computed: {
+        userInfo () {
+            return this.$store.state.userInfo
         }
     },
     components: {

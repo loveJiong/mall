@@ -1,9 +1,9 @@
 <template>
-    <pull-to :bottom-load-method="refresh" :bottom-config="{failText: '没有更多'}">
+    <pull-to :bottom-load-method="refresh" :bottom-config="{failText: '没有更多', doneText: '', stayDistance: 0}" :bottom-block-height="0">
     <div class="group-detail">
-        <div class="header" v-on:click.stop="''">
+        <div class="header" @click.stop="''">
             <router-link to="/productPictures" class="el-icon-arrow-left"></router-link>
-            <div class="title" v-on:click.stop="menuToggle">
+            <div class="title" @click.stop="menuToggle">
                 <span class="category-name">{{activeCategory.name}}</span>
                 <span v-if="activeSecondary">{{activeSecondary.name}}</span>
                 <i v-show="menuShow" class="el-icon-caret-top"></i>
@@ -15,13 +15,13 @@
             </div>
             <div class="header-menu" v-show="menuShow">
                 <ul class="categoryList">
-                    <li v-for="(category, index) in categoryList" v-bind:key="index" v-bind:class="{ active: category.isActive}" v-on:click.stop="categoryChoose(category)">
+                    <li v-for="(category, index) in categoryList" v-bind:key="index" v-bind:class="{ active: category.isActive}" @click.stop="categoryChoose(category)">
                         <span>{{category.name}}</span>
                         <i class="el-icon-arrow-right"></i>
                     </li>
                 </ul>
                 <ul class="secondaryList">
-                    <li v-for="(secondary, index) in secondaryList" v-bind:key="index" v-on:click.stop="secondaryChoose(secondary)">
+                    <li v-for="(secondary, index) in secondaryList" v-bind:key="index" @click.stop="secondaryChoose(secondary)">
                         <img v-bind:src="secondary.imgSrc" alt="图片">
                         <span>{{secondary.name}}</span>
                     </li>
@@ -30,7 +30,9 @@
         </div>
         <ul class="container">
             <li v-for="(good, index) in goods" v-bind:key="index">
-                <img v-bind:src="good.url" alt="图片">
+                <div class="good-img">
+                    <img v-bind:src="good.url" alt="图片">
+                </div>
                 <span>{{good.name}}</span>
                 <div>
                     <span class="price">{{good.price}}</span>
@@ -38,7 +40,7 @@
                 </div>
             </li>
         </ul>
-        <div class="box" v-show="menuShow" v-on:touchmove="preventTouchmove"></div>
+        <div class="box" v-show="menuShow" @touchmove="preventTouchmove"></div>
     </div>
     </pull-to>
 </template>
@@ -310,9 +312,6 @@ export default {
             border-radius: 5px;
             margin-top: 7px;
             padding: 15px 0 10px 0;
-            img {
-                width: 100%;
-            }
             span {
                 @include sc(12px, #555555);
                 margin-top: 15px;
@@ -337,6 +336,11 @@ export default {
         li:nth-child(even) {
             margin-left: 1%;
         }
+    }
+    .good-img::before {
+        content: "";
+        display: inline-block;
+        padding-bottom: 68%;
     }
 }
 </style>

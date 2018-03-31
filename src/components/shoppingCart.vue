@@ -1,17 +1,17 @@
 <template>
     <div class="shopping-cart">
         <div class="header">
-            <div class="shopping-title" v-on:click.stop="''">
+            <div class="shopping-title" @click.stop="''">
                 当前订单
             </div>
             <div class="company-menu">
-                <div class="company-active" v-on:click.stop="menuToggle">
+                <div class="company-active" @click.stop="menuToggle">
                     {{active.name}}
                     <i v-show="menuShow" class="el-icon-caret-top"></i>
                     <i v-show="!menuShow" class="el-icon-caret-bottom"></i>
                 </div>
                 <ul v-show="menuShow" class="companyList">
-                    <li v-for="(company, index) in companyList" v-bind:key="index" v-bind:class="{ active: company.isActive}" v-on:click.stop="companyChoose(company)">
+                    <li v-for="(company, index) in companyList" v-bind:key="index" v-bind:class="{ active: company.isActive}" @click.stop="companyChoose(company)">
                         <span class="company-name">{{company.name}}</span>
                         <span class="company-price">{{company.price}}</span>
                     </li>
@@ -27,7 +27,7 @@
             </div>
         </div>
         <foot-guide></foot-guide>
-        <div class="box" v-show="menuShow" v-on:touchmove="preventTouchmove"></div>
+        <div class="box" v-show="menuShow" @touchmove="preventTouchmove"></div>
     </div>
 </template>
 
@@ -156,7 +156,7 @@ export default {
 
     .container {
         height: 100%;
-        margin-top: 90px;
+        padding-top: 90px;
         .no-goods {
             display: flex;
             flex-direction: column;
