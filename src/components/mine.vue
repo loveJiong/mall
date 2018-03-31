@@ -5,29 +5,39 @@
             <span>{{this.userInfo.name}}</span>
         </div>
         <div class="container">
-            <ul class="menus green-menus">
-                <li @click="toAddress">
+            <ul class="menus">
+                <li class="orange-item" @click="toAddress">
                     <i class="el-icon-location"></i>
                     <span>我的收货地址</span>
                     <i class="el-icon-arrow-right"></i>
                 </li>
-                <li>
+                <!-- <li>
                     <i class="el-icon-goods"></i>
                     <span>我的商家</span>
                     <i class="el-icon-arrow-right"></i>
+                </li> -->
+                <li class="blue-item">
+                    <i class="el-icon-mobile-phone"></i>
+                    <span>关于软件</span>
+                    <i class="el-icon-arrow-right"></i>
+                </li>
+                <li class="green-item">
+                    <i class="el-icon-service"></i>
+                    <span>关于我们</span>
+                    <i class="el-icon-arrow-right"></i>
                 </li>
             </ul>
-            <ul class="menus yellow-menus">
+            <!-- <ul class="menus yellow-menus">
                 <li>
                     <i class="el-icon-share"></i>
                     <span>把友购分享给朋友</span>
                     <i class="el-icon-arrow-right"></i>
                 </li>
-            </ul>
+            </ul> -->
             <ul class="menus red-menus">
-                <li>
-                    <i class="el-icon-message"></i>
-                    <span>意见反馈</span>
+                <li class="red-item">
+                    <i class="el-icon-tickets"></i>
+                    <span>服务与支付</span>
                     <i class="el-icon-arrow-right"></i>
                 </li>
             </ul>
@@ -93,6 +103,8 @@ export default {
                 position: relative;
                 margin-left: 15px;
                 padding-right: 15px;
+                border-top: 1px solid #c8c7cc;
+                border-bottom: 1px solid #c8c7cc;
                 @include sc(14px, #999999);
                 .el-icon-arrow-right {
                     position: absolute;
@@ -102,22 +114,35 @@ export default {
                 span {
                     margin-left: 5px;
                 }
+                &:first-child {
+                    border: none;
+                }
+                &:last-child {
+                    border: none;
+                }
             }
         }
-        .green-menus {
+        .green-item {
             i {
                 @include sc(19px, #a3c97e);
             }
-            li:first-child {
-                border-bottom: 1px solid #c8c7cc;
-            }
         }
-        .yellow-menus {
+        .yellow-item {
             i {
                 @include sc(19px, #f9d848);
             }
         }
-        .red-menus {
+        .blue-item {
+            i {
+                @include sc(19px, #62b1f5);
+            }
+        }
+        .orange-item {
+            i {
+                @include sc(19px, orange);
+            }
+        }
+        .red-item {
             i {
                 @include sc(19px, #e77d69);
             }

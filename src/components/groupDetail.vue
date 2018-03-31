@@ -1,5 +1,4 @@
 <template>
-    <pull-to :bottom-load-method="refresh" :bottom-config="{failText: '没有更多', doneText: '', stayDistance: 0}" :bottom-block-height="0">
     <div class="group-detail">
         <div class="header" @click.stop="''">
             <router-link to="/productPictures" class="el-icon-arrow-left"></router-link>
@@ -28,21 +27,23 @@
                 </ul>
             </div>
         </div>
-        <ul class="container">
-            <li v-for="(good, index) in goods" v-bind:key="index">
-                <div class="good-img">
-                    <img v-bind:src="good.url" alt="图片">
-                </div>
-                <span>{{good.name}}</span>
-                <div>
-                    <span class="price">{{good.price}}</span>
-                    <i class="el-icon-circle-plus-outline"></i>
-                </div>
-            </li>
-        </ul>
+        <pull-to :bottom-load-method="refresh" :bottom-config="{failText: '没有更多', doneText: '', stayDistance: 0}" :bottom-block-height="0">
+            <ul class="container">
+                <li v-for="(good, index) in goods" v-bind:key="index">
+                    <div class="good-img">
+                        <img v-bind:src="good.url" alt="图片">
+                    </div>
+                    <span>{{good.name}}</span>
+                    <div>
+                        <span class="price">{{good.price}}</span>
+                        <i class="el-icon-circle-plus-outline"></i>
+                    </div>
+                </li>
+            </ul>
+        </pull-to>
         <div class="box" v-show="menuShow" @touchmove="preventTouchmove"></div>
     </div>
-    </pull-to>
+
 </template>
 
 <script>
@@ -86,15 +87,13 @@ export default {
             return this.$store.state.activeCompany
         }
     },
-    beforeCreate () {
-        document.querySelector('body').setAttribute('style', 'background:#ffffff')
-        document.addEventListener('click', this.menuHide)
-    },
     beforeDestroy () {
         document.querySelector('body').setAttribute('style', '')
         document.removeEventListener('click', this.menuHide)
     },
     mounted () {
+        document.querySelector('body').setAttribute('style', 'background:#ffffff')
+        document.addEventListener('click', this.menuHide)
         if (this.secondaryList.length > 0) {
             this.activeSecondary = this.secondaryList[0]
         }
@@ -214,6 +213,8 @@ export default {
 <style lang="scss" scoped>
 @import 'src/style/config';
 .group-detail {
+    padding-top: $headH;
+    height: 100%;
     .header {
         display: flex;
         align-items: center;
@@ -221,7 +222,9 @@ export default {
         @include wh(100%, $headH);
         background-color: $white;
         border-bottom: 1px solid $borcd;
-        position: fixed;
+        position: absolute;
+        top: 0;
+        left: 0;
         z-index: 100;
         .title {
             display: flex;
@@ -303,7 +306,7 @@ export default {
     .container {
         display: flex;
         flex-wrap: wrap;
-        padding: $headH 2% 0 2%;
+        padding: 0 2% 0 2%;
         li {
             display: flex;
             flex-direction: column;

@@ -6,13 +6,13 @@
             </div>
             <div class="company-menu">
                 <div class="company-active" @click.stop="menuToggle">
-                    {{active.name}}
+                    {{activeCompany.companyDisplayName}}
                     <i v-show="menuShow" class="el-icon-caret-top"></i>
                     <i v-show="!menuShow" class="el-icon-caret-bottom"></i>
                 </div>
                 <ul v-show="menuShow" class="companyList">
                     <li v-for="(company, index) in companyList" v-bind:key="index" v-bind:class="{ active: company.isActive}" @click.stop="companyChoose(company)">
-                        <span class="company-name">{{company.name}}</span>
+                        <span class="company-name">{{company.companyDisplayName}}</span>
                         <span class="company-price">{{company.price}}</span>
                     </li>
                 </ul>
@@ -38,27 +38,21 @@ export default {
     name: 'shoppingCart',
     data () {
         return {
-            companyList: [
-                {
-                    name: '国贸城集团',
-                    price: '15.26$',
-                    isActive: true
-                },
-                {
-                    name: '中汇文具',
-                    price: '12.26$',
-                    isActive: false
-                }
-            ],
-            menuShow: false,
-            active: {}
+            menuShow: false
         }
     },
+    computed: {
+		companyList () {
+            return this.$store.state.companyList
+        },
+		activeCompany () {
+			return this.$store.state.activeCompany
+		}
+	},
     components: {
         footGuide
     },
     mounted () {
-        this.active = this.companyList[0]
         document.addEventListener('click', this.menuHide)
     },
     beforeDestroy () {
@@ -80,9 +74,7 @@ export default {
             }
         },
         companyChoose (company) {
-            this.active.isActive = false
-            company.isActive = true
-            this.active = company
+            this.$store.commit('setActiveCompany', company)
             this.menuShow = false
         },
         preventTouchmove (event) {

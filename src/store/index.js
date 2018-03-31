@@ -3,14 +3,20 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 let userInfo = localStorage.userInfo ? JSON.parse(localStorage.userInfo) : null
-console.log(JSON.parse(localStorage.companyList))
 let companyList = localStorage.companyList ? JSON.parse(localStorage.companyList) : []
+let activeCompany = localStorage.activeCompany ? JSON.parse(localStorage.activeCompany) : null
+
+function setCompany (company) {
+    company.cart = {}
+    company.price = 0
+    company.isActive = false
+}
 
 export default new Vuex.Store({
     state: {
         userInfo,
         companyList,
-        activeCompany: null,
+        activeCompany,
         categoryList: [],
         activeCategory: null
     },
@@ -20,7 +26,13 @@ export default new Vuex.Store({
             localStorage.userInfo = JSON.stringify(state.userInfo)
         },
         setCompanyList (state, companyList) {
+            companyList.forEach(company => setCompany(company))
             state.companyList = companyList
+            if (companyList.length > 0) {
+                state.activeCompany = state.companyList[0]
+                state.activeCompany.isActive = true
+                localStorage.activeCompany = JSON.stringify(state.activeCompany)
+            }
             localStorage.companyList = JSON.stringify(state.companyList)
         },
         setActiveCompany (state, company) {
@@ -29,10 +41,17 @@ export default new Vuex.Store({
             }
             state.activeCompany = company
             state.activeCompany.isActive = true
+            localStorage.activeCompany = JSON.stringify(state.activeCompany)
         },
         pushCompany (state, company) {
+            setCompany(company)
             state.companyList.push(company)
-            localStorage.userInfo = JSON.stringify(state.companyList)
+            if (state.companyList.length < 2) {
+                state.activeCompany = state.companyList[0]
+                state.activeCompany.isActive = true
+                localStorage.activeCompany = JSON.stringify(state.activeCompany)
+            }
+            localStorage.companyList = JSON.stringify(state.companyList)
         },
         setCategoryList (state, categoryList) {
             state.categoryList = []

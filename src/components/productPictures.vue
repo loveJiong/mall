@@ -42,22 +42,9 @@ export default {
 	},
     computed: {
 		companyList () {
-            return this.$store.state.companyList.map((company, index) => {
-				if (this.$store.state.activeCompany && this.$store.state.activeCompany.companyId === company.companyId) {
-					company.isActive = true
-				} else if (!this.$store.state.activeCompany && index === 0) {
-					company.isActive = true
-				} else {
-                    company.isActive = false
-                }
-                return company
-            })
-		},
+            return this.$store.state.companyList
+        },
 		activeCompany () {
-			console.log(this.companyList)
-			if (!this.$store.state.activeCompany) {
-				this.$store.commit('setActiveCompany', this.companyList[0])
-			}
 			return this.$store.state.activeCompany
 		}
 	},

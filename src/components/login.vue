@@ -45,8 +45,8 @@ export default {
     mounted () {
         if (this.userInfo && this.companyList.length > 0) {
             this.$router.push('/home')
-        } else {
-            this.getComanyList()
+        } else if (this.userInfo) {
+            this.getComanyList(this.userInfo.id)
         }
     },
     methods: {

@@ -17,9 +17,11 @@ body, div, span, header, footer, nav, section, aside, article, ul, dl, dt, dd, l
 html, body , #app{
     width: 100%;
     height: 100%;
+    overflow: hidden;
 }
 
 body {
+    position: relative;
     background-color: #f8f8f8;
 }
 
