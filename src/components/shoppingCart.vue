@@ -27,7 +27,7 @@
             </div>
             <div class="have-goods" v-if="haveGoods">
                 <ul class="good-list">
-                    <li class="good-item" v-for="(good, index) in goods" v-bind:key="index">
+                    <li class="good-item" v-for="(good, index) in goods" v-bind:key="index" v-if="good.num > 0">
                         <img v-bind:src="good.url" alt="图片" width="100" height="70">
                         <div class="good-introduction">
                             <span class="good-name">{{good.name}}</span>
@@ -58,7 +58,8 @@ export default {
     data () {
         return {
             menuShow: false,
-            goods: []
+            goods: [],
+            haveGoods: false
         }
     },
     computed: {
@@ -70,13 +71,6 @@ export default {
         },
         cart () {
             return this.$store.state.cart
-        },
-        haveGoods () {
-            let arr = -1
-            if (this.cart[this.activeCompany.companyId]) {
-                arr = Object.keys(this.cart[this.activeCompany.companyId])
-            }
-            return arr.length > 0
         }
 	},
     components: {
@@ -85,12 +79,7 @@ export default {
     mounted () {
         console.log(this.goods)
         if (this.companyList.length > 0) {
-            if (this.cart[this.activeCompany.companyId]) {
-                let arr = Object.keys(this.cart[this.activeCompany.companyId])
-                this.goods = arr.map(key => {
-                    return this.cart[this.activeCompany.companyId][key]
-                })
-            }
+            this.init()
 		} else {
 			this.$message.error('你当前没有添加商家，请先添加商家！')
 			this.$router.push('/addCompany')
@@ -101,6 +90,17 @@ export default {
         document.removeEventListener('click', this.menuHide)
     },
     methods: {
+        init () {
+            this.haveGoods = false
+            this.goods = []
+            if (this.cart[this.activeCompany.companyId]) {
+                let arr = Object.keys(this.cart[this.activeCompany.companyId])
+                this.goods = arr.map(key => {
+                    return this.cart[this.activeCompany.companyId][key]
+                })
+                this.haveGoods = arr.length > 0
+            }
+        },
         menuToggle () {
             this.menuShow = !this.menuShow
             if (this.menuShow) {
@@ -117,6 +117,7 @@ export default {
         },
         companyChoose (company) {
             this.$store.commit('setActiveCompany', company)
+            this.init()
             this.menuShow = false
         },
         preventTouchmove (event) {
@@ -125,13 +126,13 @@ export default {
             }
         },
         addToCart (good) {
-            console.log(good)
             good.num++
             this.$store.commit('addToCart', {company: this.activeCompany, good})
         },
         removeToCart (good) {
             good.num--
             this.$store.commit('removeToCart', {company: this.activeCompany, good})
+            this.init()
         }
     }
 }
