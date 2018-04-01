@@ -66,7 +66,7 @@ export const getCategoryList = (companyId) => http('/goods/category', 'GET', hea
 
 export const getGoods = (companyId, categoryId, offset = 0) => http('/goods/list', 'GET', headers, {companyId, categoryId, offset})
 
-export const bindCustomer = (customerId, companyCode, customerCode) => http('/PMBOX/companyinfo/bindCustomer', 'GET', headers, {customerId, companyCode, customerCode})
+export const bindCustomer = (customerId, companyCode, customerCode) => http('/companyinfo/bindCustomer', 'GET', headers, {customerId, companyCode, customerCode})
 
 export const getAddress = (customerId) => http('/customer/address/list', 'GET', headers, {customerId})
 

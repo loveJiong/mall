@@ -53,6 +53,11 @@ export default {
         footGuide
     },
     mounted () {
+        if (this.companyList.length > 0) {
+		} else {
+			this.$message.error('你当前没有添加商家，请先添加商家！')
+			this.$router.push('/addCompany')
+		}
         document.addEventListener('click', this.menuHide)
     },
     beforeDestroy () {

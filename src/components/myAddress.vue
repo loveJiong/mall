@@ -71,7 +71,7 @@ export default {
   },
   methods: {
         async init () {
-            let addressRes = await getAddress(1)
+            let addressRes = await getAddress(this.userInfo.id)
             if (addressRes.success && addressRes.data.length > 0) {
                 this.form = addressRes.data[0]
             } else if (addressRes.success && addressRes.data.length === 0) {
@@ -82,7 +82,7 @@ export default {
         async submit () {
             console.log(this.form)
             if (this.isAdd) {
-                let data = Object.assign({}, this.form, {customerId: 1})
+                let data = Object.assign({}, this.form, {customerId: this.userInfo.id})
                 console.log(data)
                 let newAddressRes = await newAddress(data)
                 if (newAddressRes.success) {
@@ -91,7 +91,7 @@ export default {
                     this.$message.error('新增地址失败，请稍后重试。')
                 }
             } else {
-                let data = Object.assign({}, this.form, {customerId: 1})
+                let data = Object.assign({}, this.form, {customerId: this.userInfo.id})
                 console.log(data)
                 let updateAddressRes = await updateAddress(data)
                 console.log(updateAddressRes)

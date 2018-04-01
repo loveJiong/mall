@@ -1,5 +1,5 @@
 <template>
-    <div class="login">
+    <div class="login" v-if="!haveCache">
         <div class="loing-bg">
         </div>
         <div class="login-form">
@@ -31,22 +31,20 @@ export default {
                 customerName: '',
                 password: ''
             },
-            errorText: ''
+            errorText: '',
+            haveCache: true
         }
     },
     computed: {
         userInfo () {
             return this.$store.state.userInfo
-        },
-        companyList () {
-            return this.$store.state.companyList
         }
     },
     mounted () {
-        if (this.userInfo && this.companyList.length > 0) {
-            this.$router.push('/home')
-        } else if (this.userInfo) {
+        if (this.userInfo) {
             this.getComanyList(this.userInfo.id)
+        } else {
+            this.haveCache = false
         }
     },
     methods: {

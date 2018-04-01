@@ -24,6 +24,12 @@
                 </li>
             </ul>
         </div>
+		<div class="no-company" v-if="noCompany">
+			<i class="el-icon-warning"></i>
+			<span class="title">当前没有商家</span>
+			<span class="text">你目前没有添加任何商家，你可以点击左右上角的添加商家进行添加！</span>
+			<router-link to="/addCompany">去添加</router-link>
+		</div>
         <foot-guide></foot-guide>
     </div>
 </template>
@@ -40,6 +46,9 @@ export default {
 		footGuide
 	},
 	computed: {
+		noCompany () {
+			return this.$store.state.companyList.length <= 0
+		},
 		companyList () {
 			console.log(this.$store.state.companyList)
             return this.$store.state.companyList
@@ -128,4 +137,32 @@ $imgMargin: 20px;
 		border: 1px solid #e45c28;
 	}
 }
+
+.no-company {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 0 20px;
+	padding-top: 40%;
+	i {
+		color: #888888;
+		font-size: 60px;
+	}
+	span {
+		text-align: center;
+	}
+	.title {
+		margin-top: 10px;
+		@include sc(16px, #000000);
+	}
+	.text {
+		margin-top: 10px;
+		@include sc(14px, #888888);
+	}
+	a {
+		margin-top: 10px;
+		@include sc(14px, $blue);
+	}
+}
+
 </style>

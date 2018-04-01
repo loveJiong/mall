@@ -65,8 +65,13 @@ export default {
 		}
 	},
     mounted () {
+        if (this.companyList.length > 0) {
+            this.active = this.tabs[0]
+		} else {
+			this.$message.error('你当前没有添加商家，请先添加商家！')
+			this.$router.push('/addCompany')
+		}
         document.addEventListener('click', this.menuHide)
-        this.active = this.tabs[0]
     },
     beforeDestroy () {
         document.removeEventListener('click', this.menuHide)

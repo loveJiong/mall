@@ -3,8 +3,6 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 let userInfo = localStorage.userInfo ? JSON.parse(localStorage.userInfo) : null
-let companyList = localStorage.companyList ? JSON.parse(localStorage.companyList) : []
-let activeCompany = localStorage.activeCompany ? JSON.parse(localStorage.activeCompany) : null
 
 function setCompany (company) {
     company.cart = {}
@@ -15,10 +13,10 @@ function setCompany (company) {
 export default new Vuex.Store({
     state: {
         userInfo,
-        companyList,
-        activeCompany,
+        companyList: [],
+        activeCompany: {},
         categoryList: [],
-        activeCategory: null
+        activeCategory: {}
     },
     mutations: {
         setUserInfo (state, userInfo) {
@@ -31,9 +29,7 @@ export default new Vuex.Store({
             if (companyList.length > 0) {
                 state.activeCompany = state.companyList[0]
                 state.activeCompany.isActive = true
-                localStorage.activeCompany = JSON.stringify(state.activeCompany)
             }
-            localStorage.companyList = JSON.stringify(state.companyList)
         },
         setActiveCompany (state, company) {
             if (state.activeCompany) {
@@ -41,17 +37,6 @@ export default new Vuex.Store({
             }
             state.activeCompany = company
             state.activeCompany.isActive = true
-            localStorage.activeCompany = JSON.stringify(state.activeCompany)
-        },
-        pushCompany (state, company) {
-            setCompany(company)
-            state.companyList.push(company)
-            if (state.companyList.length < 2) {
-                state.activeCompany = state.companyList[0]
-                state.activeCompany.isActive = true
-                localStorage.activeCompany = JSON.stringify(state.activeCompany)
-            }
-            localStorage.companyList = JSON.stringify(state.companyList)
         },
         setCategoryList (state, categoryList) {
             state.categoryList = []
