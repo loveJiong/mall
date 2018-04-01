@@ -3,11 +3,26 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 let userInfo = localStorage.userInfo ? JSON.parse(localStorage.userInfo) : null
+let cart = localStorage.cart ? JSON.parse(localStorage.cart) : {}
 
 function setCompany (company) {
-    company.cart = {}
     company.price = 0
     company.isActive = false
+}
+
+function getGoodCart (good) {
+    console.log(good)
+    return {
+        id: good.id,
+        name: good.name,
+        price: good.price,
+        url: good.url,
+        zk: good.zk ? good.zk : 1,
+        num: good.num,
+        origin: 0,
+        total: 0,
+        count: good.count
+    }
 }
 
 export default new Vuex.Store({
@@ -16,7 +31,8 @@ export default new Vuex.Store({
         companyList: [],
         activeCompany: {},
         categoryList: [],
-        activeCategory: {}
+        activeCategory: {},
+        cart
     },
     mutations: {
         setUserInfo (state, userInfo) {
@@ -55,6 +71,40 @@ export default new Vuex.Store({
             }
             state.activeCategory = category
             state.activeCategory.isActive = true
+        },
+        logout (state) {
+            state.userInfo = null
+            state.companyList = []
+            state.activeCompany = {}
+            state.activeCategory = {}
+            state.categoryList = []
+            localStorage.userInfo = ''
+        },
+        addToCart (state, data) {
+            let companyId = data.company.companyId
+            let good = data.good
+            let num = good.num
+            if (!state.cart[companyId]) state.cart[companyId] = {}
+            if (!state.cart[companyId][good.id]) state.cart[companyId][good.id] = getGoodCart(good)
+            let stateGood = state.cart[companyId][good.id]
+            stateGood.num = num
+            stateGood.origin = stateGood.num * stateGood.price
+            stateGood.total = stateGood.origin * stateGood.zk
+            localStorage.cart = JSON.stringify(state.cart)
+            console.log(state.cart)
+        },
+        removeToCart (state, data) {
+            let companyId = data.company.companyId
+            let good = data.good
+            let num = good.num
+            let stateGood = state.cart[companyId][good.id]
+            stateGood.num = num
+            console.log(stateGood.num)
+            stateGood.origin = stateGood.num * stateGood.price
+            stateGood.total = stateGood.origin * stateGood.zk
+            if (state.cart[companyId][good.id].num === 0) delete state.cart[companyId][good.id]
+            localStorage.cart = JSON.stringify(state.cart)
+            console.log(state.cart)
         }
     }
 })

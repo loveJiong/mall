@@ -41,6 +41,12 @@
                     <i class="el-icon-arrow-right"></i>
                 </li>
             </ul>
+
+            <ul class="menus" @click="logout">
+                <li class="logout">
+                    退出登录
+                </li>
+            </ul>
         </div>
         <foot-guide></foot-guide>
     </div>
@@ -66,6 +72,22 @@ export default {
     methods: {
         toAddress () {
             this.$router.push('/mine/myAddress')
+        },
+        logout () {
+            this.$confirm('确认退出当前账号？', '退出确认', {
+                confirmButtonText: '确认退出',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.$store.commit('logout')
+                this.$router.push('/')
+                this.$message({
+                    type: 'success',
+                    message: '退出成功！'
+                })
+            }, () => {
+                console.log('cancel')
+            })
         }
     }
 }
@@ -96,6 +118,10 @@ export default {
             background-color: $white;
             border-top: 1px solid #c8c7cc;
             border-bottom: 1px solid #c8c7cc;
+            .logout {
+                justify-content: center;
+                color: #e77d69;
+            }
             li {
                 display: flex;
                 align-items: center;
@@ -149,4 +175,5 @@ export default {
         }
     }
 }
+
 </style>

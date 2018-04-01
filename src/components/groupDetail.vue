@@ -36,7 +36,11 @@
                     <span>{{good.name}}</span>
                     <div>
                         <span class="price">{{good.price}}</span>
-                        <i class="el-icon-circle-plus-outline"></i>
+                        <div class="add-remove">
+                            <i class="el-icon-remove" @click="removeToCart(good)" v-if="good.num > 0"></i>
+                            <span class="num" v-if="good.num > 0">{{good.num}}</span>
+                            <i class="el-icon-circle-plus" @click="addToCart(good)"></i>
+                        </div>
                     </div>
                 </li>
             </ul>
@@ -85,6 +89,9 @@ export default {
         },
         activeCompany () {
             return this.$store.state.activeCompany
+        },
+        cart () {
+            return this.$store.state.cart
         }
     },
     beforeDestroy () {
@@ -105,13 +112,16 @@ export default {
                 let index = this.getSecondaryIndex(this.activeSecondary)
                 let goodsRes = await getGoods(this.activeCompany.companyId, this.activeSecondary.guid)
                 if (goodsRes.success && goodsRes.data.length > 0) {
+                    this.setGood(goodsRes.data)
                     this.goods = goodsRes.data
+                    console.log(this.goods)
                     this.offset = goodsRes.offset
                     this.index = index
                 } else if (goodsRes.success) {
                     for (++index; index < this.activeCategory.secondaryList.length; index++) {
                         goodsRes = await getGoods(this.activeCompany.companyId, this.activeCategory.secondaryList[index].guid)
                         if (goodsRes.success && goodsRes.data.length > 0) {
+                            this.setGood(goodsRes.data)
                             this.goods = goodsRes.data
                             this.offset = goodsRes.offset
                             this.index = index
@@ -123,11 +133,19 @@ export default {
                 let goodsRes = await getGoods(this.activeCompany.companyId, this.activeCategory.guid)
                 console.log(goodsRes)
                 if (goodsRes.success) {
+                    this.setGood(goodsRes.data)
                     this.goods = goodsRes.data
                     this.offset = goodsRes.offset
                     this.index = -1
                 }
             }
+        },
+        setGood (goods) {
+            let companyId = this.activeCompany.companyId
+            goods.forEach(good => {
+                if (this.cart[companyId] && this.cart[companyId][good.id]) good.num = this.cart[companyId][good.id].num
+                else good.num = 0
+            })
         },
         getSecondaryIndex (secondary) {
             return this.activeCategory.secondaryList.indexOf(secondary)
@@ -172,6 +190,7 @@ export default {
                 let goodsRes = await getGoods(this.activeCompany.companyId, this.activeCategory.secondaryList[index].guid, this.offset)
                 console.log(goodsRes)
                 if (goodsRes.success && goodsRes.data.length > 0) {
+                    this.setGood(goodsRes.data)
                     this.goods.push(...goodsRes.data)
                     this.offset = goodsRes.offset
                     loaded('done')
@@ -179,6 +198,7 @@ export default {
                     for (++index; index < this.activeCategory.secondaryList.length; index++) {
                         goodsRes = await getGoods(this.activeCompany.companyId, this.activeCategory.secondaryList[index].guid)
                         if (goodsRes.success && goodsRes.data.length > 0) {
+                            this.setGood(goodsRes.data)
                             this.goods.push(...goodsRes.data)
                             this.offset = goodsRes.offset
                             this.index = index
@@ -196,6 +216,7 @@ export default {
                 let goodsRes = await getGoods(this.activeCompany.companyId, this.activeCategory.guid, this.offset)
                 console.log(goodsRes)
                 if (goodsRes.success && goodsRes.data.length > 0) {
+                    this.setGood(goodsRes.data)
                     this.goods.push(...goodsRes.data)
                     this.offset = goodsRes.offset
                     this.index = -1
@@ -204,6 +225,14 @@ export default {
                     loaded('fail')
                 }
             }
+        },
+        addToCart (good) {
+            good.num++
+            this.$store.commit('addToCart', {company: this.activeCompany, good})
+        },
+        removeToCart (good) {
+            good.num--
+            this.$store.commit('removeToCart', {company: this.activeCompany, good})
         }
     }
 }
@@ -325,11 +354,22 @@ export default {
                 .price {
                     @include sc(12px, #5eacf0);
                 }
-                i {
-                    position: absolute;
-                    right: 5px;
+                .add-remove {
+                    float: right;
                     top: 3px;
-                    @include sc(18px, #dad8d6);
+                    right: 5px;
+                }
+                .num {
+                    position: relative;
+                    top: -2px;
+                    padding: 0;
+                }
+                .el-icon-remove {
+                    @include sc(18px, #f56c6c);
+                }
+                .el-icon-circle-plus {
+                    top: 3px;
+                    @include sc(18px, #5eacf0);
                 }
             }
         }

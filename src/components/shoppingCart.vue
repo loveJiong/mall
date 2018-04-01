@@ -19,11 +19,30 @@
             </div>
         </div>
         <div class="container">
-            <div class="no-goods">
+            <div class="no-goods" v-if="!haveGoods">
                 <i class="el-icon-warning"></i>
                 <span class="title">当前订单是空的</span>
                 <span class="text">你目前没有订购任何产品，你可以点击左下角的产品图册进行选购！</span>
                 <router-link to="/productPictures">去看看</router-link>
+            </div>
+            <div class="have-goods" v-if="haveGoods">
+                <ul class="good-list">
+                    <li class="good-item" v-for="(good, index) in goods" v-bind:key="index">
+                        <img v-bind:src="good.url" alt="图片" width="100" height="70">
+                        <div class="good-introduction">
+                            <span class="good-name">{{good.name}}</span>
+                            <span class="good-price">{{good.price}}</span>
+                        </div>
+                        <div class="good-detail">
+                            <span class="good-total-price">总价：{{good.total}}</span>
+                            <div class="good-num">
+                                <i class="el-icon-remove" @click="removeToCart(good)" v-if="good.num > 0"></i>
+                                <span class="count" v-if="good.num > 0">{{good.num}}</span>
+                                <i class="el-icon-circle-plus" @click="addToCart(good)"></i>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
             </div>
         </div>
         <foot-guide></foot-guide>
@@ -38,7 +57,8 @@ export default {
     name: 'shoppingCart',
     data () {
         return {
-            menuShow: false
+            menuShow: false,
+            goods: []
         }
     },
     computed: {
@@ -47,13 +67,30 @@ export default {
         },
 		activeCompany () {
 			return this.$store.state.activeCompany
-		}
+        },
+        cart () {
+            return this.$store.state.cart
+        },
+        haveGoods () {
+            let arr = -1
+            if (this.cart[this.activeCompany.companyId]) {
+                arr = Object.keys(this.cart[this.activeCompany.companyId])
+            }
+            return arr.length > 0
+        }
 	},
     components: {
         footGuide
     },
     mounted () {
+        console.log(this.goods)
         if (this.companyList.length > 0) {
+            if (this.cart[this.activeCompany.companyId]) {
+                let arr = Object.keys(this.cart[this.activeCompany.companyId])
+                this.goods = arr.map(key => {
+                    return this.cart[this.activeCompany.companyId][key]
+                })
+            }
 		} else {
 			this.$message.error('你当前没有添加商家，请先添加商家！')
 			this.$router.push('/addCompany')
@@ -86,6 +123,15 @@ export default {
             if (this.menuShow) {
                 event.preventDefault()
             }
+        },
+        addToCart (good) {
+            console.log(good)
+            good.num++
+            this.$store.commit('addToCart', {company: this.activeCompany, good})
+        },
+        removeToCart (good) {
+            good.num--
+            this.$store.commit('removeToCart', {company: this.activeCompany, good})
         }
     }
 }
@@ -95,6 +141,8 @@ export default {
 <style lang="scss" scoped>
 @import 'src/style/config';
 .shopping-cart {
+    height: 100%;
+    overflow-y: auto;
     .header {
         position: fixed;
         width: 100%;
@@ -180,6 +228,45 @@ export default {
                 @include sc(14px, $blue);
             }
         }
+    }
+}
+
+.have-goods {
+    padding-bottom: 45px;
+}
+
+.good-item {
+    display: flex;
+    height: 100px;
+    padding: 10px;
+    border-bottom: 1px solid #c8c7cc;
+    font-size: 14px;
+    background: $white;
+    position: relative;
+}
+
+.good-introduction {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 150px;
+}
+
+.good-price {
+    color: #5eacf0;
+}
+
+.good-detail {
+    position: absolute;
+    right: 20px;
+    bottom: 25px;
+    text-align: right;
+    .el-icon-remove {
+        @include sc(15px, #f56c6c);
+    }
+    .el-icon-circle-plus {
+        top: 3px;
+        @include sc(15px, #5eacf0);
     }
 }
 </style>
