@@ -34,7 +34,7 @@
                             <span class="good-price">{{good.price}}</span>
                         </div>
                         <div class="good-detail">
-                            <span class="good-total-price">总价：{{good.total}}</span>
+                            <span class="good-total-price">总价：{{good.totalPrice}}</span>
                             <div class="good-num">
                                 <i class="el-icon-remove" @click="removeToCart(good)" v-if="good.num > 0"></i>
                                 <span class="count" v-if="good.num > 0">{{good.num}}</span>
@@ -43,6 +43,10 @@
                         </div>
                     </li>
                 </ul>
+                <div class="commit-order">
+                    <input type="text" class="order-bz" v-model="bz" placeholder="在这里写下您的订单备注">
+                    <el-button type="primary" round @click="commitOrder">提交订单</el-button>
+                </div>
             </div>
         </div>
         <foot-guide></foot-guide>
@@ -51,7 +55,7 @@
 </template>
 
 <script>
-// import {getComanyList} from './../service/getData'
+import {commitOrder} from './../service/getData'
 import footGuide from './footGuide'
 export default {
     name: 'shoppingCart',
@@ -59,10 +63,14 @@ export default {
         return {
             menuShow: false,
             goods: [],
-            haveGoods: false
+            haveGoods: false,
+            bz: ''
         }
     },
     computed: {
+		userInfo () {
+            return this.$store.state.userInfo
+        },
 		companyList () {
             return this.$store.state.companyList
         },
@@ -92,6 +100,7 @@ export default {
     methods: {
         init () {
             this.haveGoods = false
+            this.bz = ''
             this.goods = []
             if (this.cart[this.activeCompany.companyId]) {
                 let arr = Object.keys(this.cart[this.activeCompany.companyId])
@@ -133,6 +142,20 @@ export default {
             good.num--
             this.$store.commit('removeToCart', {company: this.activeCompany, good})
             this.init()
+        },
+        async commitOrder () {
+            let data = {
+                companyId: this.activeCompany.companyId,
+                customerId: this.userInfo.id,
+                bz: this.bz,
+                goods: this.goods
+            }
+            let commitRes = await commitOrder(data)
+            if (commitRes.success) {
+                this.$message.success('提交订单成功！')
+                this.$store.commit('clearCart', this.activeCompany.companyId)
+                this.init()
+            }
         }
     }
 }
@@ -233,7 +256,7 @@ export default {
 }
 
 .have-goods {
-    padding-bottom: 45px;
+    padding-bottom: 84px;
 }
 
 .good-item {
@@ -268,6 +291,29 @@ export default {
     .el-icon-circle-plus {
         top: 3px;
         @include sc(15px, #5eacf0);
+    }
+}
+
+.commit-order {
+    display: flex;
+    position: absolute;
+    bottom: 46px;
+    width: 100%;
+    justify-content: flex-end;
+    background: #fff;
+    align-items: center;
+    padding: 5px 20px;
+    border-top: 1px solid #c8c7cc;
+    .order-bz {
+        width: calc(100% - 90px - 10px);
+        border: 1px solid #409EFF;
+        border-radius: 10px;
+        margin-right: 10px;
+        height: 25px;
+        padding: 0 5px;
+    }
+    .el-button.is-round {
+        padding: 6px 16px;
     }
 }
 </style>

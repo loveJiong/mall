@@ -228,7 +228,7 @@ export default {
         },
         addToCart (good) {
             good.num++
-            this.$store.commit('addToCart', {company: this.activeCompany, good})
+            this.$store.commit('addToCart', {company: this.activeCompany, good, categoryGUID: this.activeCategory.guid})
         },
         removeToCart (good) {
             good.num--

@@ -10,17 +10,18 @@ function setCompany (company) {
     company.isActive = false
 }
 
-function getGoodCart (good) {
+function getGoodCart (good, categoryGUID) {
     console.log(good)
     return {
-        id: good.id,
+        categoryGUID,
+        goodNO: good.id,
         name: good.name,
         price: good.price,
         url: good.url,
         zk: good.zk ? good.zk : 1,
         num: good.num,
         origin: 0,
-        total: 0,
+        totalPrice: 0,
         count: good.count
     }
 }
@@ -85,13 +86,12 @@ export default new Vuex.Store({
             let good = data.good
             let num = good.num
             if (!state.cart[companyId]) state.cart[companyId] = {}
-            if (!state.cart[companyId][good.id]) state.cart[companyId][good.id] = getGoodCart(good)
+            if (!state.cart[companyId][good.id]) state.cart[companyId][good.id] = getGoodCart(good, data.categoryGUID)
             let stateGood = state.cart[companyId][good.id]
             stateGood.num = num
             stateGood.origin = stateGood.num * stateGood.price
-            stateGood.total = stateGood.origin * stateGood.zk
+            stateGood.totalPrice = stateGood.origin * stateGood.zk
             localStorage.cart = JSON.stringify(state.cart)
-            console.log(state.cart)
         },
         removeToCart (state, data) {
             let companyId = data.company.companyId
@@ -99,12 +99,14 @@ export default new Vuex.Store({
             let num = good.num
             let stateGood = state.cart[companyId][good.id]
             stateGood.num = num
-            console.log(stateGood.num)
             stateGood.origin = stateGood.num * stateGood.price
-            stateGood.total = stateGood.origin * stateGood.zk
+            stateGood.totalPrice = stateGood.origin * stateGood.zk
             if (state.cart[companyId][good.id].num === 0) delete state.cart[companyId][good.id]
             localStorage.cart = JSON.stringify(state.cart)
-            console.log(state.cart)
+        },
+        clearCart (state, companyId) {
+            delete state.cart[companyId]
+            localStorage.cart = JSON.stringify(state.cart)
         }
     }
 })

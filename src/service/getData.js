@@ -73,3 +73,7 @@ export const getAddress = (customerId) => http('/customer/address/list', 'GET', 
 export const newAddress = (data) => http('/customer/address/add', 'POST', headers, data)
 
 export const updateAddress = (data) => http('/customer/address/update', 'POST', headers, data)
+
+export const commitOrder = (data) => http('/order/commit', 'POST', headers, data)
+
+export const getOrder = (customerId, companyId, status) => http('/order/all', 'GET', headers, {customerId, companyId, status})
