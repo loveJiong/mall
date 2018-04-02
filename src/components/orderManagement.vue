@@ -13,7 +13,6 @@
                 <ul v-show="menuShow" class="companyList">
                     <li v-for="(company, index) in companyList" v-bind:key="index" v-bind:class="{ active: company.isActive}" @click.stop="companyChoose(company)">
                         <span class="company-name">{{company.companyDisplayName}}</span>
-                        <span class="company-price">{{company.price}}</span>
                     </li>
                 </ul>
             </div>
@@ -226,9 +225,8 @@ export default {
         padding-bottom: 80px;
     }
     .order {
-        background: #ffff;
+        background: #ffffff;
         margin-bottom: 10px;
-        padding-left: 15px;
         padding: 10px;
     }
     .order-text {

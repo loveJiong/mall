@@ -15,6 +15,7 @@ function getGoodCart (good, categoryGUID) {
     return {
         categoryGUID,
         goodNO: good.id,
+        id: good.id,
         name: good.name,
         price: good.price,
         url: good.url,
