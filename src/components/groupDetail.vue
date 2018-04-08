@@ -30,15 +30,25 @@
         <pull-to :bottom-load-method="refresh" :bottom-config="{failText: '没有更多', doneText: '', stayDistance: 0}" :bottom-block-height="0">
             <ul class="container">
                 <li v-for="(good, index) in goods" v-bind:key="index">
+                    <div class="good-num" v-if="good.num > 0">{{good.num}}</div>
+                    <div class="good-no">REF:{{good.no}}</div>
                     <div class="good-img">
                         <img class="good-img-icon" v-bind:src="good.url" alt="图片">
                     </div>
                     <span>{{good.name}}</span>
                     <div>
-                        <span class="price">{{good.price}}</span>
+                        <div class="good-detail">
+                            <span class="good-count">库存：{{good.count}}</span>
+                            <span class="good-pck">包装数：{{good.bagCount}}/{{good.bagCount}}</span>
+                        </div>
+                        <span v-if="good.zk == '0'" class="price">{{good.price}}€</span>
+                        <div v-if="good.zk != '0'" class="have-zk">
+                            <span class="zk-price">{{zkPrice(good.price, good.zk)}}€</span>
+                            <span class="origin-price">{{good.price}}</span>
+                            <span class="zk">(-{{good.zk}}%)</span>
+                        </div>
                         <div class="add-remove">
                             <i class="el-icon-remove" @click="removeToCart(good)" v-if="good.num > 0"></i>
-                            <span class="num" v-if="good.num > 0">{{good.num}}</span>
                             <i class="el-icon-circle-plus" @click="addToCart(good)"></i>
                         </div>
                     </div>
@@ -153,15 +163,15 @@ export default {
         menuToggle () {
             this.menuShow = !this.menuShow
             if (this.menuShow) {
-                document.querySelector('body').setAttribute('style', 'overflow:hidden')
+                document.querySelector('body').setAttribute('style', 'overflow:hidden;background:#ffffff')
             } else {
-                document.querySelector('body').setAttribute('style', 'overflow:auto')
+                document.querySelector('body').setAttribute('style', 'overflow:auto;background:#ffffff')
             }
         },
         menuHide () {
             if (this.menuShow) {
                 this.menuShow = false
-                document.querySelector('body').setAttribute('style', 'overflow:auto')
+                document.querySelector('body').setAttribute('style', 'overflow:auto;background:#ffffff')
             }
         },
         preventTouchmove (event) {
@@ -182,7 +192,7 @@ export default {
             this.menuShow = false
             this.activeSecondary = secondary
             this.getGoods()
-            document.querySelector('body').setAttribute('style', 'overflow:auto')
+            document.querySelector('body').setAttribute('style', 'overflow:auto;background:#ffffff')
         },
         async refresh (loaded) {
             let index = this.index
@@ -233,6 +243,11 @@ export default {
         removeToCart (good) {
             good.num--
             this.$store.commit('removeToCart', {company: this.activeCompany, good})
+        },
+        zkPrice (price, zk) {
+            let num = price * (100 - zk) / 100
+            num = num.toFixed(2)
+            return num
         }
     }
 }
@@ -337,6 +352,7 @@ export default {
         flex-wrap: wrap;
         padding: 0 2% 0 2%;
         li {
+            position: relative;
             display: flex;
             flex-direction: column;
             width: 49%;
@@ -346,30 +362,61 @@ export default {
             padding: 15px 0 10px 0;
             span {
                 @include sc(12px, #555555);
-                margin-top: 15px;
                 padding: 0 5px;
+            }
+            .good-num {
+                position: absolute;
+                right: 5px;
+                top: 2px;
+                font-size: 12px;
+                background: red;
+                border-radius: 100px;
+                color: white;
+                z-index: 1;
+                padding: 0 5px;
+                height: 20px;
+                line-height: 20px;
+                text-align: center;
+            }
+            .good-no {
+                position: absolute;
+                left: 5px;
+                top: 2px;
+                font-size: 12px;
             }
             div {
                 position: relative;
                 .price {
-                    @include sc(12px, #5eacf0);
+                    @include sc(14px, #5eacf0);
+                }
+                .have-zk {
+                    display: inline-block;
+                    padding: 0 5px;
+                    span {
+                        padding: 0;
+                    }
+                    .zk-price {
+                         @include sc(12px, #5eacf0);
+                    }
+                    .origin-price {
+                        font-size: 12px;
+                        text-decoration: line-through;
+                    }
+                    .zk {
+                        color: #f56c6c;
+                    }
                 }
                 .add-remove {
                     float: right;
                     top: 3px;
                     right: 5px;
                 }
-                .num {
-                    position: relative;
-                    top: -2px;
-                    padding: 0;
-                }
                 .el-icon-remove {
-                    @include sc(18px, #f56c6c);
+                    @include sc(22px, #f56c6c);
                 }
                 .el-icon-circle-plus {
                     top: 3px;
-                    @include sc(18px, #5eacf0);
+                    @include sc(22px, #5eacf0);
                 }
             }
         }
@@ -387,6 +434,10 @@ export default {
     }
     .good-img-icon {
 		@include wh(100%, 100%);
+    }
+    .good-detail {
+        display: flex;
+        justify-content: space-between;
     }
 }
 </style>

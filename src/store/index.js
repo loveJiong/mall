@@ -19,7 +19,7 @@ function getGoodCart (good, categoryGUID) {
         name: good.name,
         price: good.price,
         url: good.url,
-        zk: good.zk ? good.zk : 1,
+        zk: good.zk ? good.zk : 0,
         num: good.num,
         origin: 0,
         totalPrice: 0,
@@ -91,7 +91,7 @@ export default new Vuex.Store({
             let stateGood = state.cart[companyId][good.id]
             stateGood.num = num
             stateGood.origin = stateGood.num * stateGood.price
-            stateGood.totalPrice = stateGood.origin * stateGood.zk
+            stateGood.totalPrice = (stateGood.origin * (100 - stateGood.zk) / 100).toFixed(2)
             localStorage.cart = JSON.stringify(state.cart)
         },
         removeToCart (state, data) {
@@ -101,7 +101,7 @@ export default new Vuex.Store({
             let stateGood = state.cart[companyId][good.id]
             stateGood.num = num
             stateGood.origin = stateGood.num * stateGood.price
-            stateGood.totalPrice = stateGood.origin * stateGood.zk
+            stateGood.totalPrice = (stateGood.origin * (100 - stateGood.zk) / 100).toFixed(2)
             if (state.cart[companyId][good.id].num === 0) delete state.cart[companyId][good.id]
             localStorage.cart = JSON.stringify(state.cart)
         },

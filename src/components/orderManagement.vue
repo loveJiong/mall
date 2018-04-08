@@ -30,7 +30,7 @@
                     <div class="order-detail">
                         <div class="num-price">
                             <p class="order-num"><span class="order-title">数量：</span>{{order.count}}</p>
-                            <p class="order-price"><span class="order-title">金额：</span>{{order.hj}}</p>
+                            <p class="order-price"><span class="order-title">金额：</span>{{order.hj}}€</p>
                         </div>
                         <span class="order-time">{{order.createTime}}</span>
                     </div>

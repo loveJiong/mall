@@ -30,10 +30,15 @@
                         <img v-bind:src="good.url" alt="图片" width="100" height="70">
                         <div class="good-introduction">
                             <span class="good-name">{{good.name}}</span>
-                            <span class="good-price">{{good.price}}</span>
+                            <span v-if="good.zk == '0'" class="good-price">{{good.price}}€</span>
+                            <div v-if="good.zk != '0'" class="have-zk">
+                                <span class="zk-price">{{zkPrice(good.price, good.zk)}}€</span>
+                                <span class="origin-price">{{good.price}}</span>
+                                <span class="zk">(-{{good.zk}}%)</span>
+                            </div>
                         </div>
                         <div class="good-detail">
-                            <span class="good-total-price">总价：{{good.totalPrice}}</span>
+                            <span class="good-total-price">总价：{{good.totalPrice}}€</span>
                             <div class="good-num">
                                 <i class="el-icon-remove" @click="removeToCart(good)" v-if="good.num > 0"></i>
                                 <span class="count" v-if="good.num > 0">{{good.num}}</span>
@@ -155,6 +160,11 @@ export default {
                 this.$store.commit('clearCart', this.activeCompany.companyId)
                 this.init()
             }
+        },
+        zkPrice (price, zk) {
+            let num = price * (100 - zk) / 100
+            num = num.toFixed(2)
+            return num
         }
     }
 }
@@ -277,6 +287,24 @@ export default {
 
 .good-price {
     color: #5eacf0;
+}
+
+.have-zk {
+    display: inline-block;
+    padding: 0 5px;
+    span {
+        padding: 0;
+    }
+    .zk-price {
+            @include sc(12px, #5eacf0);
+    }
+    .origin-price {
+        font-size: 12px;
+        text-decoration: line-through;
+    }
+    .zk {
+        color: #f56c6c;
+    }
 }
 
 .good-detail {
