@@ -31,7 +31,7 @@
             <ul class="container">
                 <li v-for="(good, index) in goods" v-bind:key="index">
                     <div class="good-img">
-                        <img v-bind:src="good.url" alt="图片">
+                        <img class="good-img-icon" v-bind:src="good.url" alt="图片">
                     </div>
                     <span>{{good.name}}</span>
                     <div>
@@ -384,6 +384,9 @@ export default {
         content: "";
         display: inline-block;
         padding-bottom: 68%;
+    }
+    .good-img-icon {
+		@include wh(100%, 100%);
     }
 }
 </style>
