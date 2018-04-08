@@ -21,7 +21,7 @@
                 </ul>
                 <ul class="secondaryList">
                     <li v-for="(secondary, index) in secondaryList" v-bind:key="index" @click.stop="secondaryChoose(secondary)">
-                        <img v-bind:src="secondary.imgSrc" alt="图片">
+                        <img v-bind:src="secondary.url" alt="图片">
                         <span>{{secondary.name}}</span>
                     </li>
                 </ul>
@@ -83,8 +83,8 @@ export default {
             })
         },
         secondaryList () {
-            return this.activeCategory.secondaryList.map((secondary) => {
-                if (secondary.level === 1) return secondary
+            return this.activeCategory.secondaryList.filter((secondary) => {
+                return secondary.level === 1
             })
         },
         activeCompany () {

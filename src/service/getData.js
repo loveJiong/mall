@@ -7,7 +7,8 @@ const headers = {
 }
 switch (process.env.NODE_ENV) {
     case 'development':
-        baseUrl = 'http://jesusl.cn:8080/dadi'
+        // baseUrl = 'http://jesusl.cn:8080/dadi'
+        baseUrl = 'http://old.dadisoft.cn/dadi'
         break
     case 'production':
         baseUrl = 'http://old.dadisoft.cn/dadi'
