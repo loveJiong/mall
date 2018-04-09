@@ -9,7 +9,7 @@
                 <i v-show="!menuShow" class="el-icon-caret-bottom"></i>
             </div>
             <div class="header-icons">
-                <router-link to="/shoppingCart" class="el-icon-goods"></router-link>
+                <a class="el-icon-goods" @click="toShoppingCart"></a>
                 <i class="el-icon-search"></i>
             </div>
             <div class="header-menu" v-show="menuShow">
@@ -74,6 +74,7 @@ export default {
             menuShow: false,
             goods: [],
             activeSecondary: null,
+            guid: null,
             offset: 0,
             index: -1
         }
@@ -104,17 +105,20 @@ export default {
             return this.$store.state.cart
         }
     },
-    beforeDestroy () {
-        document.querySelector('body').setAttribute('style', '')
-        document.removeEventListener('click', this.menuHide)
-    },
-    mounted () {
+    activated () {
         document.querySelector('body').setAttribute('style', 'background:#ffffff')
         document.addEventListener('click', this.menuHide)
-        if (this.secondaryList.length > 0) {
-            this.activeSecondary = this.secondaryList[0]
+        if (this.$route.params.refresh) {
+            this.initData()
+            if (this.secondaryList.length > 0) {
+                this.activeSecondary = this.secondaryList[0]
+            }
+            this.getGoods()
         }
-        this.getGoods()
+    },
+    deactivated () {
+        document.querySelector('body').setAttribute('style', '')
+        document.removeEventListener('click', this.menuHide)
     },
     methods: {
         async getGoods () {
@@ -149,6 +153,13 @@ export default {
                     this.index = -1
                 }
             }
+        },
+        initData () {
+            this.menuShow = false
+            this.goods = []
+            this.activeSecondary = null
+            this.offset = 0
+            this.index = -1
         },
         setGood (goods) {
             let companyId = this.activeCompany.companyId
@@ -248,6 +259,10 @@ export default {
             let num = price * (100 - zk) / 100
             num = num.toFixed(2)
             return num
+        },
+        toShoppingCart () {
+            this.$router.push('/shoppingCart')
+            this.$store.commit('setProductRoute', 'groupDetail')
         }
     }
 }
@@ -381,7 +396,7 @@ export default {
             .good-no {
                 position: absolute;
                 left: 5px;
-                top: 2px;
+                top: 0px;
                 font-size: 12px;
             }
             div {

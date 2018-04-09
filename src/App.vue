@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <router-view/>
+    <keep-alive include="groupDetail"><router-view></router-view></keep-alive>
   </div>
 </template>
 

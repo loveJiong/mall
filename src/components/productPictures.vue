@@ -52,6 +52,7 @@ export default {
 		footGuide
     },
 	mounted () {
+		this.$store.commit('setProductRoute', 'productPictures')
 		if (this.companyList.length > 0) {
 			this.getCategoryList()
 		} else {
@@ -74,7 +75,7 @@ export default {
         },
 		gotoDeatile (category) {
 			this.$store.commit('setActiveCategory', category)
-			this.$router.push('/productPictures/groupDetail')
+			this.$router.push({name: 'groupDetail', params: { refresh: true }})
 		},
 		menuToggle () {
 		this.menuShow = !this.menuShow

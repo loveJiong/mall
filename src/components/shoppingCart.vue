@@ -3,6 +3,7 @@
         <div class="header">
             <div class="shopping-title" @click.stop="''">
                 当前订单
+                <el-button class="shopping-continue" round size="mini" @click="toProduct">继续点货</el-button>
             </div>
             <div class="company-menu">
                 <div class="company-active" @click.stop="menuToggle">
@@ -49,7 +50,7 @@
                 </ul>
                 <div class="commit-order">
                     <input type="text" class="order-bz" v-model="bz" placeholder="在这里写下您的订单备注">
-                    <el-button type="primary" round @click="commitOrder">提交订单</el-button>
+                    <el-button type="primary" round @click="commitOrder">生成订单</el-button>
                 </div>
             </div>
         </div>
@@ -156,7 +157,7 @@ export default {
             }
             let commitRes = await commitOrder(data)
             if (commitRes.success) {
-                this.$message.success('提交订单成功！')
+                this.$message.success('生成订单成功！')
                 this.$store.commit('clearCart', this.activeCompany.companyId)
                 this.init()
             }
@@ -165,6 +166,9 @@ export default {
             let num = price * (100 - zk) / 100
             num = num.toFixed(2)
             return num
+        },
+        toProduct () {
+            this.$router.push({name: 'groupDetail', params: { refresh: false }})
         }
     }
 }
@@ -182,10 +186,16 @@ export default {
         z-index: 100;
         top: 0;
         .shopping-title {
+            position: relative;
             text-align: center;
             background-color: #89c4f4;
             color: $white;
             @include font(16px, 49px);
+            .shopping-continue {
+                position: absolute;
+                right: 10px;
+                top: 12px;
+            }
         }
         .company-menu {
             position: relative;
@@ -343,4 +353,5 @@ export default {
         padding: 6px 16px;
     }
 }
+
 </style>

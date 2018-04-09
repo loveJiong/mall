@@ -34,7 +34,8 @@ export default new Vuex.Store({
         activeCompany: {},
         categoryList: [],
         activeCategory: {},
-        cart
+        cart,
+        productRoute: 'productPictures'
     },
     mutations: {
         setUserInfo (state, userInfo) {
@@ -108,6 +109,9 @@ export default new Vuex.Store({
         clearCart (state, companyId) {
             delete state.cart[companyId]
             localStorage.cart = JSON.stringify(state.cart)
+        },
+        setProductRoute (state, route) {
+            state.productRoute = route
         }
     }
 })
