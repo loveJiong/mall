@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import {accountLogin, getComanyList} from './../service/getData'
+import {accountLogin, getCompanyList} from './../service/getData'
 export default {
     name: 'login',
     data () {
@@ -42,7 +42,7 @@ export default {
     },
     mounted () {
         if (this.userInfo) {
-            this.getComanyList(this.userInfo.id)
+            this.getCompanyList(this.userInfo.id)
         } else {
             this.haveCache = false
         }
@@ -53,13 +53,13 @@ export default {
             if (loginRes.success) {
                 this.$store.commit('setUserInfo', loginRes.data)
                 let customerId = loginRes.data.id
-                this.getComanyList(customerId)
+                this.getCompanyList(customerId)
             } else {
                 this.$message.error(loginRes.msg)
             }
         },
-        async getComanyList (customerId) {
-            let companyListRes = await getComanyList(customerId)
+        async getCompanyList (customerId) {
+            let companyListRes = await getCompanyList(customerId)
             if (companyListRes.success) {
                 this.$store.commit('setCompanyList', companyListRes.data)
                 console.log(companyListRes.data)

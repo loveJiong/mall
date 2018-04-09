@@ -59,7 +59,7 @@ async function http (url, method = 'GET', headers, data = {}) {
     }
 }
 
-export const getComanyList = (customerId) => http('/companyinfo/compnayList', 'GET', headers, {customerId})
+export const getCompanyList = (customerId) => http('/companyinfo/compnayList', 'GET', headers, {customerId})
 
 export const accountLogin = (loginInfo) => http('/customer/login', 'GET', headers, loginInfo)
 

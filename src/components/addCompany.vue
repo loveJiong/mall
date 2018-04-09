@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import {bindCustomer, getComanyList} from './../service/getData'
+import {bindCustomer, getCompanyList} from './../service/getData'
 export default {
     name: 'addCompany',
     data () {
@@ -56,7 +56,7 @@ export default {
                 let bindRes = await bindCustomer(this.userInfo.id, this.companyCode, this.customerCode)
                 console.log(bindRes)
                 if (bindRes.success) {
-                    let companyListRes = await getComanyList(this.userInfo.id)
+                    let companyListRes = await getCompanyList(this.userInfo.id)
                     if (companyListRes.success) {
                         this.$store.commit('setCompanyList', companyListRes.data)
                         this.$message.success('恭喜您，添加成功！')
