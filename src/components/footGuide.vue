@@ -18,7 +18,7 @@
                 <span>订单管理</span>
             </el-menu-item>
             <el-menu-item index="/mine">
-                <i class="el-icon-setting"></i>
+                <i class="el-icon-ump-gerenzhongxin"></i>
                 <span>我的</span>
             </el-menu-item>
         </el-menu>

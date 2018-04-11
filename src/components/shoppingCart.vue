@@ -60,7 +60,7 @@
 </template>
 
 <script>
-import {commitOrder} from './../service/getData'
+// import {commitOrder} from './../service/getData'
 import footGuide from './footGuide'
 export default {
     name: 'shoppingCart',
@@ -148,19 +148,23 @@ export default {
             this.$store.commit('removeToCart', {company: this.activeCompany, good})
             this.init()
         },
-        async commitOrder () {
-            let data = {
-                companyId: this.activeCompany.companyId,
-                customerId: this.userInfo.id,
-                bz: this.bz,
-                goods: this.goods
-            }
-            let commitRes = await commitOrder(data)
-            if (commitRes.success) {
-                this.$message.success('生成订单成功！')
-                this.$store.commit('clearCart', this.activeCompany.companyId)
-                this.init()
-            }
+        commitOrder () {
+            // let data = {
+            //     companyId: this.activeCompany.companyId,
+            //     customerId: this.userInfo.id,
+            //     bz: this.bz,
+            //     goods: this.goods
+            // }
+            // let commitRes = await commitOrder(data)
+            // if (commitRes.success) {
+            //     this.$message.success('生成订单成功！')
+            //     this.$store.commit('clearCart', this.activeCompany.companyId)
+            //     this.init()
+            // }
+            this.$store.commit('pushOrder', this.cart[this.activeCompany.companyId])
+            this.$store.commit('clearCart', this.activeCompany.companyId)
+            this.init()
+            this.$message.success('生成订单成功！')
         },
         zkPrice (price, zk) {
             let num = price * (100 - zk) / 100
@@ -168,7 +172,11 @@ export default {
             return num
         },
         toProduct () {
-            this.$router.push({name: 'groupDetail', params: { refresh: false }})
+            if (this.$store.state.activeCategory.guid) {
+                this.$router.push({name: 'groupDetail', params: { refresh: false }})
+            } else {
+                this.$router.push({name: 'productPictures'})
+            }
         }
     }
 }

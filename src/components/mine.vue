@@ -1,7 +1,7 @@
 <template>
     <div class="mine">
         <div class="header">
-            <i class="el-icon-info"></i>
+            <i class="el-icon-ump-gerenzhongxin"></i>
             <span>{{this.userInfo.name}}</span>
         </div>
         <div class="container">

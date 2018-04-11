@@ -65,7 +65,7 @@ export const accountLogin = (loginInfo) => http('/customer/login', 'GET', header
 
 export const getCategoryList = (companyId) => http('/goods/category', 'GET', headers, {companyId})
 
-export const getGoods = (companyId, categoryId, offset = 0) => http('/goods/list', 'GET', headers, {companyId, categoryId, offset})
+export const getGoods = (companyId, categoryId) => http('/goods/list', 'GET', headers, {companyId, categoryId})
 
 export const bindCustomer = (customerId, companyCode, customerCode) => http('/companyinfo/bindCustomer', 'GET', headers, {customerId, companyCode, customerCode})
 

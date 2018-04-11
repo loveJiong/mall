@@ -11,7 +11,7 @@
                 <li class="company" v-for="(company, index) in companyList" :key="index" v-bind:class="{ active: company.isActive}" @click="toProductPictures(company)">
                     <div class="information">
                         <div class="icon">
-                            <img v-bind:src="company.companyLogo" alt="icon">
+							<span v-bind:class="colorObj(index)">{{company.companyDisplayName.substring(0,1)}}</span>
                         </div>
                         <div class="detail">
                             <span class="name" v-bind:title="company.companyDisplayName">{{company.companyDisplayName}}</span>
@@ -52,12 +52,20 @@ export default {
 		companyList () {
 			console.log(this.$store.state.companyList)
             return this.$store.state.companyList
-        }
+		}
 	},
 	methods: {
 		toProductPictures (company) {
 			this.$store.commit('setActiveCompany', company)
 			this.$router.push('/productPictures')
+		},
+		colorObj (index) {
+			return {
+				pink: index % 4 === 0,
+				orange: index % 4 === 1,
+				blue: index % 4 === 2,
+				red: index % 4 === 3
+			}
 		}
 	}
 }
@@ -66,8 +74,6 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 @import 'src/style/config';
-$imgWith: 50px;
-$imgMargin: 20px;
 .home {
 	.home-title {
 		position: relative;
@@ -96,15 +102,24 @@ $imgMargin: 20px;
 			display: flex;
 			border-bottom: 1px solid #efeff4;
 			.icon {
-				img {
-					@include wh($imgWith,50px);
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				@include wh(50px,50px);
+				margin-right: 20px;
+				background-color: $bc;
+				span {
+					@include wh(40px,40px);
+					line-height: 40px;
+					text-align: center;
+					color: $white;
+					font-size: 30px;
 				}
-				margin-right: $imgMargin;
 			}
 			.detail {
 				display: flex;
-				flex-direction: column;
-				width: 100%;
+				align-items: center;
+				height: 50px;
 				.name {
 					@include sc(16px, #000000);
 					margin-top: 3px;
@@ -112,7 +127,6 @@ $imgMargin: 20px;
 					white-space: nowrap;
 					text-overflow: ellipsis;
 					overflow: auto;
-					width: calc(100% - 70px);
 				}
 				.mobile {
 					@include sc(12px, #aaaaaa);
@@ -163,6 +177,19 @@ $imgMargin: 20px;
 		margin-top: 10px;
 		@include sc(14px, $blue);
 	}
+}
+
+.red {
+	background-color: red;
+}
+.orange {
+	background-color: orange;
+}
+.blue {
+	background-color: blue;
+}
+.pink {
+	background-color: pink;
 }
 
 </style>

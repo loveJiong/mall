@@ -9,7 +9,7 @@
                 <i v-show="!menuShow" class="el-icon-caret-bottom"></i>
             </div>
             <div class="header-icons">
-                <a class="el-icon-goods" @click="toShoppingCart"></a>
+                <a class="el-icon-ump-cart" @click="toShoppingCart"></a>
                 <i class="el-icon-search"></i>
             </div>
             <div class="header-menu" v-show="menuShow">
@@ -75,8 +75,8 @@ export default {
             goods: [],
             activeSecondary: null,
             guid: null,
-            offset: 0,
-            index: -1
+            secondaryIndex: -1,
+            categoryIndex: -1
         }
     },
     computed: {
@@ -122,35 +122,34 @@ export default {
     },
     methods: {
         async getGoods () {
+            let scroll = document.getElementsByClassName('scroll-container')[0]
             if (this.activeSecondary) {
                 let index = this.getSecondaryIndex(this.activeSecondary)
                 let goodsRes = await getGoods(this.activeCompany.companyId, this.activeSecondary.guid)
                 if (goodsRes.success && goodsRes.data.length > 0) {
                     this.setGood(goodsRes.data)
                     this.goods = goodsRes.data
-                    console.log(this.goods)
-                    this.offset = goodsRes.offset
-                    this.index = index
+                    scroll.scrollTop = 0
+                    this.secondaryIndex = index + 1
                 } else if (goodsRes.success) {
                     for (++index; index < this.activeCategory.secondaryList.length; index++) {
                         goodsRes = await getGoods(this.activeCompany.companyId, this.activeCategory.secondaryList[index].guid)
                         if (goodsRes.success && goodsRes.data.length > 0) {
                             this.setGood(goodsRes.data)
                             this.goods = goodsRes.data
-                            this.offset = goodsRes.offset
-                            this.index = index
+                            scroll.scrollTop = 0
+                            this.secondaryIndex = index + 1
                             break
                         }
                     }
                 }
             } else {
                 let goodsRes = await getGoods(this.activeCompany.companyId, this.activeCategory.guid)
-                console.log(goodsRes)
                 if (goodsRes.success) {
                     this.setGood(goodsRes.data)
                     this.goods = goodsRes.data
-                    this.offset = goodsRes.offset
-                    this.index = -1
+                    scroll.scrollTop = 0
+                    this.secondaryIndex = -1
                 }
             }
         },
@@ -158,8 +157,7 @@ export default {
             this.menuShow = false
             this.goods = []
             this.activeSecondary = null
-            this.offset = 0
-            this.index = -1
+            this.secondaryIndex = -1
         },
         setGood (goods) {
             let companyId = this.activeCompany.companyId
@@ -170,6 +168,9 @@ export default {
         },
         getSecondaryIndex (secondary) {
             return this.activeCategory.secondaryList.indexOf(secondary)
+        },
+        getCategoryIndex (category) {
+            return this.categoryList.indexOf(category)
         },
         menuToggle () {
             this.menuShow = !this.menuShow
@@ -206,41 +207,42 @@ export default {
             document.querySelector('body').setAttribute('style', 'overflow:auto;background:#ffffff')
         },
         async refresh (loaded) {
-            let index = this.index
-            if (index >= 0) {
-                let goodsRes = await getGoods(this.activeCompany.companyId, this.activeCategory.secondaryList[index].guid, this.offset)
-                console.log(goodsRes)
+            let index = this.secondaryIndex
+            let scroll = document.getElementsByClassName('scroll-container')[0]
+            if (index >= 0 && index < this.activeCategory.secondaryList.length) {
+                let goodsRes = await getGoods(this.activeCompany.companyId, this.activeCategory.secondaryList[index].guid)
                 if (goodsRes.success && goodsRes.data.length > 0) {
                     this.setGood(goodsRes.data)
-                    this.goods.push(...goodsRes.data)
-                    this.offset = goodsRes.offset
+                    this.goods = goodsRes.data
+                    this.secondaryIndex = index + 1
+                    if (this.activeCategory.secondaryList[index].level === 1) {
+                        this.activeSecondary = this.activeCategory.secondaryList[index]
+                    }
+                    scroll.scrollTop = 0
                     loaded('done')
                 } else if (goodsRes.success) {
                     for (++index; index < this.activeCategory.secondaryList.length; index++) {
                         goodsRes = await getGoods(this.activeCompany.companyId, this.activeCategory.secondaryList[index].guid)
                         if (goodsRes.success && goodsRes.data.length > 0) {
                             this.setGood(goodsRes.data)
-                            this.goods.push(...goodsRes.data)
-                            this.offset = goodsRes.offset
-                            this.index = index
+                            this.goods = goodsRes.data
+                            this.secondaryIndex = index + 1
                             if (this.activeCategory.secondaryList[index].level === 1) {
                                 this.activeSecondary = this.activeCategory.secondaryList[index]
                             }
                             break
                         }
                     }
+                    scroll.scrollTop = 0
                     loaded('done')
                 } else {
                     loaded('fail')
                 }
             } else {
-                let goodsRes = await getGoods(this.activeCompany.companyId, this.activeCategory.guid, this.offset)
-                console.log(goodsRes)
-                if (goodsRes.success && goodsRes.data.length > 0) {
-                    this.setGood(goodsRes.data)
-                    this.goods.push(...goodsRes.data)
-                    this.offset = goodsRes.offset
-                    this.index = -1
+                let categoryIndex = this.getCategoryIndex(this.activeCategory) + 1
+                if (categoryIndex < this.categoryList.length) {
+                    this.categoryChoose(this.categoryList[categoryIndex])
+                    this.secondaryIndex = -1
                     loaded('done')
                 } else {
                     loaded('fail')
@@ -360,6 +362,9 @@ export default {
                     }
                 }
             }
+        }
+        .el-icon-search {
+            margin-left: 10px;
         }
     }
     .container {

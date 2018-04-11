@@ -4,6 +4,7 @@ Vue.use(Vuex)
 
 let userInfo = localStorage.userInfo ? JSON.parse(localStorage.userInfo) : null
 let cart = localStorage.cart ? JSON.parse(localStorage.cart) : {}
+let upLoadOrders = localStorage.upLoadOrders ? JSON.parse(localStorage.upLoadOrders) : []
 
 function setCompany (company) {
     company.price = 0
@@ -11,7 +12,6 @@ function setCompany (company) {
 }
 
 function getGoodCart (good, categoryGUID) {
-    console.log(good)
     return {
         categoryGUID,
         goodNO: good.id,
@@ -35,7 +35,8 @@ export default new Vuex.Store({
         categoryList: [],
         activeCategory: {},
         cart,
-        productRoute: 'productPictures'
+        productRoute: 'productPictures',
+        upLoadOrders
     },
     mutations: {
         setUserInfo (state, userInfo) {
@@ -112,6 +113,15 @@ export default new Vuex.Store({
         },
         setProductRoute (state, route) {
             state.productRoute = route
+        },
+        pushOrder (state, order) {
+            state.upLoadOrders.push(order)
+            localStorage.upLoadOrders = JSON.stringify(state.upLoadOrders)
+        },
+        deleteOrder (state, order) {
+            let index = state.upLoadOrders.indexOf(order)
+            state.upLoadOrders.splice(index, 1)
+            localStorage.upLoadOrders = JSON.stringify(state.upLoadOrders)
         }
     }
 })
