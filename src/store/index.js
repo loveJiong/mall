@@ -103,7 +103,13 @@ export default new Vuex.Store({
             stateGood.num = num
             stateGood.origin = stateGood.num * stateGood.price
             stateGood.totalPrice = (stateGood.origin * (100 - stateGood.zk) / 100).toFixed(2)
-            if (state.cart[companyId][good.id].num === 0) delete state.cart[companyId][good.id]
+            // if (state.cart[companyId][good.id].num === 0) delete state.cart[companyId][good.id]
+            localStorage.cart = JSON.stringify(state.cart)
+        },
+        deleteGood (state, data) {
+            let companyId = data.company.companyId
+            let good = data.good
+            delete state.cart[companyId][good.id]
             localStorage.cart = JSON.stringify(state.cart)
         },
         clearCart (state, companyId) {

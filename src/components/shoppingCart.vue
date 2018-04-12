@@ -12,7 +12,7 @@
                     <i v-show="!menuShow" class="el-icon-caret-bottom"></i>
                 </div>
                 <ul v-show="menuShow" class="companyList">
-                    <li v-for="(company, index) in companyList" v-bind:key="index" v-bind:class="{ active: company.isActive}" @click.stop="companyChoose(company)">
+                    <li v-for="(company, index) in companyList" v-bind:key="index" v-bind:class="{ active: company.isActive }" @click.stop="companyChoose(company)">
                         <span class="company-name">{{company.companyDisplayName}}</span>
                     </li>
                 </ul>
@@ -27,25 +27,32 @@
             </div>
             <div class="have-goods" v-if="haveGoods">
                 <ul class="good-list">
-                    <li class="good-item" v-for="(good, index) in goods" v-bind:key="index" v-if="good.num > 0">
-                        <img v-bind:src="good.url" alt="图片" width="100" height="70">
-                        <div class="good-introduction">
-                            <span class="good-name">{{good.name}}</span>
-                            <span v-if="good.zk == '0'" class="good-price">{{good.price}}€</span>
-                            <div v-if="good.zk != '0'" class="have-zk">
-                                <span class="zk-price">{{zkPrice(good.price, good.zk)}}€</span>
-                                <span class="origin-price">{{good.price}}</span>
-                                <span class="zk">(-{{good.zk}}%)</span>
+                    <li v-for="(good, index) in goods" v-bind:key="index" v-bind:class="{ showDelete: good.showDelete, hideDelete: good.hideDelete }">
+                        <v-touch v-on:swipeleft="showDelete(good)" v-on:swiperight="hideDelete(good)">
+                        <div class="delete-button" @click="deleteGood(good)">
+                            删除
+                        </div>
+                        <div class="good-item">
+                            <img v-bind:src="good.url" alt="图片" width="100" height="70">
+                            <div class="good-introduction">
+                                <span class="good-name">{{good.name}}</span>
+                                <span v-if="good.zk == '0'" class="good-price">{{good.price}}€</span>
+                                <div v-if="good.zk != '0'" class="have-zk">
+                                    <span class="zk-price">{{zkPrice(good.price, good.zk)}}€</span>
+                                    <span class="origin-price">{{good.price}}</span>
+                                    <span class="zk">(-{{good.zk}}%)</span>
+                                </div>
+                            </div>
+                            <div class="good-detail">
+                                <span class="good-total-price">总价：{{good.totalPrice}}€</span>
+                                <div class="good-num">
+                                    <i class="el-icon-remove" @click="removeToCart(good)" v-if="good.num > 0"></i>
+                                    <span class="count">{{good.num}}</span>
+                                    <i class="el-icon-circle-plus" @click="addToCart(good)"></i>
+                                </div>
                             </div>
                         </div>
-                        <div class="good-detail">
-                            <span class="good-total-price">总价：{{good.totalPrice}}€</span>
-                            <div class="good-num">
-                                <i class="el-icon-remove" @click="removeToCart(good)" v-if="good.num > 0"></i>
-                                <span class="count" v-if="good.num > 0">{{good.num}}</span>
-                                <i class="el-icon-circle-plus" @click="addToCart(good)"></i>
-                            </div>
-                        </div>
+                        </v-touch>
                     </li>
                 </ul>
                 <div class="commit-order">
@@ -110,6 +117,8 @@ export default {
             if (this.cart[this.activeCompany.companyId]) {
                 let arr = Object.keys(this.cart[this.activeCompany.companyId])
                 this.goods = arr.map(key => {
+                    this.cart[this.activeCompany.companyId][key].showDelete = false
+                    this.cart[this.activeCompany.companyId][key].hideDelete = false
                     return this.cart[this.activeCompany.companyId][key]
                 })
                 this.haveGoods = arr.length > 0
@@ -148,6 +157,11 @@ export default {
             this.$store.commit('removeToCart', {company: this.activeCompany, good})
             this.init()
         },
+        deleteGood (good) {
+            this.$store.commit('deleteGood', {company: this.activeCompany, good})
+            this.$message.success('删除商品成功！')
+            this.init()
+        },
         commitOrder () {
             // let data = {
             //     companyId: this.activeCompany.companyId,
@@ -177,6 +191,16 @@ export default {
             } else {
                 this.$router.push({name: 'productPictures'})
             }
+        },
+        showDelete (good) {
+            good.showDelete = true
+            good.hideDelete = false
+            this.$forceUpdate()
+        },
+        hideDelete (good) {
+            good.hideDelete = true
+            good.showDelete = false
+            this.$forceUpdate()
         }
     }
 }
@@ -342,6 +366,7 @@ export default {
 .commit-order {
     display: flex;
     position: absolute;
+    z-index: 2;
     bottom: 46px;
     width: 100%;
     justify-content: flex-end;
@@ -362,4 +387,57 @@ export default {
     }
 }
 
+.delete-button {
+    background: red;
+    width: 100px;
+    height: 100px;
+    position: absolute;
+    right: -100px;
+    z-index: 1;
+    color: white;
+    font-size: 24px;
+    text-align: center;
+    line-height: 95px;
+}
+
+.good-list > li{
+    position: relative;
+    left: 0px;
+}
+
+.good-list > .showDelete {
+    left: -100px;
+    animation:showDelete 0.5s;
+	-webkit-animation:showDelete 0.5s; /* Safari and Chrome */
+}
+
+.good-list > .hideDelete {
+    left: 0px;
+    animation:hideDelete 0.5s;
+	-webkit-animation:hideDelete 0.5s; /* Safari and Chrome */
+}
+
+@keyframes showDelete
+{
+	from {left: 0px;}
+	to {left: -100px;}
+}
+
+@-webkit-keyframes showDelete /* Safari and Chrome */
+{
+	from {left: 0px;}
+	to {left: -100px;}
+}
+
+@keyframes hideDelete
+{
+	from {left: -100px;}
+	to {left: 0px;}
+}
+
+@-webkit-keyframes hideDelete /* Safari and Chrome */
+{
+	from {left: -100px;}
+	to {left: -0px;}
+}
 </style>
