@@ -61,10 +61,13 @@ export default {
 		},
 		colorObj (index) {
 			return {
-				pink: index % 4 === 0,
-				orange: index % 4 === 1,
-				blue: index % 4 === 2,
-				red: index % 4 === 3
+				color1: index % 7 === 0,
+				color2: index % 7 === 1,
+				color3: index % 7 === 2,
+				color4: index % 7 === 3,
+				color5: index % 7 === 4,
+				color6: index % 7 === 5,
+				color7: index % 7 === 6
 			}
 		}
 	}
@@ -179,17 +182,26 @@ export default {
 	}
 }
 
-.red {
-	background-color: red;
+.color1 {
+	background-color: #ed386f;
 }
-.orange {
-	background-color: orange;
+.color2 {
+	background-color: #ff7e00;
 }
-.blue {
-	background-color: blue;
+.color3 {
+	background-color: #00a5a0;
 }
-.pink {
-	background-color: pink;
+.color4 {
+	background-color: #007aff;
+}
+.color5 {
+	background-color: #72b442;
+}
+.color6 {
+	background-color: #ed4f25;
+}
+.color7 {
+	background-color: #3d62db;
 }
 
 </style>

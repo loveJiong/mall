@@ -5,6 +5,7 @@ import home from '@/components/home'
 import addCompany from '@/components/addCompany'
 import productPictures from '@/components/productPictures'
 import groupDetail from '@/components/groupDetail'
+import search from '@/components/search'
 import shoppingCart from '@/components/shoppingCart'
 import orderManagement from '@/components/orderManagement'
 import mine from '@/components/mine'
@@ -38,6 +39,11 @@ export default new Router({
       path: '/productPictures/groupDetail',
       name: 'groupDetail',
       component: groupDetail
+    },
+    {
+      path: '/productPictures/search',
+      name: 'search',
+      component: search
     },
     {
       path: '/shoppingCart',

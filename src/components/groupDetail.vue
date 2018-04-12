@@ -4,13 +4,13 @@
             <router-link to="/productPictures" class="el-icon-arrow-left"></router-link>
             <div class="title" @click.stop="menuToggle">
                 <span class="category-name">{{activeCategory.name}}</span>
-                <span v-if="activeSecondary">{{activeSecondary.name}}</span>
+                <span class="secondar-name" v-if="activeSecondary">{{activeSecondary.name}}</span>
                 <i v-show="menuShow" class="el-icon-caret-top"></i>
                 <i v-show="!menuShow" class="el-icon-caret-bottom"></i>
             </div>
             <div class="header-icons">
                 <a class="el-icon-ump-cart" @click="toShoppingCart"></a>
-                <i class="el-icon-search"></i>
+                <a class="el-icon-search" @click="toSearch"></a>
             </div>
             <div class="header-menu" v-show="menuShow">
                 <ul class="categoryList">
@@ -251,7 +251,7 @@ export default {
         },
         addToCart (good) {
             good.num++
-            this.$store.commit('addToCart', {company: this.activeCompany, good, categoryGUID: this.activeCategory.guid})
+            this.$store.commit('addToCart', {company: this.activeCompany, good})
         },
         removeToCart (good) {
             good.num--
@@ -265,6 +265,9 @@ export default {
         toShoppingCart () {
             this.$router.push('/shoppingCart')
             this.$store.commit('setProductRoute', 'groupDetail')
+        },
+        toSearch () {
+            this.$router.push('/productPictures/search')
         }
     }
 }
@@ -293,7 +296,7 @@ export default {
             flex-direction: column;
             justify-content: space-around;
             align-items: center;
-            @include wh(200px, 40px);
+            @include wh(150px, 40px);
             @include sc(12px, #555555);
             border: 1px solid #eb8677;
             border-radius: 5px;
@@ -303,6 +306,15 @@ export default {
             }
             .category-name {
                 font-size: 14px;
+            }
+            .category-name,
+            .secondar-name {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                width: 100%;
+                padding: 0 10px;
+                text-align: center;
             }
         }
         .header-menu {

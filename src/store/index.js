@@ -11,9 +11,8 @@ function setCompany (company) {
     company.isActive = false
 }
 
-function getGoodCart (good, categoryGUID) {
+function getGoodCart (good) {
     return {
-        categoryGUID,
         goodNO: good.id,
         id: good.id,
         name: good.name,
@@ -89,7 +88,7 @@ export default new Vuex.Store({
             let good = data.good
             let num = good.num
             if (!state.cart[companyId]) state.cart[companyId] = {}
-            if (!state.cart[companyId][good.id]) state.cart[companyId][good.id] = getGoodCart(good, data.categoryGUID)
+            if (!state.cart[companyId][good.id]) state.cart[companyId][good.id] = getGoodCart(good)
             let stateGood = state.cart[companyId][good.id]
             stateGood.num = num
             stateGood.origin = stateGood.num * stateGood.price

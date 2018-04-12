@@ -78,3 +78,5 @@ export const updateAddress = (data) => http('/customer/address/update', 'POST', 
 export const commitOrder = (data) => http('/order/commit', 'POST', headers, data)
 
 export const getOrder = (customerId, companyId, status) => http('/order/all', 'GET', headers, {customerId, companyId, status})
+
+export const search = (companyId, q) => http('/goods/search', 'GET', headers, {companyId, q})
