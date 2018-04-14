@@ -115,6 +115,8 @@ export default {
                 this.activeSecondary = this.secondaryList[0]
             }
             this.getGoods()
+        } else {
+            this.setGood(this.goods)
         }
     },
     deactivated () {

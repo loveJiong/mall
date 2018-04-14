@@ -67,7 +67,6 @@
 </template>
 
 <script>
-// import {commitOrder} from './../service/getData'
 import footGuide from './footGuide'
 export default {
     name: 'shoppingCart',
@@ -155,27 +154,18 @@ export default {
         removeToCart (good) {
             good.num--
             this.$store.commit('removeToCart', {company: this.activeCompany, good})
-            this.init()
         },
         deleteGood (good) {
             this.$store.commit('deleteGood', {company: this.activeCompany, good})
             this.$message.success('删除商品成功！')
             this.init()
         },
-        commitOrder () {
-            // let data = {
-            //     companyId: this.activeCompany.companyId,
-            //     customerId: this.userInfo.id,
-            //     bz: this.bz,
-            //     goods: this.goods
-            // }
-            // let commitRes = await commitOrder(data)
-            // if (commitRes.success) {
-            //     this.$message.success('生成订单成功！')
-            //     this.$store.commit('clearCart', this.activeCompany.companyId)
-            //     this.init()
-            // }
-            this.$store.commit('pushOrder', this.cart[this.activeCompany.companyId])
+        async commitOrder () {
+            this.$store.commit('pushOrder', {
+                company: this.activeCompany,
+                order: this.cart[this.activeCompany.companyId],
+                bz: this.bz
+            })
             this.$store.commit('clearCart', this.activeCompany.companyId)
             this.init()
             this.$message.success('生成订单成功！')

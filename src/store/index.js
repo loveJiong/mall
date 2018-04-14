@@ -4,7 +4,7 @@ Vue.use(Vuex)
 
 let userInfo = localStorage.userInfo ? JSON.parse(localStorage.userInfo) : null
 let cart = localStorage.cart ? JSON.parse(localStorage.cart) : {}
-let upLoadOrders = localStorage.upLoadOrders ? JSON.parse(localStorage.upLoadOrders) : []
+let upLoadOrders = localStorage.upLoadOrders ? JSON.parse(localStorage.upLoadOrders) : {}
 
 function setCompany (company) {
     company.price = 0
@@ -24,6 +24,15 @@ function getGoodCart (good) {
         totalPrice: 0,
         count: good.count
     }
+}
+
+function pad2 (n) {
+    return n < 10 ? '0' + n : n
+}
+
+function generateBh () {
+    const date = new Date()
+    return date.getFullYear().toString() + pad2(date.getMonth() + 1) + pad2(date.getDate()) + pad2(date.getHours()) + pad2(date.getMinutes()) + pad2(date.getSeconds())
 }
 
 export default new Vuex.Store({
@@ -119,13 +128,54 @@ export default new Vuex.Store({
         setProductRoute (state, route) {
             state.productRoute = route
         },
-        pushOrder (state, order) {
-            state.upLoadOrders.push(order)
+        pushOrder (state, data) {
+            let companyId = data.company.companyId
+            let order = data.order
+            order.bh = generateBh()
+            order.bz = data.bz
+            if (!state.upLoadOrders[companyId]) state.upLoadOrders[companyId] = []
+            state.upLoadOrders[companyId].push(order)
+            console.log(state.upLoadOrders)
             localStorage.upLoadOrders = JSON.stringify(state.upLoadOrders)
         },
-        deleteOrder (state, order) {
-            let index = state.upLoadOrders.indexOf(order)
-            state.upLoadOrders.splice(index, 1)
+        deleteOrder (state, data) {
+            let companyId = data.company.companyId
+            let order = data.order
+            let index = state.upLoadOrders[companyId].indexOf(order)
+            state.upLoadOrders[companyId].splice(index, 1)
+            localStorage.upLoadOrders = JSON.stringify(state.upLoadOrders)
+        },
+        addToOrder (state, data) {
+            let companyId = data.company.companyId
+            let good = data.good
+            let order = data.unOrder
+            let num = good.num
+            let index = state.upLoadOrders[companyId].indexOf(order)
+            let stateGood = state.upLoadOrders[companyId][index][good.id]
+            stateGood.num = num
+            stateGood.origin = stateGood.num * stateGood.price
+            stateGood.totalPrice = (stateGood.origin * (100 - stateGood.zk) / 100).toFixed(2)
+            localStorage.upLoadOrders = JSON.stringify(state.upLoadOrders)
+        },
+        removeToOrder (state, data) {
+            let companyId = data.company.companyId
+            let good = data.good
+            let order = data.unOrder
+            let num = good.num
+            let index = state.upLoadOrders[companyId].indexOf(order)
+            let stateGood = state.upLoadOrders[companyId][index][good.id]
+            stateGood.num = num
+            stateGood.origin = stateGood.num * stateGood.price
+            stateGood.totalPrice = (stateGood.origin * (100 - stateGood.zk) / 100).toFixed(2)
+            // if (state.cart[companyId][good.id].num === 0) delete state.cart[companyId][good.id]
+            localStorage.upLoadOrders = JSON.stringify(state.upLoadOrders)
+        },
+        deleteGoodToOrder (state, data) {
+            let companyId = data.company.companyId
+            let good = data.good
+            let order = data.unOrder
+            let index = state.upLoadOrders[companyId].indexOf(order)
+            delete state.upLoadOrders[companyId][index][good.id]
             localStorage.upLoadOrders = JSON.stringify(state.upLoadOrders)
         }
     }
