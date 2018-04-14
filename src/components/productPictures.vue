@@ -114,6 +114,7 @@ export default {
 .product-pictures {
 	height: 100%;
 	padding-top: $headH;
+	overflow: auto;
 	.company-switch {
         position: absolute;
         top: 0;
@@ -173,6 +174,7 @@ export default {
         margin-bottom: 45px;
 		li {
 			display: flex;
+			position: relative;
 			align-items: center;
 			padding: 5px;
 			background-color: $white;

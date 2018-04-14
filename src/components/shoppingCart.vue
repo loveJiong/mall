@@ -23,7 +23,7 @@
                 <i class="el-icon-warning"></i>
                 <span class="title">当前订单是空的</span>
                 <span class="text">你目前没有订购任何产品，你可以点击左下角的产品图册进行选购！</span>
-                <router-link to="/productPictures">去看看</router-link>
+                <a @click="toProduct">去看看</a>
             </div>
             <div class="have-goods" v-if="haveGoods">
                 <ul class="good-list">
@@ -36,8 +36,8 @@
                             <img v-bind:src="good.url" alt="图片" width="100" height="70">
                             <div class="good-introduction">
                                 <span class="good-name">{{good.name}}</span>
-                                <span v-if="good.zk == '0'" class="good-price">{{good.price}}€</span>
-                                <div v-if="good.zk != '0'" class="have-zk">
+                                <span v-if="good.zk == '0' || good.zk == ''" class="good-price">{{good.price}}€</span>
+                                <div v-if="good.zk != '0' && good.zk != ''" class="have-zk">
                                     <span class="zk-price">{{zkPrice(good.price, good.zk)}}€</span>
                                     <span class="origin-price">{{good.price}}</span>
                                     <span class="zk">(-{{good.zk}}%)</span>
@@ -56,8 +56,11 @@
                     </li>
                 </ul>
                 <div class="commit-order">
-                    <input type="text" class="order-bz" v-model="bz" placeholder="在这里写下您的订单备注">
-                    <el-button type="primary" round @click="commitOrder">生成订单</el-button>
+                    <p class="order-price">金额：<span>{{orderPrice()}}€</span></p>
+                    <div>
+                        <input type="text" class="order-bz" v-model="bz" placeholder="在这里写下您的订单备注">
+                        <el-button type="primary" round @click="commitOrder">生成订单</el-button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -160,20 +163,35 @@ export default {
             this.$message.success('删除商品成功！')
             this.init()
         },
-        async commitOrder () {
-            this.$store.commit('pushOrder', {
-                company: this.activeCompany,
-                order: this.cart[this.activeCompany.companyId],
-                bz: this.bz
+        commitOrder () {
+            this.$confirm('确认生成当前订单？', '订单确认', {
+                confirmButtonText: '确认生成',
+                cancelButtonText: '取消',
+                type: 'success'
+            }).then(() => {
+                this.$store.commit('pushOrder', {
+                    company: this.activeCompany,
+                    order: this.cart[this.activeCompany.companyId],
+                    bz: this.bz
+                })
+                this.$store.commit('clearCart', this.activeCompany.companyId)
+                this.init()
+                this.$message.success('生成订单成功！')
+            }, () => {
+                console.log('cancel')
             })
-            this.$store.commit('clearCart', this.activeCompany.companyId)
-            this.init()
-            this.$message.success('生成订单成功！')
         },
         zkPrice (price, zk) {
             let num = price * (100 - zk) / 100
             num = num.toFixed(2)
             return num
+        },
+        orderPrice () {
+            let price = 0
+            this.goods.forEach(good => {
+                price += parseFloat(good.totalPrice)
+            })
+            return price.toFixed(2)
         },
         toProduct () {
             if (this.$store.state.activeCategory.guid) {
@@ -297,7 +315,7 @@ export default {
 }
 
 .have-goods {
-    padding-bottom: 84px;
+    padding-bottom: 105px;
 }
 
 .good-item {
@@ -355,17 +373,23 @@ export default {
 
 .commit-order {
     display: flex;
+    flex-direction: column;
     position: absolute;
     z-index: 2;
     bottom: 46px;
     width: 100%;
-    justify-content: flex-end;
     background: #fff;
-    align-items: center;
     padding: 5px 20px;
     border-top: 1px solid #c8c7cc;
+    .order-price {
+        margin-bottom: 5px;
+        font-size: 14px;
+        > span {
+            color: #5eacf0;
+        }
+    }
     .order-bz {
-        width: calc(100% - 90px - 10px);
+        width: calc(100% - 90px - 15px);
         border: 1px solid #409EFF;
         border-radius: 10px;
         margin-right: 10px;
@@ -393,6 +417,10 @@ export default {
 .good-list > li{
     position: relative;
     left: 0px;
+}
+
+.good-list > li > div{
+    touch-action: pan-y !important;
 }
 
 .good-list > .showDelete {

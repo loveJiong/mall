@@ -41,8 +41,8 @@
                             <span class="good-count">库存：{{good.count}}</span>
                             <span class="good-pck">包装数：{{good.bagCount}}/{{good.bagCount}}</span>
                         </div>
-                        <span v-if="good.zk == '0'" class="price">{{good.price}}€</span>
-                        <div v-if="good.zk != '0'" class="have-zk">
+                        <span v-if="good.zk == '0' || good.zk == ''" class="price">{{good.price}}€</span>
+                        <div v-if="good.zk != '0' && good.zk != ''" class="have-zk">
                             <span class="zk-price">{{zkPrice(good.price, good.zk)}}€</span>
                             <span class="origin-price">{{good.price}}</span>
                             <span class="zk">(-{{good.zk}}%)</span>

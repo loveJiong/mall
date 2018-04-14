@@ -3,6 +3,7 @@
         <div class="header">
             <div class="order-title" @click.stop="''">
                 订单管理
+                <el-button class="shopping-continue" round size="mini" @click="toProduct">继续点货</el-button>
             </div>
             <div class="company-menu">
                 <div class="company-active" @click.stop="menuToggle">
@@ -17,7 +18,7 @@
                 </ul>
             </div>
         </div>
-        <div class="container">
+        <div class="container" v-loading="loading">
             <ul class="tabs">
                 <li v-for="(item, index) in tabs" v-bind:key="index" class="tab-item" v-bind:class="{ active: item.isActive}" @click="tabSwitch(item)">{{item.name}}</li>
             </ul>
@@ -37,40 +38,51 @@
                 </li>
             </ul>
             <ul class="unOrders" v-show="active.status === -1">
-                <li class="unOrder" v-for="unOrder in unOrders" v-bind:key="unOrder.bh">
-                    <p class="unOrder-bh"><span class="order-title">订单编号：</span>{{unOrder.bh}}</p>
-                    <ul class="good-list">
-                        <li v-for="(good, index) in unOrder.goods" v-bind:key="index" v-bind:class="{ showDelete: good.showDelete, hideDelete: good.hideDelete }">
-                            <v-touch v-on:swipeleft="showDelete(good)" v-on:swiperight="hideDelete(good)">
-                            <div class="delete-button" @click="deleteGood(good, unOrder)">
-                                删除
-                            </div>
-                            <div class="good-item">
-                                <img v-bind:src="good.url" alt="图片" width="100" height="70">
-                                <div class="good-introduction">
-                                    <span class="good-name">{{good.name}}</span>
-                                    <span v-if="good.zk == '0'" class="good-price">{{good.price}}€</span>
-                                    <div v-if="good.zk != '0'" class="have-zk">
-                                        <span class="zk-price">{{zkPrice(good.price, good.zk)}}€</span>
-                                        <span class="origin-price">{{good.price}}</span>
-                                        <span class="zk">(-{{good.zk}}%)</span>
+                <li class="unOrder" v-for="unOrder in unOrders" v-bind:key="unOrder.bh" >
+                    <p class="unOrder-bh" @click="toggle(unOrder)"><span class="order-title">订单编号：</span>{{unOrder.bh}}</p>
+                    <i v-show="unOrder.show" class="el-icon-caret-top"></i>
+                    <i v-show="!unOrder.show" class="el-icon-caret-bottom"></i>
+                    <div></div>
+                    <transition name="fade">
+                        <ul class="good-list" v-show="unOrder.show">
+                            <li v-for="(good, index) in unOrder.goods" v-bind:key="index" v-bind:class="{ showDelete: good.showDelete, hideDelete: good.hideDelete }">
+                                <v-touch v-on:swipeleft="showDelete(good)" v-on:swiperight="hideDelete(good)">
+                                <div class="delete-button" @click="deleteGood(good, unOrder)">
+                                    删除
+                                </div>
+                                <div class="good-item">
+                                    <img v-bind:src="good.url" alt="图片" width="100" height="70">
+                                    <div class="good-introduction">
+                                        <span class="good-name">{{good.name}}</span>
+                                        <span v-if="good.zk == '0' || good.zk == ''" class="good-price">{{good.price}}€</span>
+                                        <div v-if="good.zk != '0' && good.zk != ''" class="have-zk">
+                                            <span class="zk-price">{{zkPrice(good.price, good.zk)}}€</span>
+                                            <span class="origin-price">{{good.price}}</span>
+                                            <span class="zk">(-{{good.zk}}%)</span>
+                                        </div>
+                                    </div>
+                                    <div class="good-detail">
+                                        <span class="good-total-price">总价：{{good.totalPrice}}€</span>
+                                        <div class="good-num">
+                                            <i class="el-icon-remove" @click="removeToOrder(good, unOrder)" v-if="good.num > 0"></i>
+                                            <span class="count">{{good.num}}</span>
+                                            <i class="el-icon-circle-plus" @click="addToOrder(good, unOrder)"></i>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="good-detail">
-                                    <span class="good-total-price">总价：{{good.totalPrice}}€</span>
-                                    <div class="good-num">
-                                        <i class="el-icon-remove" @click="removeToOrder(good, unOrder)" v-if="good.num > 0"></i>
-                                        <span class="count">{{good.num}}</span>
-                                        <i class="el-icon-circle-plus" @click="addToOrder(good, unOrder)"></i>
-                                    </div>
-                                </div>
-                            </div>
-                            </v-touch>
-                        </li>
-                    </ul>
+                                </v-touch>
+                            </li>
+                        </ul>
+                    </transition>
                     <div class="commit-unOrder">
-                        <input type="text" class="unOrder-bz" v-model="unOrder.bz" placeholder="在这里写下您的订单备注">
-                        <el-button type="primary" round @click="commitUnOrder(unOrder)">上传订单</el-button>
+                        <div>
+                            <span class="unOrder-price"><span class="order-title">金额：</span>{{unOrderPrice(unOrder)}}€</span>
+                            <el-button class="delete-unOrder" type="danger" round @click="deleteUnOrder(unOrder)">删除订单</el-button>
+                        </div>
+                        <div>
+                            <input type="text" class="unOrder-bz" v-model="unOrder.bz" placeholder="在这里写下您的订单备注">
+                            <el-button type="primary" round @click="commitUnOrder(unOrder)">上传订单</el-button>
+                        </div>
                     </div>
                 </li>
             </ul>
@@ -81,7 +93,7 @@
 </template>
 
 <script>
-import {getOrder, commitOrder} from './../service/getData'
+import {getOrder, commitOrder, getAddress} from './../service/getData'
 import footGuide from './footGuide'
 export default {
     name: 'orderManagement',
@@ -102,7 +114,8 @@ export default {
                 }
             ],
             orders: [],
-            unOrders: []
+            unOrders: [],
+            loading: false
         }
     },
     components: {
@@ -138,8 +151,10 @@ export default {
     methods: {
         async getOrder (status) {
             if (status === 0) {
+                this.loading = true
                 let orderRes = await getOrder(this.userInfo.id, this.activeCompany.companyId, status)
                 if (orderRes.success) this.orders = orderRes.data
+                this.loading = false
             } else {
                 this.unOrders = this.upLoadOrders[this.activeCompany.companyId] || []
                 this.unOrders.forEach(unOrder => {
@@ -177,23 +192,33 @@ export default {
             this.active = tab
             this.getOrder(this.active.status)
         },
+        toggle (unOrder) {
+            unOrder.show = !unOrder.show
+            this.$forceUpdate()
+        },
         zkPrice (price, zk) {
             let num = price * (100 - zk) / 100
             num = num.toFixed(2)
             return num
         },
+        unOrderPrice (unOrder) {
+            let price = 0
+            unOrder.goods.forEach(good => {
+                price += parseFloat(good.totalPrice)
+            })
+            return price.toFixed(2)
+        },
         getGoods (unOrder) {
             let arr = Object.keys(unOrder)
             let goods = []
             arr.forEach(key => {
-                if (key !== 'bh' && key !== 'bz' && key !== 'goods') {
+                if (key !== 'bh' && key !== 'bz' && key !== 'goods' && key !== 'show') {
                     unOrder[key].showDelete = false
                     unOrder[key].hideDelete = false
+                    unOrder[key].show = false
                     goods.push(unOrder[key])
                 }
             })
-            // unOrder.goods = goods
-            // console.log(goods)
             return goods
         },
         addToOrder (good, unOrder) {
@@ -220,6 +245,7 @@ export default {
             })
             this.$message.success('删除商品成功！')
             this.getOrder(this.active.status)
+            this.$forceUpdate()
         },
         showDelete (good) {
             good.showDelete = true
@@ -229,21 +255,69 @@ export default {
             good.hideDelete = true
             good.showDelete = false
         },
-        async commitUnOrder (unOrder) {
+        deleteUnOrder (unOrder) {
+            this.$confirm('确认删除当前订单？', '删除确认', {
+                confirmButtonText: '确认删除',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.$store.commit('deleteOrder', {
+                    company: this.activeCompany,
+                    unOrder
+                })
+                this.$message.success('删除订单成功！')
+            }, () => {
+                console.log('cancel')
+            })
+        },
+        commitUnOrder (unOrder) {
             let data = {
                 companyId: this.activeCompany.companyId,
                 customerId: this.userInfo.id,
                 bz: unOrder.bz,
                 goods: unOrder.goods
             }
-            let commitRes = await commitOrder(data)
-            if (commitRes.success) {
-                this.$message.success('上传订单成功！')
-                this.$store.commit('deleteOrder', {
-                    company: this.activeCompany,
-                    unOrder
-                })
-                this.getOrder(this.active.status)
+            this.$confirm('确认上传当前订单？', '上传确认', {
+                confirmButtonText: '确认上传',
+                cancelButtonText: '取消',
+                type: 'success'
+            }).then(async () => {
+                this.loading = true
+                let addressRes = await getAddress(this.userInfo.id)
+                if (addressRes.success && addressRes.data.length > 0 && addressRes.data[0].companyAddress && addressRes.data[0].linkMan) {
+                    let commitRes = await commitOrder(data)
+                    if (commitRes.success) {
+                        this.$message.success('上传订单成功！')
+                        this.$store.commit('deleteOrder', {
+                            company: this.activeCompany,
+                            unOrder
+                        })
+                        this.getOrder(this.active.status)
+                    }
+                } else if (addressRes.success) {
+                    this.alertAddAddress()
+                }
+                this.loading = false
+            }, () => {
+                console.log('cancel')
+            })
+        },
+        alertAddAddress () {
+            this.$confirm('您当前没完善收货地址！', '提示', {
+                confirmButtonText: '前去完善',
+                cancelButtonText: '取消上传',
+                type: 'warning'
+            }).then(() => {
+                this.$router.push('/mine/myAddress')
+            }, () => {
+                console.log('cancel')
+            })
+        },
+        toProduct () {
+            if (this.$store.state.activeCategory.guid) {
+                this.$router.push({name: 'groupDetail', params: { refresh: false }})
+            } else {
+                this.$router.push({name: 'productPictures'})
             }
         }
     }
@@ -261,10 +335,16 @@ export default {
         z-index: 100;
         top: 0;
         .order-title {
+            position: relative;
             text-align: center;
             background-color: #89c4f4;
             color: $white;
             @include font(16px, 49px);
+            .shopping-continue {
+                position: absolute;
+                right: 10px;
+                top: 12px;
+            }
         }
         .company-menu {
             position: relative;
@@ -364,15 +444,20 @@ export default {
 }
 
 .unOrder {
+    position: relative;
     padding: 10px;
     background: #ffffff;
     margin-bottom: 10px;
+    > i {
+        position: absolute;
+        right: 8px;
+        top: 10px;
+    }
 }
 
 .unOrder-bh {
     background-color: $white;
-    height: 30px;
-    line-height: 28px;
+    height: 25px;
     border-bottom: 2px solid #f8f8f8;
     font-size: 14px;
 }
@@ -445,15 +530,25 @@ export default {
 
 .commit-unOrder {
     display: flex;
+    flex-direction: column;
     bottom: 46px;
     width: 100%;
-    justify-content: flex-end;
     background: #fff;
-    align-items: center;
-    padding: 10px 20px 0 20px;
+    padding-top: 10px;
     border-top: 1px solid #c8c7cc;
+    > div {
+        padding: 3px 0;
+    }
+    .unOrder-price {
+        margin-bottom: 5px;
+        font-size: 14px;
+        color: #5eacf0;
+    }
+    .delete-unOrder {
+        float: right;
+    }
     .unOrder-bz {
-        width: calc(100% - 90px - 10px);
+        width: calc(100% - 90px - 15px);
         border: 1px solid #409EFF;
         border-radius: 10px;
         margin-right: 10px;
@@ -468,6 +563,10 @@ export default {
 .good-list > li{
     position: relative;
     left: 0px;
+}
+
+.good-list > li > div{
+    touch-action: pan-y !important;
 }
 
 .good-list > .showDelete {

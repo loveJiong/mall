@@ -78,6 +78,7 @@ export default {
 <style lang="scss" scoped>
 @import 'src/style/config';
 .home {
+	height: 100%;
 	.home-title {
 		position: relative;
 		text-align: center;
@@ -95,7 +96,11 @@ export default {
 			background-color: $blue;
 		}
 	}
-
+	.companyList {
+		height: 100%;
+		overflow: auto;
+		padding-bottom: 90px;
+	}
 	.company {
 		background-color: $white;
 		margin: 10px;

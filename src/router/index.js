@@ -10,6 +10,8 @@ import shoppingCart from '@/components/shoppingCart'
 import orderManagement from '@/components/orderManagement'
 import mine from '@/components/mine'
 import myAddress from '@/components/myAddress'
+import aboutUs from '@/components/aboutUs'
+import aboutSoft from '@/components/aboutSoft'
 
 Vue.use(Router)
 
@@ -64,6 +66,16 @@ export default new Router({
       path: '/mine/myAddress',
       name: 'myAddress',
       component: myAddress
+    },
+    {
+      path: '/mine/aboutUs',
+      name: 'aboutUs',
+      component: aboutUs
+    },
+    {
+      path: '/mine/aboutSoft',
+      name: 'aboutSoft',
+      component: aboutSoft
     }
   ]
 })

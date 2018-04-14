@@ -128,7 +128,7 @@ export default {
         z-index: 100;
     }
     .container {
-        height: 100%;
+        max-height: 100%;
         overflow: auto;
         display: flex;
         flex-wrap: wrap;

@@ -80,14 +80,11 @@ export default {
                 this.isAdd = true
             }
             this.loading = false
-            console.log(addressRes)
         },
         async submit () {
             this.loading = true
-            console.log(this.form)
             if (this.isAdd) {
                 let data = Object.assign({}, this.form, {customerId: this.userInfo.id})
-                console.log(data)
                 let newAddressRes = await newAddress(data)
                 if (newAddressRes.success) {
                     this.$message.success('恭喜您，新增地址成功！')
@@ -96,9 +93,7 @@ export default {
                 }
             } else {
                 let data = Object.assign({}, this.form, {customerId: this.userInfo.id})
-                console.log(data)
                 let updateAddressRes = await updateAddress(data)
-                console.log(updateAddressRes)
                 if (updateAddressRes.success) {
                     this.$message.success('恭喜您，更新地址成功！')
                 } else {

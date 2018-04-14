@@ -16,12 +16,12 @@
                     <span>我的商家</span>
                     <i class="el-icon-arrow-right"></i>
                 </li> -->
-                <li class="blue-item">
+                <li class="blue-item" @click="toAboutSoft">
                     <i class="el-icon-mobile-phone"></i>
                     <span>关于软件</span>
                     <i class="el-icon-arrow-right"></i>
                 </li>
-                <li class="green-item">
+                <li class="green-item" @click="toAboutUs">
                     <i class="el-icon-service"></i>
                     <span>关于我们</span>
                     <i class="el-icon-arrow-right"></i>
@@ -72,6 +72,12 @@ export default {
     methods: {
         toAddress () {
             this.$router.push('/mine/myAddress')
+        },
+        toAboutSoft () {
+            this.$router.push('/mine/aboutSoft')
+        },
+        toAboutUs () {
+            this.$router.push('/mine/aboutUs')
         },
         logout () {
             this.$confirm('确认退出当前账号？', '退出确认', {
