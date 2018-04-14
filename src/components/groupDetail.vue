@@ -27,7 +27,7 @@
                 </ul>
             </div>
         </div>
-        <pull-to :bottom-load-method="refresh" :bottom-config="{failText: '没有更多', doneText: '', stayDistance: 0}" :bottom-block-height="0">
+        <pull-to :bottom-load-method="refresh" :bottom-config="{failText: '没有更多', doneText: '', stayDistance: 0}" :bottom-block-height="0" v-loading="loading">
             <ul class="container">
                 <li v-for="(good, index) in goods" v-bind:key="index">
                     <div class="good-num" v-if="good.num > 0">{{good.num}}</div>
@@ -76,7 +76,8 @@ export default {
             activeSecondary: null,
             guid: null,
             secondaryIndex: -1,
-            categoryIndex: -1
+            categoryIndex: -1,
+            loading: false
         }
     },
     computed: {
@@ -122,6 +123,7 @@ export default {
     },
     methods: {
         async getGoods () {
+            this.loading = true
             let scroll = document.getElementsByClassName('scroll-container')[0]
             if (this.activeSecondary) {
                 let index = this.getSecondaryIndex(this.activeSecondary)
@@ -129,7 +131,6 @@ export default {
                 if (goodsRes.success && goodsRes.data.length > 0) {
                     this.setGood(goodsRes.data)
                     this.goods = goodsRes.data
-                    scroll.scrollTop = 0
                     this.secondaryIndex = index + 1
                 } else if (goodsRes.success) {
                     for (++index; index < this.activeCategory.secondaryList.length; index++) {
@@ -137,7 +138,6 @@ export default {
                         if (goodsRes.success && goodsRes.data.length > 0) {
                             this.setGood(goodsRes.data)
                             this.goods = goodsRes.data
-                            scroll.scrollTop = 0
                             this.secondaryIndex = index + 1
                             break
                         }
@@ -148,10 +148,11 @@ export default {
                 if (goodsRes.success) {
                     this.setGood(goodsRes.data)
                     this.goods = goodsRes.data
-                    scroll.scrollTop = 0
                     this.secondaryIndex = -1
                 }
             }
+            scroll.scrollTop = 0
+            this.loading = false
         },
         initData () {
             this.menuShow = false
@@ -207,6 +208,7 @@ export default {
             document.querySelector('body').setAttribute('style', 'overflow:auto;background:#ffffff')
         },
         async refresh (loaded) {
+            this.loading = true
             let index = this.secondaryIndex
             let scroll = document.getElementsByClassName('scroll-container')[0]
             if (index >= 0 && index < this.activeCategory.secondaryList.length) {
@@ -218,7 +220,6 @@ export default {
                     if (this.activeCategory.secondaryList[index].level === 1) {
                         this.activeSecondary = this.activeCategory.secondaryList[index]
                     }
-                    scroll.scrollTop = 0
                     loaded('done')
                 } else if (goodsRes.success) {
                     for (++index; index < this.activeCategory.secondaryList.length; index++) {
@@ -233,11 +234,12 @@ export default {
                             break
                         }
                     }
-                    scroll.scrollTop = 0
                     loaded('done')
                 } else {
                     loaded('fail')
                 }
+                scroll.scrollTop = 0
+                this.loading = false
             } else {
                 let categoryIndex = this.getCategoryIndex(this.activeCategory) + 1
                 if (categoryIndex < this.categoryList.length) {
@@ -336,6 +338,7 @@ export default {
                     display: flex;
                     align-items: center;
                     justify-content: space-between;
+                    position: relative;
                     @include wh(100%, 55px);
                     @include sc(14px, #000000);
                     padding-left: 17px;

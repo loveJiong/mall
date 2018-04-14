@@ -5,36 +5,38 @@
             <input class="input-search" type="text" placeholder="输入品名或货号" v-model="searchText">
             <a class="el-icon-search" @click="search"></a>
         </div>
-        <ul class="container">
-            <li v-for="(good, index) in goods" v-bind:key="index">
-                <div class="good-num" v-if="good.num > 0">{{good.num}}</div>
-                <div class="good-no">REF:{{good.no}}</div>
-                <div class="good-img">
-                    <img class="good-img-icon" v-bind:src="good.url" alt="图片">
+        <div class="loading" v-loading="loading">
+            <ul class="container">
+                <li v-for="(good, index) in goods" v-bind:key="index">
+                    <div class="good-num" v-if="good.num > 0">{{good.num}}</div>
+                    <div class="good-no">REF:{{good.no}}</div>
+                    <div class="good-img">
+                        <img class="good-img-icon" v-bind:src="good.url" alt="图片">
+                    </div>
+                    <span>{{good.name}}</span>
+                    <div>
+                        <div class="good-detail">
+                            <span class="good-count">库存：{{good.count}}</span>
+                            <span class="good-pck">包装数：{{good.bagCount}}/{{good.bagCount}}</span>
+                        </div>
+                        <span v-if="good.zk == '0'" class="price">{{good.price}}€</span>
+                        <div v-if="good.zk != '0'" class="have-zk">
+                            <span class="zk-price">{{zkPrice(good.price, good.zk)}}€</span>
+                            <span class="origin-price">{{good.price}}</span>
+                            <span class="zk">(-{{good.zk}}%)</span>
+                        </div>
+                        <div class="add-remove">
+                            <i class="el-icon-remove" @click="removeToCart(good)" v-if="good.num > 0"></i>
+                            <i class="el-icon-circle-plus" @click="addToCart(good)"></i>
+                        </div>
+                    </div>
+                </li>
+                <div class="no-goods" v-if="goods.length === 0">
+                    <i class="el-icon-warning"></i>
+                    <span class="title">{{noGoods.title}}</span>
                 </div>
-                <span>{{good.name}}</span>
-                <div>
-                    <div class="good-detail">
-                        <span class="good-count">库存：{{good.count}}</span>
-                        <span class="good-pck">包装数：{{good.bagCount}}/{{good.bagCount}}</span>
-                    </div>
-                    <span v-if="good.zk == '0'" class="price">{{good.price}}€</span>
-                    <div v-if="good.zk != '0'" class="have-zk">
-                        <span class="zk-price">{{zkPrice(good.price, good.zk)}}€</span>
-                        <span class="origin-price">{{good.price}}</span>
-                        <span class="zk">(-{{good.zk}}%)</span>
-                    </div>
-                    <div class="add-remove">
-                        <i class="el-icon-remove" @click="removeToCart(good)" v-if="good.num > 0"></i>
-                        <i class="el-icon-circle-plus" @click="addToCart(good)"></i>
-                    </div>
-                </div>
-            </li>
-            <div class="no-goods" v-if="goods.length === 0">
-                <i class="el-icon-warning"></i>
-                <span class="title">{{noGoods.title}}</span>
-            </div>
-        </ul>
+            </ul>
+        </div>
     </div>
 
 </template>
@@ -50,7 +52,8 @@ export default {
             goods: [],
             noGoods: {
                 title: '输入品名或货号进行搜索'
-            }
+            },
+            loading: false
         }
     },
     computed: {
@@ -69,6 +72,8 @@ export default {
     },
     methods: {
         async search () {
+            this.loading = true
+            let scroll = document.getElementsByClassName('container')[0]
             let searchRes = await search(this.activeCompany.companyId, this.searchText)
             if (searchRes.success && searchRes.data.length > 0) {
                 this.setGood(searchRes.data)
@@ -77,6 +82,8 @@ export default {
                 this.noGoods.title = '没有搜索到对应的商品，请重新搜索'
                 this.goods = []
             }
+            scroll.scrollTop = 0
+            this.loading = false
         },
         setGood (goods) {
             let companyId = this.activeCompany.companyId
@@ -108,7 +115,6 @@ export default {
 .search {
     padding-top: $headH;
     height: 100%;
-    overflow: auto;
     .header {
         display: flex;
         align-items: center;
@@ -122,6 +128,8 @@ export default {
         z-index: 100;
     }
     .container {
+        height: 100%;
+        overflow: auto;
         display: flex;
         flex-wrap: wrap;
         padding: 0 2% 0 2%;
@@ -240,5 +248,9 @@ export default {
         margin-top: 10px;
         @include sc(16px, #000000);
     }
+}
+
+.loading {
+    height: 100%;
 }
 </style>

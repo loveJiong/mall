@@ -1,5 +1,5 @@
 <template>
-  <div class="addCompany">
+  <div class="addCompany" v-loading="loading">
     <div class="addCompany-title">
         <router-link to="/home" class="el-icon-arrow-left"></router-link>
         添加商家
@@ -33,7 +33,8 @@ export default {
         return {
             addCompanyImg: require('../../static/img/addCompany.png'),
             customerCode: '',
-            companyCode: ''
+            companyCode: '',
+            loading: false
         }
     },
     computed: {
@@ -52,6 +53,7 @@ export default {
     },
     methods: {
         async addCompany () {
+            this.loading = true
             if (this.companyCode && this.customerCode) {
                 let bindRes = await bindCustomer(this.userInfo.id, this.companyCode, this.customerCode)
                 console.log(bindRes)
@@ -69,6 +71,7 @@ export default {
             } else {
                 this.$message.error('编号或口令不能为空。')
             }
+            this.loading = false
         }
     }
 }
@@ -78,6 +81,7 @@ export default {
 <style lang="scss" scoped>
 @import 'src/style/config';
 .addCompany {
+    height: 100%;
     .addCompany-title {
         position: relative;
         text-align: center;
@@ -92,6 +96,7 @@ export default {
         }
   }
   .container {
+    height: 100%;
     .phone-img {
         margin: 5px 0;
         text-align: center;

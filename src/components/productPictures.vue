@@ -1,5 +1,5 @@
 <template>
-	<div class="product-pictures">
+	<div class="product-pictures" v-loading="loading">
 		<div class="company-switch">
 			<div class="company-menu">
 				<div class="company-active" @click.stop="menuToggle">
@@ -37,7 +37,8 @@ export default {
 		return {
 			categoryList: [
 			],
-			menuShow: false
+			menuShow: false,
+			loading: false
 		}
 	},
     computed: {
@@ -66,12 +67,14 @@ export default {
 	},
 	methods: {
         async getCategoryList () {
+			this.loading = true
             let categoryListRes = await getCategoryList(this.activeCompany.companyId)
             if (categoryListRes.success) {
 				this.$store.commit('setCategoryList', categoryListRes.data)
 				this.categoryList = this.$store.state.categoryList
 				console.log(this.categoryList)
             }
+			this.loading = false
         },
 		gotoDeatile (category) {
 			this.$store.commit('setActiveCategory', category)
@@ -109,14 +112,19 @@ export default {
 <style lang="scss" scoped>
 @import 'src/style/config';
 .product-pictures {
+	height: 100%;
+	padding-top: $headH;
 	.company-switch {
-		position: relative;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 100;
 		display: flex;
+		@include wh(100%, $headH);
 		align-items: center;
-		height: $headH;
 		background-color: $white;
 		border-bottom: 1px solid $borcd;
-		z-index: 1;
+		z-index: 100;
 		.company-menu {
 			width: 100%;
 			.company-active {
@@ -160,6 +168,7 @@ export default {
 	.container {
 		display: flex;
 		flex-direction: column;
+		min-height: 100%;
         margin-top: 10px;
         margin-bottom: 45px;
 		li {

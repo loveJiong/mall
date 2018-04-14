@@ -1,5 +1,5 @@
 <template>
-    <div class="login" v-if="!haveCache">
+    <div class="login" v-if="!haveCache" v-loading="loading">
         <div class="loing-bg">
         </div>
         <div class="login-form">
@@ -32,7 +32,8 @@ export default {
                 password: ''
             },
             errorText: '',
-            haveCache: true
+            haveCache: true,
+            loading: false
         }
     },
     computed: {
@@ -49,6 +50,7 @@ export default {
     },
     methods: {
         async login () {
+            this.loading = true
             let loginRes = await accountLogin(this.loginForm)
             if (loginRes.success) {
                 this.$store.commit('setUserInfo', loginRes.data)
@@ -57,8 +59,10 @@ export default {
             } else {
                 this.$message.error(loginRes.msg)
             }
+            this.loading = false
         },
         async getCompanyList (customerId) {
+            this.loading = true
             let companyListRes = await getCompanyList(customerId)
             if (companyListRes.success) {
                 this.$store.commit('setCompanyList', companyListRes.data)
@@ -67,6 +71,7 @@ export default {
             } else {
                 this.$message.error(companyListRes.msg)
             }
+            this.loading = false
         }
     }
 }

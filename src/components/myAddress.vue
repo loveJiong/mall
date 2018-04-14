@@ -1,5 +1,5 @@
 <template>
-    <div class="myAddress">
+    <div class="myAddress" v-loading="loading">
         <div class="myAddress-title">
             <router-link to="/mine" class="el-icon-arrow-left"></router-link>
             我的收货地址
@@ -58,7 +58,8 @@ export default {
     return {
         isAdd: false,
         form: {
-        }
+        },
+        loading: false
     }
   },
   computed: {
@@ -71,15 +72,18 @@ export default {
   },
   methods: {
         async init () {
+            this.loading = true
             let addressRes = await getAddress(this.userInfo.id)
             if (addressRes.success && addressRes.data.length > 0) {
                 this.form = addressRes.data[0]
             } else if (addressRes.success && addressRes.data.length === 0) {
                 this.isAdd = true
             }
+            this.loading = false
             console.log(addressRes)
         },
         async submit () {
+            this.loading = true
             console.log(this.form)
             if (this.isAdd) {
                 let data = Object.assign({}, this.form, {customerId: this.userInfo.id})
@@ -101,6 +105,7 @@ export default {
                     this.$message.error('更新地址失败，请稍后重试。')
                 }
             }
+            this.loading = false
         }
   }
 }
