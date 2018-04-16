@@ -27,9 +27,10 @@
                 </ul>
             </div>
         </div>
-        <pull-to :bottom-load-method="refresh" :bottom-config="{failText: '没有更多', doneText: '', stayDistance: 0}" :bottom-block-height="0" v-loading="loading">
+        <pull-to :bottom-load-method="nextRefresh" :bottom-config="{pullText: '上拉加载下一系列', failText: '没有更多', doneText: '加载完成'}" :bottom-block-height="0"
+        :top-load-method="lastRefresh" :top-config="{pullText: '下拉加载上一系列', failText: '没有更多', doneText: '', stayDistance: 0}" v-loading="loading">
             <ul class="container">
-                <li v-for="(good, index) in goods" v-bind:key="index">
+                <li class="good-item" v-for="(good, index) in goods" v-bind:key="index">
                     <div class="good-num" v-if="good.num > 0">{{good.num}}</div>
                     <div class="good-no">REF:{{good.no}}</div>
                     <div class="good-img">
@@ -38,8 +39,8 @@
                     <span>{{good.name}}</span>
                     <div>
                         <div class="good-detail">
-                            <span class="good-count">库存：{{good.count}}</span>
-                            <span class="good-pck">包装数：{{good.bagCount}}/{{good.bagCount}}</span>
+                            <span class="good-count">库存:{{good.count}}</span>
+                            <span class="good-pck">包装数:{{good.boxCount}}/{{good.bagCount}}</span>
                         </div>
                         <span v-if="good.zk == '0' || good.zk == ''" class="price">{{good.price}}€</span>
                         <div v-if="good.zk != '0' && good.zk != ''" class="have-zk">
@@ -124,23 +125,22 @@ export default {
         document.removeEventListener('click', this.menuHide)
     },
     methods: {
-        async getGoods () {
+        async getGoods (isScroll, isNext) {
             this.loading = true
-            let scroll = document.getElementsByClassName('scroll-container')[0]
             if (this.activeSecondary) {
                 let index = this.getSecondaryIndex(this.activeSecondary)
                 let goodsRes = await getGoods(this.activeCompany.companyId, this.activeSecondary.guid)
                 if (goodsRes.success && goodsRes.data.length > 0) {
                     this.setGood(goodsRes.data)
                     this.goods = goodsRes.data
-                    this.secondaryIndex = index + 1
+                    this.secondaryIndex = index
                 } else if (goodsRes.success) {
                     for (++index; index < this.activeCategory.secondaryList.length; index++) {
                         goodsRes = await getGoods(this.activeCompany.companyId, this.activeCategory.secondaryList[index].guid)
                         if (goodsRes.success && goodsRes.data.length > 0) {
                             this.setGood(goodsRes.data)
                             this.goods = goodsRes.data
-                            this.secondaryIndex = index + 1
+                            this.secondaryIndex = index
                             break
                         }
                     }
@@ -153,8 +153,18 @@ export default {
                     this.secondaryIndex = -1
                 }
             }
-            scroll.scrollTop = 0
             this.loading = false
+            if (!isScroll || isNext) {
+                let scroll = document.getElementsByClassName('scroll-container')[0]
+                scroll.scrollTop = 0
+            } else {
+                this.$nextTick(() => {
+                    let scroll = document.getElementsByClassName('good-item')
+                    scroll = scroll[scroll.length - 1]
+                    scroll.scrollIntoView(false)
+                    console.log(scroll)
+                })
+            }
         },
         initData () {
             this.menuShow = false
@@ -194,14 +204,14 @@ export default {
                 event.preventDefault()
             }
         },
-        categoryChoose (category) {
+        categoryChoose (category, isScroll = false, isNext = true) {
             this.$store.commit('setActiveCategory', category)
             if (this.secondaryList.length > 0) {
-                this.activeSecondary = this.secondaryList[0]
+                this.activeSecondary = this.secondaryList[isNext ? 0 : this.secondaryList.length - 1]
             } else {
                 this.activeSecondary = null
             }
-            this.getGoods()
+            this.getGoods(isScroll, isNext)
         },
         secondaryChoose (secondary) {
             this.menuShow = false
@@ -209,27 +219,28 @@ export default {
             this.getGoods()
             document.querySelector('body').setAttribute('style', 'overflow:auto;background:#ffffff')
         },
-        async refresh (loaded) {
+        async nextRefresh (loaded) {
             this.loading = true
-            let index = this.secondaryIndex
+            let index = this.secondaryIndex + 1
             let scroll = document.getElementsByClassName('scroll-container')[0]
             if (index >= 0 && index < this.activeCategory.secondaryList.length) {
                 let goodsRes = await getGoods(this.activeCompany.companyId, this.activeCategory.secondaryList[index].guid)
                 if (goodsRes.success && goodsRes.data.length > 0) {
                     this.setGood(goodsRes.data)
                     this.goods = goodsRes.data
-                    this.secondaryIndex = index + 1
+                    this.secondaryIndex = index
                     if (this.activeCategory.secondaryList[index].level === 1) {
                         this.activeSecondary = this.activeCategory.secondaryList[index]
                     }
                     loaded('done')
+                    scroll.scrollTop = 0
                 } else if (goodsRes.success) {
                     for (++index; index < this.activeCategory.secondaryList.length; index++) {
                         goodsRes = await getGoods(this.activeCompany.companyId, this.activeCategory.secondaryList[index].guid)
                         if (goodsRes.success && goodsRes.data.length > 0) {
                             this.setGood(goodsRes.data)
                             this.goods = goodsRes.data
-                            this.secondaryIndex = index + 1
+                            this.secondaryIndex = index
                             if (this.activeCategory.secondaryList[index].level === 1) {
                                 this.activeSecondary = this.activeCategory.secondaryList[index]
                             }
@@ -237,29 +248,94 @@ export default {
                         }
                     }
                     loaded('done')
+                    scroll.scrollTop = 0
                 } else {
                     loaded('fail')
                 }
-                scroll.scrollTop = 0
-                this.loading = false
             } else {
                 let categoryIndex = this.getCategoryIndex(this.activeCategory) + 1
                 if (categoryIndex < this.categoryList.length) {
-                    this.categoryChoose(this.categoryList[categoryIndex])
-                    this.secondaryIndex = -1
+                    this.categoryChoose(this.categoryList[categoryIndex], true)
                     loaded('done')
                 } else {
                     loaded('fail')
                 }
             }
+            this.loading = false
+        },
+        async lastRefresh (loaded) {
+            this.loading = true
+            let index = this.secondaryIndex - 1
+            if (index >= 0 && index < this.activeCategory.secondaryList.length) {
+                let goodsRes = await getGoods(this.activeCompany.companyId, this.activeCategory.secondaryList[index].guid)
+                if (goodsRes.success && goodsRes.data.length > 0) {
+                    this.setGood(goodsRes.data)
+                    this.goods = goodsRes.data
+                    this.secondaryIndex = index - 1
+                    if (this.activeCategory.secondaryList[index].level === 1) {
+                        this.activeSecondary = this.activeCategory.secondaryList[index]
+                    }
+                    loaded('done')
+                    this.$nextTick(() => {
+                        let scroll = document.getElementsByClassName('good-item')
+                        scroll = scroll[scroll.length - 1]
+                        scroll.scrollIntoView(false)
+                        console.log(scroll)
+                    })
+                } else if (goodsRes.success) {
+                    for (--index; index >= 0; index--) {
+                        goodsRes = await getGoods(this.activeCompany.companyId, this.activeCategory.secondaryList[index].guid)
+                        if (goodsRes.success && goodsRes.data.length > 0) {
+                            this.setGood(goodsRes.data)
+                            this.goods = goodsRes.data
+                            this.secondaryIndex = index - 1
+                            if (this.activeCategory.secondaryList[index].level === 1) {
+                                this.activeSecondary = this.activeCategory.secondaryList[index]
+                            }
+                            break
+                        }
+                    }
+                    loaded('done')
+                    this.$nextTick(() => {
+                        let scroll = document.getElementsByClassName('good-item')
+                        scroll = scroll[scroll.length - 1]
+                        scroll.scrollIntoView(false)
+                    })
+                } else {
+                    loaded('fail')
+                }
+            } else {
+                let categoryIndex = this.getCategoryIndex(this.activeCategory) - 1
+                if (categoryIndex >= 0) {
+                    this.categoryChoose(this.categoryList[categoryIndex], true, false)
+                    loaded('done')
+                } else {
+                    loaded('fail')
+                }
+            }
+            this.loading = false
         },
         addToCart (good) {
-            good.num++
+            good.num += good.bagCount
             this.$store.commit('addToCart', {company: this.activeCompany, good})
         },
         removeToCart (good) {
-            good.num--
-            this.$store.commit('removeToCart', {company: this.activeCompany, good})
+            if (good.num - good.bagCount === 0) {
+                this.$confirm('确认删除当前商品？', '删除确认', {
+                    confirmButtonText: '确认删除',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    good.num -= good.bagCount
+                    this.$store.commit('deleteGood', {company: this.activeCompany, good})
+                    this.$message.success('删除商品成功！')
+                }, () => {
+                    console.log('cancel')
+                })
+            } else {
+                good.num -= good.bagCount
+                this.$store.commit('removeToCart', {company: this.activeCompany, good})
+            }
         },
         zkPrice (price, zk) {
             let num = price * (100 - zk) / 100

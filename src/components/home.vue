@@ -6,36 +6,37 @@
                 <el-button type="primary">添加商家</el-button>
             </router-link>
         </div>
-        <div class="companyList">
-            <ul>
-                <li class="company" v-for="(company, index) in companyList" :key="index" v-bind:class="{ active: company.isActive}" @click="toProductPictures(company)">
-                    <div class="information">
-                        <div class="icon">
-							<span v-bind:class="colorObj(index)">{{company.companyDisplayName.substring(0,1)}}</span>
-                        </div>
-                        <div class="detail">
-                            <span class="name" v-bind:title="company.companyDisplayName">{{company.companyDisplayName}}</span>
-                            <!-- <span class="mobile">电话：{{company.mobile}}</span> -->
-                        </div>
-                    </div>
-                    <div class="description">
-                        <span>{{company.companyScope}}</span>
-                    </div>
-                </li>
-            </ul>
-        </div>
-		<div class="no-company" v-if="noCompany">
-			<i class="el-icon-warning"></i>
-			<span class="title">当前没有商家</span>
-			<span class="text">你目前没有添加任何商家，你可以点击左右上角的添加商家进行添加！</span>
-			<router-link to="/addCompany">去添加</router-link>
-		</div>
+		<pull-to :top-load-method="refresh" :top-config="{failText: '刷新失败', doneText: '刷新完成'}" :top-block-height="0">
+			<div class="companyList">
+				<ul>
+					<li class="company" v-for="(company, index) in companyList" :key="index" v-bind:class="{ active: company.isActive}" @click="toProductPictures(company)">
+						<div class="information">
+							<div class="icon">
+								<span v-bind:class="colorObj(index)">{{company.companyDisplayName.substring(0,1)}}</span>
+							</div>
+							<div class="detail">
+								<span class="name" v-bind:title="company.companyDisplayName">{{company.companyDisplayName}}</span>
+								<span class="description">{{company.companyScope}}</span>
+							</div>
+						</div>
+					</li>
+				</ul>
+			</div>
+			<div class="no-company" v-if="noCompany">
+				<i class="el-icon-warning"></i>
+				<span class="title">当前没有商家</span>
+				<span class="text">你目前没有添加任何商家，你可以点击左右上角的添加商家进行添加！</span>
+				<router-link to="/addCompany">去添加</router-link>
+			</div>
+		</pull-to>
         <foot-guide></foot-guide>
     </div>
 </template>
 
 <script>
 import footGuide from './footGuide'
+import PullTo from 'vue-pull-to'
+import {getCompanyList} from './../service/getData'
 export default {
 	name: 'home',
 	data () {
@@ -43,7 +44,8 @@ export default {
 		}
 	},
 	components: {
-		footGuide
+		footGuide,
+		PullTo
 	},
 	computed: {
 		noCompany () {
@@ -52,7 +54,10 @@ export default {
 		companyList () {
 			console.log(this.$store.state.companyList)
             return this.$store.state.companyList
-		}
+		},
+		userInfo () {
+            return this.$store.state.userInfo
+        }
 	},
 	methods: {
 		toProductPictures (company) {
@@ -69,6 +74,15 @@ export default {
 				color6: index % 7 === 5,
 				color7: index % 7 === 6
 			}
+		},
+		async refresh (loaded) {
+			let companyListRes = await getCompanyList(this.userInfo.id)
+			if (companyListRes.success) {
+				this.$store.commit('setCompanyList', companyListRes.data)
+				loaded('done')
+			} else {
+				loaded('fail')
+			}
 		}
 	}
 }
@@ -81,6 +95,7 @@ export default {
 	height: 100%;
 	.home-title {
 		position: relative;
+		z-index: 2;
 		text-align: center;
 		border-bottom: 1px solid $borcd;
 		color: $fc;
@@ -108,7 +123,6 @@ export default {
 		border-radius: 10px;
 		.information {
 			display: flex;
-			border-bottom: 1px solid #efeff4;
 			.icon {
 				display: flex;
 				align-items: center;
@@ -126,7 +140,7 @@ export default {
 			}
 			.detail {
 				display: flex;
-				align-items: center;
+				flex-direction: column;
 				height: 50px;
 				.name {
 					@include sc(16px, #000000);
@@ -143,16 +157,12 @@ export default {
 		}
 		.description {
 			@include sc(12px, #575757);
-			padding: 5px;
-			span {
-				height: 42px;
-				line-height: 14px;
-				display: -webkit-box;               // 将对象作为弹性伸缩盒子模型显示 。
-				text-overflow: ellipsis;            // 可以用来多行文本的情况下，用省略号“...”隐藏超出范围的文本 。
-				-webkit-box-orient: vertical;       // 设置或检索伸缩盒对象的子元素的排列方式 。
-				-webkit-line-clamp: 3;
-				overflow: hidden;
-			}
+			height: 16px;
+			display: -webkit-box;               // 将对象作为弹性伸缩盒子模型显示 。
+			text-overflow: ellipsis;            // 可以用来多行文本的情况下，用省略号“...”隐藏超出范围的文本 。
+			-webkit-box-orient: vertical;       // 设置或检索伸缩盒对象的子元素的排列方式 。
+			-webkit-line-clamp: 3;
+			overflow: hidden;
 		}
 	}
 	.active {
@@ -209,4 +219,7 @@ export default {
 	background-color: #3d62db;
 }
 
+.vue-pull-to-wrapper .action-block {
+	top: -60px;
+}
 </style>

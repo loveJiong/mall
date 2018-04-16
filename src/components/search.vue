@@ -78,6 +78,7 @@ export default {
             if (searchRes.success && searchRes.data.length > 0) {
                 this.setGood(searchRes.data)
                 this.goods = searchRes.data
+                console.log(this.goods[0])
             } else if (searchRes.success) {
                 this.noGoods.title = '没有搜索到对应的商品，请重新搜索'
                 this.goods = []
@@ -93,12 +94,26 @@ export default {
             })
         },
         addToCart (good) {
-            good.num++
+            good.num += good.bagCount
             this.$store.commit('addToCart', {company: this.activeCompany, good})
         },
         removeToCart (good) {
-            good.num--
-            this.$store.commit('removeToCart', {company: this.activeCompany, good})
+            if (good.num - good.bagCount === 0) {
+                this.$confirm('确认删除当前商品？', '删除确认', {
+                    confirmButtonText: '确认删除',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    good.num -= good.bagCount
+                    this.$store.commit('deleteGood', {company: this.activeCompany, good})
+                    this.$message.success('删除商品成功！')
+                }, () => {
+                    console.log('cancel')
+                })
+            } else {
+                good.num -= good.bagCount
+                this.$store.commit('removeToCart', {company: this.activeCompany, good})
+            }
         },
         zkPrice (price, zk) {
             let num = price * (100 - zk) / 100

@@ -22,7 +22,9 @@ function getGoodCart (good) {
         num: good.num,
         origin: 0,
         totalPrice: 0,
-        count: good.count
+        count: good.count,
+        bagCount: good.bagCount,
+        boxCount: good.boxCount
     }
 }
 

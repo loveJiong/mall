@@ -222,7 +222,7 @@ export default {
             return goods
         },
         addToOrder (good, unOrder) {
-            good.num++
+            good.num += good.bagCount
             this.$store.commit('addToOrder', {
                 company: this.activeCompany,
                 good,
@@ -230,12 +230,25 @@ export default {
             })
         },
         removeToOrder (good, unOrder) {
-            good.num--
-            this.$store.commit('removeToOrder', {
-                company: this.activeCompany,
-                good,
-                unOrder
-            })
+            if (good.num - good.bagCount === 0) {
+                this.$confirm('确认删除当前商品？', '删除确认', {
+                    confirmButtonText: '确认删除',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    good.num -= good.bagCount
+                    this.deleteGood(good, unOrder)
+                }, () => {
+                    console.log('cancel')
+                })
+            } else {
+                good.num -= good.bagCount
+                this.$store.commit('removeToOrder', {
+                    company: this.activeCompany,
+                    good,
+                    unOrder
+                })
+            }
         },
         deleteGood (good, unOrder) {
             this.$store.commit('deleteGoodToOrder', {
@@ -284,7 +297,7 @@ export default {
             }).then(async () => {
                 this.loading = true
                 let addressRes = await getAddress(this.userInfo.id)
-                if (addressRes.success && addressRes.data.length > 0 && addressRes.data[0].companyAddress && addressRes.data[0].linkMan) {
+                if (addressRes.success && addressRes.data.length > 0 && addressRes.data[0].companyAddress && addressRes.data[0].companyName && addressRes.data[0].linkTelephone) {
                     let commitRes = await commitOrder(data)
                     if (commitRes.success) {
                         this.$message.success('上传订单成功！')

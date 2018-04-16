@@ -8,7 +8,8 @@
             <p>关于我们：</p>
             <p class="indent">我们是大地软件网络科技有限公司， 专业提供叫货出货一体化软件服务。</p>
             <p>联系方式：</p>
-            <p class="indent">email: lifengcool@gmail.com</p>
+            <p class="indent">EMAIL: lifengcool@gmail.com</p>
+            <p class="indent">MOVIL: 0034-688111845</p>
         </div>
     </div>
 </template>

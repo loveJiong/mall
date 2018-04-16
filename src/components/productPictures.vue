@@ -170,8 +170,8 @@ export default {
 		display: flex;
 		flex-direction: column;
 		min-height: 100%;
-        margin-top: 10px;
-        margin-bottom: 45px;
+		padding-top: 10px;
+		padding-bottom: 45px;
 		li {
 			display: flex;
 			position: relative;

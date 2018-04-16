@@ -151,12 +151,24 @@ export default {
             }
         },
         addToCart (good) {
-            good.num++
+            good.num += good.bagCount
             this.$store.commit('addToCart', {company: this.activeCompany, good})
         },
         removeToCart (good) {
-            good.num--
-            this.$store.commit('removeToCart', {company: this.activeCompany, good})
+            if (good.num - good.bagCount === 0) {
+                this.$confirm('确认删除当前商品？', '删除确认', {
+                    confirmButtonText: '确认删除',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.deleteGood(good)
+                }, () => {
+                    console.log('cancel')
+                })
+            } else {
+                good.num -= good.bagCount
+                this.$store.commit('removeToCart', {company: this.activeCompany, good})
+            }
         },
         deleteGood (good) {
             this.$store.commit('deleteGood', {company: this.activeCompany, good})
