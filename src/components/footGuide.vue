@@ -32,18 +32,9 @@ export default {
             path: this.$route.path
         }
     },
-    computed: {
-        productRoute () {
-            return this.$store.state.productRoute
-        }
-    },
     methods: {
         handleSelect (index) {
-            if (index !== '/productPictures') {
-                this.$router.push(index)
-            } else {
-                this.$router.push({name: this.productRoute, params: { refresh: false }})
-            }
+            this.$router.push(index)
         }
     }
 }

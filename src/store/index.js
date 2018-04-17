@@ -13,7 +13,7 @@ function setCompany (company) {
 
 function getGoodCart (good) {
     return {
-        goodNO: good.id,
+        goodNO: good.no,
         id: good.id,
         name: good.name,
         price: good.price,
@@ -43,10 +43,13 @@ export default new Vuex.Store({
         companyList: [],
         activeCompany: {},
         categoryList: [],
-        activeCategory: {},
+        activeCategory: {
+            secondaryList: [] // 防止切换企业报错
+        },
         cart,
-        productRoute: 'productPictures',
-        upLoadOrders
+        upLoadOrders,
+        groupDetailBackPath: '',
+        activeOrder: ''
     },
     mutations: {
         setUserInfo (state, userInfo) {
@@ -67,6 +70,9 @@ export default new Vuex.Store({
             }
             state.activeCompany = company
             state.activeCompany.isActive = true
+            state.activeCategory = {
+                secondaryList: [] // 防止切换企业报错
+            }
         },
         setCategoryList (state, categoryList) {
             state.categoryList = []
@@ -127,9 +133,6 @@ export default new Vuex.Store({
             delete state.cart[companyId]
             localStorage.cart = JSON.stringify(state.cart)
         },
-        setProductRoute (state, route) {
-            state.productRoute = route
-        },
         pushOrder (state, data) {
             let companyId = data.company.companyId
             let order = data.order
@@ -153,6 +156,7 @@ export default new Vuex.Store({
             let order = data.unOrder
             let num = good.num
             let index = state.upLoadOrders[companyId].indexOf(order)
+            if (!state.upLoadOrders[companyId][index][good.id]) state.upLoadOrders[companyId][index][good.id] = getGoodCart(good)
             let stateGood = state.upLoadOrders[companyId][index][good.id]
             stateGood.num = num
             stateGood.origin = stateGood.num * stateGood.price
@@ -179,6 +183,12 @@ export default new Vuex.Store({
             let index = state.upLoadOrders[companyId].indexOf(order)
             delete state.upLoadOrders[companyId][index][good.id]
             localStorage.upLoadOrders = JSON.stringify(state.upLoadOrders)
+        },
+        changeAddToOrder (state, order) {
+            state.activeOrder = order
+        },
+        setGroupDetailBackPath (state, path) {
+            state.groupDetailBackPath = path
         }
     }
 })

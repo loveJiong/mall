@@ -53,7 +53,6 @@ export default {
 		footGuide
     },
 	mounted () {
-		this.$store.commit('setProductRoute', 'productPictures')
 		if (this.companyList.length > 0) {
 			this.getCategoryList()
 		} else {
@@ -72,6 +71,7 @@ export default {
             if (categoryListRes.success) {
 				this.$store.commit('setCategoryList', categoryListRes.data)
 				this.categoryList = this.$store.state.categoryList
+				if (this.$route.params.toGroupDetail) this.gotoDeatile(this.categoryList[0])
 				console.log(this.categoryList)
             }
 			this.loading = false

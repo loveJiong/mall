@@ -79,4 +79,6 @@ export const commitOrder = (data) => http('/order/commit', 'POST', headers, data
 
 export const getOrder = (customerId, companyId, status) => http('/order/all', 'GET', headers, {customerId, companyId, status})
 
+export const getOrderDetail = (customerId, companyId, orderGuid) => http('/order/goods', 'GET', headers, {customerId, companyId, orderGuid})
+
 export const search = (companyId, q) => http('/goods/search', 'GET', headers, {companyId, q})

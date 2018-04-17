@@ -12,6 +12,7 @@ import mine from '@/components/mine'
 import myAddress from '@/components/myAddress'
 import aboutUs from '@/components/aboutUs'
 import aboutSoft from '@/components/aboutSoft'
+import orderDetail from '@/components/orderDetail'
 
 Vue.use(Router)
 
@@ -56,6 +57,11 @@ export default new Router({
       path: '/orderManagement',
       name: 'orderManagement',
       component: orderManagement
+    },
+    {
+      path: '/orderManagement/orderDetail',
+      name: 'orderDetail',
+      component: orderDetail
     },
     {
       path: '/mine',

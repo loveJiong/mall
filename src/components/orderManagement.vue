@@ -3,7 +3,6 @@
         <div class="header">
             <div class="order-title" @click.stop="''">
                 订单管理
-                <el-button class="shopping-continue" round size="mini" @click="toProduct">继续点货</el-button>
             </div>
             <div class="company-menu">
                 <div class="company-active" @click.stop="menuToggle">
@@ -23,7 +22,7 @@
                 <li v-for="(item, index) in tabs" v-bind:key="index" class="tab-item" v-bind:class="{ active: item.isActive}" @click="tabSwitch(item)">{{item.name}}</li>
             </ul>
             <ul class="orders" v-show="active.status === 0">
-                <li class="order" v-for="(order, index) in orders" v-bind:key="index">
+                <li class="order" v-for="(order, index) in orders" v-bind:key="index" @click="toOrderDetail(order)">
                     <div class="order-text">
                         <p class="order-bh"><span class="order-title">订单编号：</span>{{order.bh}}</p>
                         <p class="order-bz"><span class="order-title">备注：</span>{{order.bz}}</p>
@@ -42,7 +41,6 @@
                     <p class="unOrder-bh" @click="toggle(unOrder)"><span class="order-title">订单编号：</span>{{unOrder.bh}}</p>
                     <i v-show="unOrder.show" class="el-icon-caret-top"></i>
                     <i v-show="!unOrder.show" class="el-icon-caret-bottom"></i>
-                    <div></div>
                     <transition name="fade">
                         <ul class="good-list" v-show="unOrder.show">
                             <li v-for="(good, index) in unOrder.goods" v-bind:key="index" v-bind:class="{ showDelete: good.showDelete, hideDelete: good.hideDelete }">
@@ -77,11 +75,12 @@
                     <div class="commit-unOrder">
                         <div>
                             <span class="unOrder-price"><span class="order-title">金额：</span>{{unOrderPrice(unOrder)}}€</span>
-                            <el-button class="delete-unOrder" type="danger" round @click="deleteUnOrder(unOrder)">删除订单</el-button>
+                            <el-button class="shopping-continue" round size="mini" @click="toGroupDetail(unOrder)">继续点货</el-button>
                         </div>
                         <div>
                             <input type="text" class="unOrder-bz" v-model="unOrder.bz" placeholder="在这里写下您的订单备注">
-                            <el-button type="primary" round @click="commitUnOrder(unOrder)">上传订单</el-button>
+                            <el-button class="delete-unOrder" type="danger" round @click="deleteUnOrder(unOrder)">删除</el-button>
+                            <el-button type="primary" round @click="commitUnOrder(unOrder)">上传</el-button>
                         </div>
                     </div>
                 </li>
@@ -105,7 +104,7 @@ export default {
                 {
                     name: '未上传',
                     status: -1,
-                    isActive: true
+                    isActive: false
                 },
                 {
                     name: '已上传',
@@ -134,10 +133,13 @@ export default {
 		upLoadOrders () {
 			return this.$store.state.upLoadOrders
 		}
-	},
+    },
     mounted () {
+        this.$store.commit('changeAddToOrder', '')
+        this.$store.commit('setGroupDetailBackPath', '')
         if (this.companyList.length > 0) {
-            this.active = this.tabs[0]
+            this.active = this.$route.params.tabs ? this.tabs[this.$route.params.tabs] : this.tabs[0]
+            this.active.isActive = true
             this.getOrder(this.active.status)
 		} else {
 			this.$message.error('你当前没有添加商家，请先添加商家！')
@@ -159,6 +161,7 @@ export default {
                 this.unOrders = this.upLoadOrders[this.activeCompany.companyId] || []
                 this.unOrders.forEach(unOrder => {
                     unOrder.goods = this.getGoods(unOrder)
+                    unOrder.show = false
                 })
             }
         },
@@ -215,7 +218,6 @@ export default {
                 if (key !== 'bh' && key !== 'bz' && key !== 'goods' && key !== 'show') {
                     unOrder[key].showDelete = false
                     unOrder[key].hideDelete = false
-                    unOrder[key].show = false
                     goods.push(unOrder[key])
                 }
             })
@@ -257,7 +259,7 @@ export default {
                 unOrder
             })
             this.$message.success('删除商品成功！')
-            this.getOrder(this.active.status)
+            unOrder.goods = this.getGoods(unOrder)
             this.$forceUpdate()
         },
         showDelete (good) {
@@ -326,12 +328,17 @@ export default {
                 console.log('cancel')
             })
         },
-        toProduct () {
+        toGroupDetail (unOrder) {
+            this.$store.commit('changeAddToOrder', unOrder)
+            this.$store.commit('setGroupDetailBackPath', '/orderManagement')
             if (this.$store.state.activeCategory.guid) {
                 this.$router.push({name: 'groupDetail', params: { refresh: false }})
             } else {
-                this.$router.push({name: 'productPictures'})
+                this.$router.push({name: 'productPictures', params: { toGroupDetail: true }})
             }
+        },
+        toOrderDetail (order) {
+			this.$router.push({name: 'orderDetail', params: { order }})
         }
     }
 }
@@ -353,11 +360,6 @@ export default {
             background-color: #89c4f4;
             color: $white;
             @include font(16px, 49px);
-            .shopping-continue {
-                position: absolute;
-                right: 10px;
-                top: 12px;
-            }
         }
         .company-menu {
             position: relative;
@@ -557,11 +559,11 @@ export default {
         font-size: 14px;
         color: #5eacf0;
     }
-    .delete-unOrder {
+    .delete-unOrder, .shopping-continue {
         float: right;
     }
     .unOrder-bz {
-        width: calc(100% - 90px - 15px);
+        width: calc(100% - 90px - 60px);
         border: 1px solid #409EFF;
         border-radius: 10px;
         margin-right: 10px;

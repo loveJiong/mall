@@ -3,7 +3,7 @@
         <div class="header">
             <div class="shopping-title" @click.stop="''">
                 当前订单
-                <el-button class="shopping-continue" round size="mini" @click="toProduct">继续点货</el-button>
+                <el-button class="shopping-continue" round size="mini" @click="toGroupDetail">继续点货</el-button>
             </div>
             <div class="company-menu">
                 <div class="company-active" @click.stop="menuToggle">
@@ -23,7 +23,7 @@
                 <i class="el-icon-warning"></i>
                 <span class="title">当前订单是空的</span>
                 <span class="text">你目前没有订购任何产品，你可以点击左下角的产品图册进行选购！</span>
-                <a @click="toProduct">去看看</a>
+                <a @click="toGroupDetail">去看看</a>
             </div>
             <div class="have-goods" v-if="haveGoods">
                 <ul class="good-list">
@@ -99,7 +99,7 @@ export default {
         footGuide
     },
     mounted () {
-        console.log(this.goods)
+        this.$store.commit('setGroupDetailBackPath', '')
         if (this.companyList.length > 0) {
             this.init()
 		} else {
@@ -205,11 +205,12 @@ export default {
             })
             return price.toFixed(2)
         },
-        toProduct () {
+        toGroupDetail () {
+            this.$store.commit('setGroupDetailBackPath', '/shoppingCart')
             if (this.$store.state.activeCategory.guid) {
                 this.$router.push({name: 'groupDetail', params: { refresh: false }})
             } else {
-                this.$router.push({name: 'productPictures'})
+                this.$router.push({name: 'productPictures', params: { toGroupDetail: true }})
             }
         },
         showDelete (good) {

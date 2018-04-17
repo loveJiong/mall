@@ -1,7 +1,7 @@
 <template>
     <div class="group-detail">
         <div class="header" @click.stop="''">
-            <router-link to="/productPictures" class="el-icon-arrow-left"></router-link>
+            <a class="el-icon-arrow-left" @click="goBack"></a>
             <div class="title" @click.stop="menuToggle">
                 <span class="category-name">{{activeCategory.name}}</span>
                 <span class="secondar-name" v-if="activeSecondary">{{activeSecondary.name}}</span>
@@ -104,7 +104,10 @@ export default {
             return this.$store.state.activeCompany
         },
         cart () {
-            return this.$store.state.cart
+            return this.$store.state.activeOrder || this.$store.state.cart
+        },
+        backPath () {
+            return this.$store.state.groupDetailBackPath
         }
     },
     activated () {
@@ -176,6 +179,7 @@ export default {
             let companyId = this.activeCompany.companyId
             goods.forEach(good => {
                 if (this.cart[companyId] && this.cart[companyId][good.id]) good.num = this.cart[companyId][good.id].num
+                else if (this.cart[good.id]) good.num = this.cart[good.id].num
                 else good.num = 0
             })
         },
@@ -317,7 +321,15 @@ export default {
         },
         addToCart (good) {
             good.num += good.bagCount
-            this.$store.commit('addToCart', {company: this.activeCompany, good})
+            if (this.$store.state.activeOrder) {
+                this.$store.commit('addToOrder', {
+                    company: this.activeCompany,
+                    good,
+                    unOrder: this.$store.state.activeOrder
+                })
+            } else {
+                this.$store.commit('addToCart', {company: this.activeCompany, good})
+            }
         },
         removeToCart (good) {
             if (good.num - good.bagCount === 0) {
@@ -327,14 +339,30 @@ export default {
                     type: 'warning'
                 }).then(() => {
                     good.num -= good.bagCount
-                    this.$store.commit('deleteGood', {company: this.activeCompany, good})
+                    if (this.$store.state.activeOrder) {
+                        this.$store.commit('deleteGoodToOrder', {
+                            company: this.activeCompany,
+                            good,
+                            unOrder: this.$store.state.activeOrder
+                        })
+                    } else {
+                        this.$store.commit('deleteGood', {company: this.activeCompany, good})
+                    }
                     this.$message.success('删除商品成功！')
                 }, () => {
                     console.log('cancel')
                 })
             } else {
                 good.num -= good.bagCount
-                this.$store.commit('removeToCart', {company: this.activeCompany, good})
+                if (this.$store.state.activeOrder) {
+                    this.$store.commit('removeToOrder', {
+                        company: this.activeCompany,
+                        good,
+                        unOrder: this.$store.state.activeOrder
+                    })
+                } else {
+                    this.$store.commit('removeToCart', {company: this.activeCompany, good})
+                }
             }
         },
         zkPrice (price, zk) {
@@ -343,11 +371,21 @@ export default {
             return num
         },
         toShoppingCart () {
-            this.$router.push('/shoppingCart')
-            this.$store.commit('setProductRoute', 'groupDetail')
+            if (this.backPath) {
+                this.$router.push(this.backPath)
+            } else {
+                this.$router.push('/shoppingCart')
+            }
         },
         toSearch () {
             this.$router.push('/productPictures/search')
+        },
+        goBack () {
+            if (this.backPath) {
+                this.$router.push(this.backPath)
+            } else {
+                this.$router.push('/productPictures')
+            }
         }
     }
 }
