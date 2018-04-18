@@ -33,7 +33,7 @@
                 <li class="good-item" v-for="(good, index) in goods" v-bind:key="index">
                     <div class="good-num" v-if="good.num > 0">{{good.num}}</div>
                     <div class="good-no">REF:{{good.no}}</div>
-                    <div class="good-img">
+                    <div class="good-img" @click="showImgDialog(good)">
                         <img class="good-img-icon" v-bind:src="good.url" alt="图片">
                     </div>
                     <span>{{good.name}}</span>
@@ -56,6 +56,17 @@
                 </li>
             </ul>
         </pull-to>
+        <el-dialog :visible.sync="imgDialog" width="100%">
+            <span>{{activeGood.name}}</span>
+            <v-touch v-on:swipeleft="nextGood(activeGood)" v-on:swiperight="lastGood(activeGood)">
+            <img class="imgDialog-img" v-bind:src="activeGood.url" alt="图片">
+            </v-touch>
+            <div class="add-remove">
+                <i class="el-icon-remove" @click="removeToCart(activeGood)" v-if="activeGood.num > 0"></i>
+                <span class="activeGood-num" v-if="activeGood.num > 0">{{activeGood.num}}</span>
+                <i class="el-icon-circle-plus" @click="addToCart(activeGood)"></i>
+            </div>
+        </el-dialog>
         <div class="box" v-show="menuShow" @touchmove="preventTouchmove"></div>
     </div>
 
@@ -78,7 +89,9 @@ export default {
             guid: null,
             secondaryIndex: -1,
             categoryIndex: -1,
-            loading: false
+            loading: false,
+            imgDialog: false,
+            activeGood: {}
         }
     },
     computed: {
@@ -188,6 +201,9 @@ export default {
         },
         getCategoryIndex (category) {
             return this.categoryList.indexOf(category)
+        },
+        getGoodIndex (good) {
+            return this.goods.indexOf(good)
         },
         menuToggle () {
             this.menuShow = !this.menuShow
@@ -386,6 +402,18 @@ export default {
             } else {
                 this.$router.push('/productPictures')
             }
+        },
+        showImgDialog (good) {
+            this.imgDialog = true
+            this.activeGood = good
+        },
+        nextGood (good) {
+            let index = this.getGoodIndex(good)
+            if (index < this.goods.length - 1) this.activeGood = this.goods[index + 1]
+        },
+        lastGood (good) {
+            let index = this.getGoodIndex(good)
+            if (index > 0) this.activeGood = this.goods[index - 1]
         }
     }
 }
@@ -557,18 +585,6 @@ export default {
                         color: #f56c6c;
                     }
                 }
-                .add-remove {
-                    float: right;
-                    top: 3px;
-                    right: 5px;
-                }
-                .el-icon-remove {
-                    @include sc(22px, #f56c6c);
-                }
-                .el-icon-circle-plus {
-                    top: 3px;
-                    @include sc(22px, #5eacf0);
-                }
             }
         }
         li:nth-child(odd) {
@@ -590,5 +606,28 @@ export default {
         display: flex;
         justify-content: space-between;
     }
+}
+
+.imgDialog-img {
+    width: 100%
+}
+
+.activeGood-num {
+    position: relative;
+    top: -2px;
+}
+
+.add-remove {
+    float: right;
+    top: 3px;
+    right: 5px;
+}
+
+.el-icon-remove {
+    @include sc(22px, #f56c6c);
+}
+.el-icon-circle-plus {
+    top: 3px;
+    @include sc(22px, #5eacf0);
 }
 </style>
