@@ -94,8 +94,11 @@ export default {
 .home {
 	height: 100%;
 	.home-title {
-		position: relative;
-		z-index: 2;
+		position: absolute;
+		top: 0;
+		left: 0;
+		z-index: 100;
+		width: 100%;
 		text-align: center;
 		border-bottom: 1px solid $borcd;
 		color: $fc;
@@ -114,6 +117,7 @@ export default {
 	.companyList {
 		height: 100%;
 		overflow: auto;
+		padding-top: 50px;
 		padding-bottom: 90px;
 	}
 	.company {
@@ -220,6 +224,6 @@ export default {
 }
 
 .vue-pull-to-wrapper .action-block {
-	top: -60px;
+	top: -60px !important;
 }
 </style>
