@@ -128,7 +128,9 @@ export default {
         document.addEventListener('click', this.menuHide)
         if (this.$route.params.refresh) {
             this.initData()
-            if (this.secondaryList.length > 0) {
+            if (this.$route.params.secondary) {
+                this.activeSecondary = this.$route.params.secondary
+            } else if (this.secondaryList.length > 0) {
                 this.activeSecondary = this.secondaryList[0]
             }
             this.getGoods()

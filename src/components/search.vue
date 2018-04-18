@@ -1,7 +1,7 @@
 <template>
     <div class="search">
         <div class="header" @click.stop="''">
-            <router-link to="/productPictures/groupDetail" class="el-icon-arrow-left"></router-link>
+            <router-link :to="{name: 'groupDetail' , params: { refresh: true, secondary: this.secondary }}" class="el-icon-arrow-left"></router-link>
             <input class="input-search" type="text" placeholder="输入品名或货号" v-model="searchText">
             <a class="el-icon-search" @click="search"></a>
         </div>
@@ -53,7 +53,8 @@ export default {
             noGoods: {
                 title: '输入品名或货号进行搜索'
             },
-            loading: false
+            loading: false,
+            secondary: ''
         }
     },
     computed: {
@@ -77,6 +78,7 @@ export default {
             let searchRes = await search(this.activeCompany.companyId, this.searchText)
             if (searchRes.success && searchRes.data.length > 0) {
                 this.setGood(searchRes.data)
+                this.setActiveCategory(searchRes.data[0].parentGuid)
                 this.goods = searchRes.data
                 console.log(this.goods[0])
             } else if (searchRes.success) {
@@ -92,6 +94,27 @@ export default {
                 if (this.cart[companyId] && this.cart[companyId][good.id]) good.num = this.cart[companyId][good.id].num
                 else if (this.cart[good.id]) good.num = this.cart[good.id].num
                 else good.num = 0
+            })
+        },
+        setActiveCategory (parentGuid) {
+            this.secondary = ''
+            let result = true
+            this.$store.state.categoryList.every(category => {
+                if (category.guid === parentGuid) {
+                    this.$store.commit('setActiveCategory', category)
+                    result = false
+                } else {
+                    category.secondaryList.every(secondary => {
+                        if (secondary.guid === parentGuid) {
+                            this.$store.commit('setActiveCategory', category)
+                            this.secondary = secondary
+                            result = false
+                            return false
+                        }
+                        return true
+                    })
+                }
+                return result
             })
         },
         addToCart (good) {
