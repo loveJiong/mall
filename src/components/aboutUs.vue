@@ -10,6 +10,8 @@
             <p>联系方式：</p>
             <p class="indent">EMAIL: lifengcool@gmail.com</p>
             <p class="indent">MOVIL: 0034-688111845</p>
+            <p>下载二维码</p>
+            <img class="qrd" src="../../static/img/qrd.png" alt="">
         </div>
     </div>
 </template>
@@ -58,5 +60,10 @@ export default {
 
 .indent {
     text-indent: 2em
+}
+
+.qrd {
+    display: block;
+    margin: 0 auto;
 }
 </style>
