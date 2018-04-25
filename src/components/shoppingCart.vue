@@ -28,7 +28,7 @@
             <div class="have-goods" v-if="haveGoods">
                 <ul class="good-list">
                     <li v-for="(good, index) in goods" v-bind:key="index" v-bind:class="{ showDelete: good.showDelete, hideDelete: good.hideDelete }">
-                        <v-touch v-on:swipeleft="showDelete(good)" v-on:swiperight="hideDelete(good)">
+                        <v-touch v-on:swipeleft="showDelete(good)" v-on:swiperight="hideDelete(good)" v-bind:swipe-options="{ direction: 'horizontal', threshold: 100 }">
                         <div class="delete-button" @click="deleteGood(good)">
                             删除
                         </div>
@@ -430,10 +430,6 @@ export default {
 .good-list > li{
     position: relative;
     left: 0px;
-}
-
-.good-list > li > div{
-    touch-action: pan-y !important;
 }
 
 .good-list > .showDelete {
