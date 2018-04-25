@@ -7,7 +7,7 @@
             </router-link>
         </div>
 		<pull-to :top-load-method="refresh" :top-config="{failText: '刷新失败', doneText: '刷新完成'}" :top-block-height="0">
-			<div class="companyList">
+			<div class="companyList" v-if="!noCompany">
 				<ul>
 					<li class="company" v-for="(company, index) in companyList" :key="index" v-bind:class="{ active: company.isActive}" @click="toProductPictures(company)">
 						<div class="information">
@@ -52,12 +52,11 @@ export default {
 			return this.$store.state.companyList.length <= 0
 		},
 		companyList () {
-			console.log(this.$store.state.companyList)
             return this.$store.state.companyList
 		},
 		userInfo () {
             return this.$store.state.userInfo
-        }
+		}
 	},
 	methods: {
 		toProductPictures (company) {

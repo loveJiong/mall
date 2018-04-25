@@ -44,7 +44,7 @@
                     <transition name="fade">
                         <ul class="good-list" v-show="unOrder.show">
                             <li v-for="(good, index) in unOrder.goods" v-bind:key="index" v-bind:class="{ showDelete: good.showDelete, hideDelete: good.hideDelete }">
-                                <v-touch v-on:swipeleft="showDelete(good)" v-on:swiperight="hideDelete(good)" v-bind:swipe-options="{ direction: 'horizontal', threshold: 100 }">
+                                <v-touch v-on:swipeleft="showDelete(good)" v-on:swiperight="hideDelete(good)" v-bind:swipe-options="{ direction: 'horizontal'}">
                                 <div class="delete-button" @click="deleteGood(good, unOrder)">
                                     删除
                                 </div>
@@ -497,7 +497,6 @@ export default {
     border-bottom: 2px solid #f8f8f8;
     font-size: 14px;
     background: $white;
-    position: relative;
 }
 
 .good-introduction {

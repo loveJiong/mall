@@ -20,7 +20,9 @@ switch (process.env.NODE_ENV) {
 
 async function http (url, method = 'GET', headers, data = {}) {
     method = method.toUpperCase()
-    url = baseUrl + url
+    if (url.indexOf('http') === -1) {
+        url = baseUrl + url
+    }
     let reqConfig = {
         method,
         url,
@@ -40,7 +42,8 @@ async function http (url, method = 'GET', headers, data = {}) {
             result = {
                 data: resObj.data,
                 offset: resObj.offset,
-                success: true
+                success: true,
+                url: resObj.url
             }
         } else {
             result = {
@@ -82,3 +85,7 @@ export const getOrder = (customerId, companyId, status) => http('/order/all', 'G
 export const getOrderDetail = (customerId, companyId, orderGuid) => http('/order/goods', 'GET', headers, {customerId, companyId, orderGuid})
 
 export const search = (companyId, q) => http('/goods/search', 'GET', headers, {companyId, q})
+
+export const getIosApp = (ver) => http('http://dadisoft.cn:8080/PMBOX/BoxRequest', 'GET', headers, {type: 'checksoftupdate', app: 'phoneios', ver})
+
+export const getAndroidApp = (ver) => http('http://dadisoft.cn:8080/PMBOX/BoxRequest', 'GET', headers, {type: 'checksoftupdate', app: 'phoneandroid', ver})

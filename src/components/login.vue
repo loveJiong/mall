@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import {accountLogin, getCompanyList} from './../service/getData'
+import {accountLogin, getCompanyList, getAndroidApp, getIosApp} from './../service/getData'
 export default {
     name: 'login',
     data () {
@@ -47,6 +47,8 @@ export default {
         } else {
             this.haveCache = false
         }
+        // this.checkUpdateAndroid()
+        // this.checkUpdateIos()
     },
     methods: {
         async login () {
@@ -66,12 +68,88 @@ export default {
             let companyListRes = await getCompanyList(customerId)
             if (companyListRes.success) {
                 this.$store.commit('setCompanyList', companyListRes.data)
-                console.log(companyListRes.data)
+                this.$router.push('/home')
+            } else if (companyListRes.code === '0001') {
                 this.$router.push('/home')
             } else {
                 this.$message.error(companyListRes.msg)
             }
             this.loading = false
+        },
+		checkUpdateAndroid () {
+            document.addEventListener('plusready', async () => {
+                let ver = plus.runtime.version
+                let updateRes = await getAndroidApp(11)
+                if (updateRes.success && updateRes.url) {
+                    this.$confirm('检测到新版本，是否升级？', '升级确认', {
+                        confirmButtonText: '确认升级',
+                        cancelButtonText: '下次再说',
+                        type: 'warning'
+                    }).then(() => {
+                        if (this.userInfo) {
+                            this.getCompanyList(this.userInfo.id)
+                        } else {
+                            this.haveCache = false
+                        }
+                        let dtask = plus.downloader.createDownload(updateRes.url, {}, (d, status) => {
+                            if (status === 200) {
+                                alert('下载成功')
+                                let path = d.filename
+                                plus.runtime.install(path)
+                            } else {
+                                alert('下载失败')
+                            }
+                        })
+                        dtask.start()
+                    }, () => {
+                        console.log('cancel')
+                        if (this.userInfo) {
+                            this.getCompanyList(this.userInfo.id)
+                        } else {
+                            this.haveCache = false
+                        }
+                    })
+                } else {
+                    if (this.userInfo) {
+                        this.getCompanyList(this.userInfo.id)
+                    } else {
+                        this.haveCache = false
+                    }
+                }
+            }, false)
+        },
+        checkUpdateIos () {
+            document.addEventListener('plusready', async () => {
+                let ver = plus.runtime.version
+                let updateRes = await getIosApp(ver)
+                if (updateRes.success && updateRes.url) {
+                    this.$confirm('检测到新版本，是否升级？', '升级确认', {
+                        confirmButtonText: '确认升级',
+                        cancelButtonText: '下次再说',
+                        type: 'warning'
+                    }).then(() => {
+                        plus.runtime.openURL(encodeURI(updateRes.url));
+                        if (this.userInfo) {
+                            this.getCompanyList(this.userInfo.id)
+                        } else {
+                            this.haveCache = false
+                        }
+                    }, () => {
+                        console.log('cancel')
+                        if (this.userInfo) {
+                            this.getCompanyList(this.userInfo.id)
+                        } else {
+                            this.haveCache = false
+                        }
+                    })
+                } else {
+                    if (this.userInfo) {
+                        this.getCompanyList(this.userInfo.id)
+                    } else {
+                        this.haveCache = false
+                    }
+                }
+            }, false)
         }
     }
 }
