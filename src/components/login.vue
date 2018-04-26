@@ -79,7 +79,7 @@ export default {
 		checkUpdateAndroid () {
             document.addEventListener('plusready', async () => {
                 let ver = plus.runtime.version
-                let updateRes = await getAndroidApp(11)
+                let updateRes = await getAndroidApp(ver)
                 if (updateRes.success && updateRes.url) {
                     this.$confirm('检测到新版本，是否升级？', '升级确认', {
                         confirmButtonText: '确认升级',
@@ -128,7 +128,7 @@ export default {
                         cancelButtonText: '下次再说',
                         type: 'warning'
                     }).then(() => {
-                        plus.runtime.openURL(encodeURI(updateRes.url));
+                        plus.runtime.openURL(encodeURI(updateRes.url))
                         if (this.userInfo) {
                             this.getCompanyList(this.userInfo.id)
                         } else {

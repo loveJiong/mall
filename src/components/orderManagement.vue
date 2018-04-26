@@ -45,7 +45,7 @@
                         <ul class="good-list" v-show="unOrder.show">
                             <li v-for="(good, index) in unOrder.goods" v-bind:key="index" v-bind:class="{ showDelete: good.showDelete, hideDelete: good.hideDelete }">
                                 <v-touch v-on:swipeleft="showDelete(good)" v-on:swiperight="hideDelete(good)" v-bind:swipe-options="{ direction: 'horizontal'}">
-                                <div class="delete-button" @click="deleteGood(good, unOrder)">
+                                <div v-if="good.showDelete" class="delete-button" @click="deleteGood(good, unOrder)">
                                     删除
                                 </div>
                                 <div class="good-item">
@@ -268,7 +268,9 @@ export default {
         },
         hideDelete (good) {
             good.hideDelete = true
-            good.showDelete = false
+            setTimeout(() => {
+                good.showDelete = false
+            }, 500);
         },
         deleteUnOrder (unOrder) {
             this.$confirm('确认删除当前订单？', '删除确认', {

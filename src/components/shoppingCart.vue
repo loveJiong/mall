@@ -29,7 +29,7 @@
                 <ul class="good-list">
                     <li v-for="(good, index) in goods" v-bind:key="index" v-bind:class="{ showDelete: good.showDelete, hideDelete: good.hideDelete }">
                         <v-touch v-on:swipeleft="showDelete(good)" v-on:swiperight="hideDelete(good)" v-bind:swipe-options="{ direction: 'horizontal'}">
-                        <div class="delete-button" @click="deleteGood(good)">
+                        <div v-if="good.showDelete" class="delete-button" @click="deleteGood(good)">
                             删除
                         </div>
                         <div class="good-item">
@@ -220,7 +220,9 @@ export default {
         },
         hideDelete (good) {
             good.hideDelete = true
-            good.showDelete = false
+            setTimeout(() => {
+                good.showDelete = false
+            }, 500);
             this.$forceUpdate()
         }
     }
