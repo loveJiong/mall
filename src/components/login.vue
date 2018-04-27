@@ -17,7 +17,6 @@
                 </el-form-item>
             </el-form>
         </div>
-
     </div>
 </template>
 
@@ -91,6 +90,7 @@ export default {
                         } else {
                             this.haveCache = false
                         }
+                        let waiting = plus.nativeUI.showWaiting('开始下载')
                         let dtask = plus.downloader.createDownload(updateRes.url, {}, (d, status) => {
                             if (status === 200) {
                                 alert('下载成功')
@@ -101,6 +101,25 @@ export default {
                             }
                         })
                         dtask.start()
+                        dtask.addEventListener('statechanged', (task, status) => {
+                            switch (task.state) {
+                                case 1:
+                                    waiting.setTitle('开始下载')
+                                    break
+                                case 2:
+                                    waiting.setTitle('开始下载')
+                                    break
+                                case 3:
+                                    let percent = task.downloadedSize / task.totalSize * 100
+                                    waiting.setTitle(`已下载${parseInt(percent)}%`)
+                                    break
+                                case 4:
+                                    waiting.close()
+                                    break
+                                default:
+                                    break
+                            }
+                        })
                     }, () => {
                         console.log('cancel')
                         if (this.userInfo) {

@@ -270,7 +270,7 @@ export default {
             good.hideDelete = true
             setTimeout(() => {
                 good.showDelete = false
-            }, 500);
+            }, 500)
         },
         deleteUnOrder (unOrder) {
             this.$confirm('确认删除当前订单？', '删除确认', {

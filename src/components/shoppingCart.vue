@@ -222,7 +222,7 @@ export default {
             good.hideDelete = true
             setTimeout(() => {
                 good.showDelete = false
-            }, 500);
+            }, 500)
             this.$forceUpdate()
         }
     }
