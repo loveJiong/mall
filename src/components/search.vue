@@ -17,7 +17,7 @@
                     <div>
                         <div class="good-detail">
                             <span class="good-count">库存：{{good.count}}</span>
-                            <span class="good-pck">包装数：{{good.bagCount}}/{{good.bagCount}}</span>
+                            <span class="good-pck">包装数：{{good.boxCount}}/{{good.bagCount}}</span>
                         </div>
                         <span v-if="good.zk == '0'" class="price">{{good.price}}€</span>
                         <div v-if="good.zk != '0'" class="have-zk">
@@ -73,20 +73,22 @@ export default {
     },
     methods: {
         async search () {
-            this.loading = true
-            let scroll = document.getElementsByClassName('container')[0]
-            let searchRes = await search(this.activeCompany.companyId, this.searchText)
-            if (searchRes.success && searchRes.data.length > 0) {
-                this.setGood(searchRes.data)
-                this.setActiveCategory(searchRes.data[0].parentGuid)
-                this.goods = searchRes.data
-                console.log(this.goods[0])
-            } else if (searchRes.success) {
-                this.noGoods.title = '没有搜索到对应的商品，请重新搜索'
-                this.goods = []
+            if (this.searchText) {
+                this.loading = true
+                let scroll = document.getElementsByClassName('container')[0]
+                let searchRes = await search(this.activeCompany.companyId, this.searchText)
+                if (searchRes.success && searchRes.data.length > 0) {
+                    this.setGood(searchRes.data)
+                    this.setActiveCategory(searchRes.data[0].parentGuid)
+                    this.goods = searchRes.data
+                    console.log(this.goods[0])
+                } else if (searchRes.success) {
+                    this.noGoods.title = '没有搜索到对应的商品，请重新搜索'
+                    this.goods = []
+                }
+                scroll.scrollTop = 0
+                this.loading = false
             }
-            scroll.scrollTop = 0
-            this.loading = false
         },
         setGood (goods) {
             let companyId = this.activeCompany.companyId
@@ -181,7 +183,6 @@ export default {
     .header {
         display: flex;
         align-items: center;
-        justify-content: space-around;
         @include wh(100%, $headH);
         background-color: $white;
         border-bottom: 1px solid $borcd;
@@ -189,6 +190,9 @@ export default {
         top: 0;
         left: 0;
         z-index: 100;
+    }
+    .el-icon-arrow-left {
+        margin-left: 40px;
     }
     .container {
         max-height: 100%;
@@ -291,6 +295,9 @@ export default {
     margin-right: 10px;
     height: 25px;
     padding: 0 5px;
+    margin-left: 20px;
+    margin-right: 20px;
+    width: calc(100% - 152px);
 }
 
 .no-goods {
