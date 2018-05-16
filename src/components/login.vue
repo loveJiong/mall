@@ -1,7 +1,7 @@
 <template>
     <div class="login" v-if="!haveCache" v-loading="loading">
-        <div class="loing-bg">
-        </div>
+        <!-- <div class="loing-bg">
+        </div> -->
         <div class="login-form">
             <img src="../../static/img/login-icon.png" alt="图标">
             <el-form ref="loginForm" :model="loginForm">
@@ -179,11 +179,11 @@ export default {
 @import 'src/style/config';
 .login {
     height: 100%;
-    .loing-bg {
-        height: 100%;
-        background: url('/static/img/login-bg.jpg') center 0px no-repeat;
-        filter: blur(5px);
-    }
+    // .loing-bg {
+    //     height: 100%;
+    //     background: url('/static/img/login-bg.jpg') center 0px no-repeat;
+    //     filter: blur(5px);
+    // }
     .login-form {
         display: flex;
         flex-direction: column;

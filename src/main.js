@@ -9,7 +9,7 @@ import VueTouch from 'vue-touch'
 import 'element-ui/lib/theme-chalk/index.css'
 import './assets/icon/iconfont.css'
 
-require('./mock')
+// require('./mock')
 
 Vue.config.productionTip = false
 
