@@ -46,8 +46,14 @@ export default {
         } else {
             this.haveCache = false
         }
-        // this.checkUpdateAndroid()
-        // this.checkUpdateIos()
+        // if (this.$store.state.plusready) {
+        //     this.checkUpdateAndroid()
+        //     // this.checkUpdateIos()
+        // } else {
+        //     this.$store.commit('plusready')
+        //     document.addEventListener('plusready', this.checkUpdateAndroid, false)
+        //     // document.addEventListener('plusready', this.checkUpdateIos, false)
+        // }
     },
     methods: {
         async login () {
@@ -75,100 +81,96 @@ export default {
             }
             this.loading = false
         },
-		checkUpdateAndroid () {
-            document.addEventListener('plusready', async () => {
-                let ver = plus.runtime.version
-                let updateRes = await getAndroidApp(ver)
-                if (updateRes.success && updateRes.url) {
-                    this.$confirm('检测到新版本，是否升级？', '升级确认', {
-                        confirmButtonText: '确认升级',
-                        cancelButtonText: '下次再说',
-                        type: 'warning'
-                    }).then(() => {
-                        if (this.userInfo) {
-                            this.getCompanyList(this.userInfo.id)
-                        } else {
-                            this.haveCache = false
-                        }
-                        let waiting = plus.nativeUI.showWaiting('开始下载')
-                        let dtask = plus.downloader.createDownload(updateRes.url, {}, (d, status) => {
-                            if (status === 200) {
-                                alert('下载成功')
-                                let path = d.filename
-                                plus.runtime.install(path)
-                            } else {
-                                alert('下载失败')
-                            }
-                        })
-                        dtask.start()
-                        dtask.addEventListener('statechanged', (task, status) => {
-                            switch (task.state) {
-                                case 1:
-                                    waiting.setTitle('开始下载')
-                                    break
-                                case 2:
-                                    waiting.setTitle('开始下载')
-                                    break
-                                case 3:
-                                    let percent = task.downloadedSize / task.totalSize * 100
-                                    waiting.setTitle(`已下载${parseInt(percent)}%`)
-                                    break
-                                case 4:
-                                    waiting.close()
-                                    break
-                                default:
-                                    break
-                            }
-                        })
-                    }, () => {
-                        console.log('cancel')
-                        if (this.userInfo) {
-                            this.getCompanyList(this.userInfo.id)
-                        } else {
-                            this.haveCache = false
-                        }
-                    })
-                } else {
+		async checkUpdateAndroid () {
+            let ver = plus.runtime.version
+            let updateRes = await getAndroidApp(ver)
+            if (updateRes.success && updateRes.url) {
+                this.$confirm('检测到新版本，是否升级？', '升级确认', {
+                    confirmButtonText: '确认升级',
+                    cancelButtonText: '下次再说',
+                    type: 'warning'
+                }).then(() => {
                     if (this.userInfo) {
                         this.getCompanyList(this.userInfo.id)
                     } else {
                         this.haveCache = false
                     }
+                    let waiting = plus.nativeUI.showWaiting('开始下载')
+                    let dtask = plus.downloader.createDownload(updateRes.url, {}, (d, status) => {
+                        if (status === 200) {
+                            alert('下载成功')
+                            let path = d.filename
+                            plus.runtime.install(path)
+                        } else {
+                            alert('下载失败')
+                        }
+                    })
+                    dtask.start()
+                    dtask.addEventListener('statechanged', (task, status) => {
+                        switch (task.state) {
+                            case 1:
+                                waiting.setTitle('开始下载')
+                                break
+                            case 2:
+                                waiting.setTitle('开始下载')
+                                break
+                            case 3:
+                                let percent = task.downloadedSize / task.totalSize * 100
+                                waiting.setTitle(`已下载${parseInt(percent)}%`)
+                                break
+                            case 4:
+                                waiting.close()
+                                break
+                            default:
+                                break
+                        }
+                    })
+                }, () => {
+                    console.log('cancel')
+                    if (this.userInfo) {
+                        this.getCompanyList(this.userInfo.id)
+                    } else {
+                        this.haveCache = false
+                    }
+                })
+            } else {
+                if (this.userInfo) {
+                    this.getCompanyList(this.userInfo.id)
+                } else {
+                    this.haveCache = false
                 }
-            }, false)
+            }
         },
-        checkUpdateIos () {
-            document.addEventListener('plusready', async () => {
-                let ver = plus.runtime.version
-                let updateRes = await getIosApp(ver)
-                if (updateRes.success && updateRes.url) {
-                    this.$confirm('检测到新版本，是否升级？', '升级确认', {
-                        confirmButtonText: '确认升级',
-                        cancelButtonText: '下次再说',
-                        type: 'warning'
-                    }).then(() => {
-                        plus.runtime.openURL(encodeURI(updateRes.url))
-                        if (this.userInfo) {
-                            this.getCompanyList(this.userInfo.id)
-                        } else {
-                            this.haveCache = false
-                        }
-                    }, () => {
-                        console.log('cancel')
-                        if (this.userInfo) {
-                            this.getCompanyList(this.userInfo.id)
-                        } else {
-                            this.haveCache = false
-                        }
-                    })
-                } else {
+        async checkUpdateIos () {
+            let ver = plus.runtime.version
+            let updateRes = await getIosApp(ver)
+            if (updateRes.success && updateRes.url) {
+                this.$confirm('检测到新版本，是否升级？', '升级确认', {
+                    confirmButtonText: '确认升级',
+                    cancelButtonText: '下次再说',
+                    type: 'warning'
+                }).then(() => {
+                    plus.runtime.openURL(encodeURI(updateRes.url))
                     if (this.userInfo) {
                         this.getCompanyList(this.userInfo.id)
                     } else {
                         this.haveCache = false
                     }
+                }, () => {
+                    console.log('cancel')
+                    if (this.userInfo) {
+                        this.getCompanyList(this.userInfo.id)
+                    } else {
+                        this.haveCache = false
+                    }
+                })
+            } else {
+                if (this.userInfo) {
+                    this.getCompanyList(this.userInfo.id)
+                } else {
+                    this.haveCache = false
                 }
-            }, false)
+            }
         }
     }
 }

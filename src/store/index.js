@@ -49,7 +49,8 @@ export default new Vuex.Store({
         cart,
         upLoadOrders,
         groupDetailBackPath: '',
-        activeOrder: ''
+        activeOrder: '',
+        plusready: false
     },
     mutations: {
         setUserInfo (state, userInfo) {
@@ -189,6 +190,9 @@ export default new Vuex.Store({
         },
         setGroupDetailBackPath (state, path) {
             state.groupDetailBackPath = path
+        },
+        plusready(state) {
+            state.plusready = true
         }
     }
 })
