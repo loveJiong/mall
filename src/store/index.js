@@ -191,7 +191,7 @@ export default new Vuex.Store({
         setGroupDetailBackPath (state, path) {
             state.groupDetailBackPath = path
         },
-        plusready(state) {
+        plusready (state) {
             state.plusready = true
         }
     }
