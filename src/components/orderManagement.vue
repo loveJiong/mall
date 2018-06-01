@@ -320,15 +320,18 @@ export default {
             })
         },
         alertAddAddress () {
-            this.$confirm('您当前没完善收货地址！', '提示', {
-                confirmButtonText: '前去完善',
-                cancelButtonText: '取消上传',
-                type: 'warning'
-            }).then(() => {
-                this.$router.push('/mine/myAddress')
-            }, () => {
-                console.log('cancel')
-            })
+            setTimeout(() => {
+                this.$confirm('您当前没完善收货地址！', '提示', {
+                    confirmButtonText: '前去完善',
+                    cancelButtonText: '取消上传',
+                    type: 'warning'
+                }).then(() => {
+                    this.$router.push('/mine/myAddress')
+                }, () => {
+                    console.log('cancel')
+                })                
+            }, 200);
+
         },
         toGroupDetail (unOrder) {
             this.$store.commit('changeAddToOrder', unOrder)
