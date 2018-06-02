@@ -2,9 +2,10 @@ $blue: #5eacf0;
 $fc: #909399;
 $white: #ffffff;
 $bc: #f8f8f8;
-$borcd:#aeadae;
+$borcd:#b2b2b2;
 $borcl:#efeff4;
 $headH: 50px;
+$headfc: #222222;
 
 // 背景图片地址和大小
 @mixin bis($url) { 
@@ -71,4 +72,11 @@ $headH: 50px;
 	display: flex;
 	justify-content: $type;
 
+}
+// 缺省button背景色
+@mixin dbb {
+	background: -webkit-linear-gradient(left, #00abff , #007bff); /* Safari 5.1 - 6.0 */
+	background: -o-linear-gradient(right, #00abff, #007bff); /* Opera 11.1 - 12.0 */
+	background: -moz-linear-gradient(right, #00abff, #007bff); /* Firefox 3.6 - 15 */
+	background: linear-gradient(to right, #00abff , #007bff); /* 标准的语法 */
 }

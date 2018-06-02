@@ -2,23 +2,28 @@
     <div class="foot-guide">
         <el-menu :default-active="path" mode="horizontal" @select="handleSelect">
             <el-menu-item index="/home">
-                <i class="el-icon-star-off"></i>
+                <img class="unActive-img" src="../../static/img/ico_gongsixinxi@2x.png" alt="home">
+                <img class="active-img" src="../../static/img/ico_gongsixinxi_selected@2x.png" alt="home">
                 <span>首页</span>
             </el-menu-item>
             <el-menu-item index="/productPictures">
-                <i class="el-icon-picture-outline"></i>
+                <img class="unActive-img" src="../../static/img/ico_chanpintuce@2x.png" alt="productPictures">
+                <img class="active-img" src="../../static/img/ico_chanpintuce_selected@2x.png" alt="productPictures">
                 <span>产品图册</span>
             </el-menu-item>
             <el-menu-item index="/shoppingCart">
-                <i class="el-icon-document"></i>
+                <img class="unActive-img" src="../../static/img/ico_dangqiandingdan@2x.png" alt="shoppingCart">
+                <img class="active-img" src="../../static/img/ico_dangqiandingdan_selected@2x.png" alt="shoppingCart">
                 <span>当前订单</span>
             </el-menu-item>
             <el-menu-item index="/orderManagement">
-                <i class="el-icon-goods"></i>
+                <img class="unActive-img" src="../../static/img/ico_dingdanguanli@2x.png" alt="orderManagement">
+                <img class="active-img" src="../../static/img/ico_dingdanguanli_selected@2x.png" alt="orderManagement">
                 <span>订单管理</span>
             </el-menu-item>
             <el-menu-item index="/mine">
-                <i class="el-icon-ump-gerenzhongxin"></i>
+                <img class="unActive-img" src="../../static/img/ico_xitongshezhi@2x.png" alt="mine">
+                <img class="active-img" src="../../static/img/ico_xitongshezhi_selected@2x.png" alt="mine">
                 <span>我的</span>
             </el-menu-item>
         </el-menu>
@@ -58,13 +63,14 @@ export default {
         .el-menu-item {
             display: flex;
             flex-direction: column;
+            align-items: center;
             justify-content: center;
             padding: 0;
             @include font(12px, 20px);
             @include wh(100%, 40px);
             border-bottom: none;
-            i {
-                @include wh(100%, 100%);
+            img {
+                @include wh(18px, 18px);
                 margin-right: 0px;
             }
             span {
@@ -75,12 +81,21 @@ export default {
         .is-active {
             border-bottom: none;
             span {
-                color: $blue;
+                color: #333333;
             }
-            i {
-                color: $blue;
+            .active-img {
+                display: flex;
+            }
+            .unActive-img {
+                display: none;
             }
         }
+    }
+    .active-img {
+        display: none;
+    }
+    .unActive-img {
+        display: flex;
     }
 }
 </style>

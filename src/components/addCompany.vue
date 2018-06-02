@@ -17,9 +17,8 @@
                 口令
                 <input v-model="customerCode" type="text">
             </div>
-        </div>
-        <div @click="addCompany" class="company-add">
-            添加
+            <el-button class="add-btn" round type="primary" @click="addCompany">添加</el-button>
+            <el-button class="return-btn" round @click="goBack">返回</el-button>
         </div>
     </div>
   </div>
@@ -45,12 +44,6 @@ export default {
             return this.$store.state.userInfo
         }
     },
-    beforeCreate () {
-        document.querySelector('body').setAttribute('style', 'background:#efeff4')
-    },
-    beforeDestroy () {
-        document.querySelector('body').setAttribute('style', '')
-    },
     methods: {
         async addCompany () {
             this.loading = true
@@ -72,6 +65,9 @@ export default {
                 this.$message.error('编号或口令不能为空。')
             }
             this.loading = false
+        },
+        goBack () {
+            this.$router.push('/home')
         }
     }
 }
@@ -86,7 +82,7 @@ export default {
         position: relative;
         text-align: center;
         border-bottom: 1px solid $borcd;
-        color: $fc;
+        color: $headfc;
         background-color: $white;
         @include font(16px, 50px);
         a {
@@ -98,20 +94,22 @@ export default {
   .container {
     height: 100%;
     .phone-img {
-        margin: 5px 0;
+        margin: 40px 0;
         text-align: center;
         img {
-            @include wh(100px, 200px);
+            @include wh(160px, 133px);
         }
     }
     .company-info {
         display: flex;
         flex-direction: column;
+        padding: 0px 40px;
         .company-input {
             @include sc(18px, #aaaaaa);
             background-color: $white;
-            margin-bottom: 2px;
             padding: 10px 15px;
+            margin-bottom: 15px;
+            border: 1px solid #e6e6e6;
             input {
                 font-size: 18px;
                 margin-left: 5px;
@@ -124,6 +122,13 @@ export default {
         margin-top: 10px;
         @include sc(18px, #ed706b);
         background-color: $white;
+    }
+    .el-button {
+        margin-top: 10px;
+        margin-left: 0px;
+    }
+    .add-btn {
+        @include dbb();
     }
   }
 }

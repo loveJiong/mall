@@ -6,7 +6,7 @@
             <img src="../../static/img/login-icon.png" alt="图标">
             <el-form ref="loginForm" :model="loginForm">
                 <el-form-item>
-                    <el-input v-model="loginForm.customerName" placeholder="账户"></el-input>
+                    <el-input v-model="loginForm.customerName" placeholder="用户名"></el-input>
                 </el-form-item>
                 <el-form-item>
                     <el-input type="password" placeholder="密码" v-model="loginForm.password"></el-input>
@@ -192,17 +192,25 @@ export default {
         align-items: center;
         width: 100%;
         position: absolute;
-        top: 100px;
+        top: 60px;
         z-index: 1;
         text-align: center;
         img {
             width: 150px;
             height: 150px;
-            margin-bottom: 50px;
+            margin-bottom: 80px;
+            background-color: #fff;
+            border-radius: 30px;
         }
         .el-button {
+            margin-top: 15px;
+            width: 100%;
             padding: 12px 60px;
+            @include dbb();
         }
+    }
+    .el-form-item {
+        width: 200px;
     }
 }
 </style>

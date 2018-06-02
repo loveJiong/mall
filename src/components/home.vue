@@ -3,7 +3,7 @@
         <div class="home-title">
             我的商家
             <router-link to="/addCompany">
-                <el-button type="primary">添加商家</el-button>
+                <el-button round type="primary">添加商家</el-button>
             </router-link>
         </div>
 		<pull-to :top-load-method="refresh" :top-config="{failText: '刷新失败', doneText: '刷新完成'}" :top-block-height="0">
@@ -100,17 +100,17 @@ export default {
 		width: 100%;
 		text-align: center;
 		border-bottom: 1px solid $borcd;
-		color: $fc;
+		color: $headfc;
 		background-color: $white;
 		@include font(16px, 49px);
 		button {
+			width: 70px;
 			position: absolute;
 			right: 20px;
 			top: 14px;
 			padding: 5px;
 			@include sc(12px, $white);
-			border-radius: 5px;
-			background-color: $blue;
+            @include dbb();
 		}
 	}
 	.companyList {
@@ -122,8 +122,7 @@ export default {
 	.company {
 		background-color: $white;
 		margin: 10px;
-		padding: 10px 5px 10px 5px;
-		border-radius: 10px;
+		padding: 5px 5px 5px 5px;
 		.information {
 			display: flex;
 			.icon {
@@ -132,7 +131,6 @@ export default {
 				justify-content: center;
 				@include wh(50px,50px);
 				margin-right: 20px;
-				background-color: $bc;
 				span {
 					@include wh(40px,40px);
 					line-height: 40px;
@@ -146,7 +144,7 @@ export default {
 				flex-direction: column;
 				height: 50px;
 				.name {
-					@include sc(16px, #000000);
+					@include sc(16px, #333333);
 					margin-top: 3px;
 					margin-bottom: 5px;
 					white-space: nowrap;
@@ -159,7 +157,7 @@ export default {
 			}
 		}
 		.description {
-			@include sc(12px, #575757);
+			@include sc(12px, #999999);
 			height: 16px;
 			display: -webkit-box;               // 将对象作为弹性伸缩盒子模型显示 。
 			text-overflow: ellipsis;            // 可以用来多行文本的情况下，用省略号“...”隐藏超出范围的文本 。
@@ -169,7 +167,7 @@ export default {
 		}
 	}
 	.active {
-		border: 1px solid #e45c28;
+		border: 1px solid #007aff;
 	}
 }
 

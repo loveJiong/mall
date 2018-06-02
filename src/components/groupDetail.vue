@@ -27,8 +27,8 @@
                 </ul>
             </div>
         </div>
-        <pull-to :bottom-load-method="nextRefresh" :bottom-config="{pullText: '上拉加载下一系列', failText: '没有更多', doneText: '加载完成'}" :bottom-block-height="0"
-        :top-load-method="lastRefresh" :top-config="{pullText: '下拉加载上一系列', failText: '没有更多', doneText: '', stayDistance: 0}" v-loading="loading">
+        <pull-to :bottom-load-method="nextRefresh" :bottom-config="{pullText: '上拉加载下一系列', failText: '没有更多', doneText: '', stayDistance: 0}" :bottom-block-height="0"
+        :top-load-method="lastRefresh" :top-config="{pullText: '下拉加载上一系列', failText: '没有更多', doneText: '', stayDistance: 0}" v-loading="loading" element-loading-text="拼命加载中">
             <ul class="container">
                 <li class="good-item" v-for="(good, index) in goods" v-bind:key="index">
                     <div class="good-num" v-if="good.num > 0">{{good.num}}</div>
@@ -171,7 +171,9 @@ export default {
                     this.secondaryIndex = -1
                 }
             }
-            this.loading = false
+            setTimeout(() => {
+                this.loading = false
+            }, 2000)
             if (!isScroll || isNext) {
                 let scroll = document.getElementsByClassName('scroll-container')[0]
                 scroll.scrollTop = 0
@@ -273,6 +275,7 @@ export default {
                     scroll.scrollTop = 0
                 } else {
                     loaded('fail')
+                    this.$message.error('没有更多！')
                 }
             } else {
                 let categoryIndex = this.getCategoryIndex(this.activeCategory) + 1
@@ -281,9 +284,12 @@ export default {
                     loaded('done')
                 } else {
                     loaded('fail')
+                    this.$message.error('没有更多！')
                 }
+                setTimeout(() => {
+                    this.loading = false
+                }, 2000)
             }
-            this.loading = false
         },
         async lastRefresh (loaded) {
             this.loading = true
@@ -325,6 +331,7 @@ export default {
                     })
                 } else {
                     loaded('fail')
+                    this.$message.error('没有更多！')
                 }
             } else {
                 let categoryIndex = this.getCategoryIndex(this.activeCategory) - 1
@@ -333,9 +340,12 @@ export default {
                     loaded('done')
                 } else {
                     loaded('fail')
+                    this.$message.error('没有更多！')
                 }
+                setTimeout(() => {
+                    this.loading = false
+                }, 2000)
             }
-            this.loading = false
         },
         addToCart (good) {
             good.num += good.bagCount
