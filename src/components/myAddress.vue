@@ -3,7 +3,7 @@
         <div class="myAddress-title">
             <router-link to="/mine" class="el-icon-arrow-left"></router-link>
             我的收货地址
-            <i class="el-icon-check" @click="submit"></i>
+            <el-button  @click="submit" round type="primary">保存</el-button>
         </div>
         <form class="form">
             <p class="form-item">
@@ -116,20 +116,25 @@ export default {
     z-index: 100;
     text-align: center;
     border-bottom: 1px solid $borcd;
-    color: $white;
-    background-color: #89c4f4;
+    background-color: $white;
+    color: #333333;
     @include font(16px, 50px);
     a, i {
         position: absolute;
         top: 19px;
-        color: $white;
-
+        color: #333333;
     }
     .el-icon-arrow-left {
         left: 20px;
     }
-    .el-icon-check {
+    button {
+        width: 70px;
+        position: absolute;
         right: 20px;
+        top: 14px;
+        padding: 5px;
+        @include sc(12px, $white);
+        @include dbb();
     }
 }
 .form {

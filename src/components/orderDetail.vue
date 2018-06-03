@@ -90,7 +90,7 @@ export default {
     text-align: center;
     border-bottom: 1px solid $borcd;
     color: $white;
-    background-color: #89c4f4;
+    @include dtb();
     @include font(16px, 50px);
     a, i {
         position: absolute;
@@ -127,7 +127,7 @@ export default {
     color: #888;
 }
 .order-price {
-    color: #5eacf0;
+    color: $blue;
 }
 
 .good-item {
@@ -148,7 +148,7 @@ export default {
 }
 
 .good-price {
-    color: #5eacf0;
+    color: $blue;
 }
 
 .have-zk {
@@ -158,7 +158,7 @@ export default {
         padding: 0;
     }
     .zk-price {
-            @include sc(12px, #5eacf0);
+            @include sc(12px, $blue);
     }
     .origin-price {
         font-size: 12px;
@@ -179,7 +179,7 @@ export default {
     }
     .el-icon-circle-plus {
         top: 3px;
-        @include sc(15px, #5eacf0);
+        @include sc(15px, $blue);
     }
 }
 </style>

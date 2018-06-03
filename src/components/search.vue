@@ -13,26 +13,26 @@
                     <div class="good-img">
                         <img class="good-img-icon" v-bind:src="good.url" alt="图片">
                     </div>
-                    <span>{{good.name}}</span>
+                    <span class="good.name">{{good.name}}</span>
                     <div>
                         <div class="good-detail">
                             <span class="good-count">库存：{{good.count}}</span>
                             <span class="good-pck">包装数：{{good.boxCount}}/{{good.bagCount}}</span>
                         </div>
-                        <span v-if="good.zk == '0'" class="price">{{good.price}}€</span>
-                        <div v-if="good.zk != '0'" class="have-zk">
+                        <span  v-if="good.zk == '0' || good.zk == ''" class="price">{{good.price}}€</span>
+                        <div v-if="good.zk != '0' && good.zk != ''" class="have-zk">
                             <span class="zk-price">{{zkPrice(good.price, good.zk)}}€</span>
                             <span class="origin-price">{{good.price}}</span>
-                            <span class="zk">(-{{good.zk}}%)</span>
+                            <span class="zk">-{{good.zk}}%</span>
                         </div>
                         <div class="add-remove">
-                            <i class="el-icon-remove" @click="removeToCart(good)" v-if="good.num > 0"></i>
+                            <i class="el-icon-remove-outline" @click="removeToCart(good)" v-if="good.num > 0"></i>
                             <i class="el-icon-circle-plus" @click="addToCart(good)"></i>
                         </div>
                     </div>
                 </li>
                 <div class="no-goods" v-if="goods.length === 0">
-                    <i class="el-icon-warning"></i>
+                    <img src="../../static/img/search.png" alt="搜索" width="120">
                     <span class="title">{{noGoods.title}}</span>
                 </div>
             </ul>
@@ -205,12 +205,12 @@ export default {
             display: flex;
             flex-direction: column;
             width: 49%;
-            border: 1px solid #aaaaaa;
+            border: 1px solid #e6e6e6;
             border-radius: 5px;
             margin-top: 7px;
-            padding: 15px 0 10px 0;
+            padding: 15px 0 0 0;
             span {
-                @include sc(12px, #555555);
+                @include sc(12px, #666666);
                 padding: 0 5px;
             }
             .good-num {
@@ -232,11 +232,16 @@ export default {
                 left: 5px;
                 top: 0px;
                 font-size: 12px;
+                color: #666666;
             }
-            div {
+            .good-name {
+                @include sc(14px, #333333);
+            }
+            > div {
                 position: relative;
+                margin: 1px 0;
                 .price {
-                    @include sc(14px, #5eacf0);
+                    @include sc(14px, #ff0000);
                 }
                 .have-zk {
                     display: inline-block;
@@ -245,27 +250,28 @@ export default {
                         padding: 0;
                     }
                     .zk-price {
-                         @include sc(12px, #5eacf0);
+                         @include sc(14px, #ff0000);
                     }
                     .origin-price {
-                        font-size: 12px;
+                        @include sc(12px, #333333);
                         text-decoration: line-through;
                     }
                     .zk {
-                        color: #f56c6c;
+                        color: $white;
+                        background-color: #ff0000;
                     }
                 }
                 .add-remove {
-                    float: right;
-                    top: 3px;
-                    right: 5px;
+                    position: absolute;
+                    bottom: -2px;
+                    right: 0px;
                 }
-                .el-icon-remove {
-                    @include sc(22px, #f56c6c);
+                .el-icon-remove-outline {
+                    @include sc(26px, #009fff);
                 }
                 .el-icon-circle-plus {
                     top: 3px;
-                    @include sc(22px, #5eacf0);
+                    @include sc(26px, #009fff);
                 }
             }
         }
@@ -286,11 +292,12 @@ export default {
     }
     .good-detail {
         display: flex;
+        flex-direction: column;
         justify-content: space-between;
     }
 }
 .input-search {
-    border: 1px solid #409EFF;
+    border: 1px solid #999999;
     border-radius: 10px;
     margin-right: 10px;
     height: 25px;
@@ -307,16 +314,12 @@ export default {
     padding: 0 20px;
     padding-top: 40%;
     width: 100%;
-    i {
-        color: #888888;
-        font-size: 60px;
-    }
     span {
         text-align: center;
     }
     .title {
-        margin-top: 10px;
-        @include sc(16px, #000000);
+        margin-top: 50px;
+        @include sc(16px, #333333);
     }
 }
 

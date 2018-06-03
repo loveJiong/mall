@@ -36,7 +36,7 @@
                     <div class="good-img" @click="showImgDialog(good)">
                         <img class="good-img-icon" v-bind:src="good.url" alt="图片">
                     </div>
-                    <span>{{good.name}}</span>
+                    <span class="good-name">{{good.name}}</span>
                     <div>
                         <div class="good-detail">
                             <span class="good-count">库存:{{good.count}}</span>
@@ -46,10 +46,10 @@
                         <div v-if="good.zk != '0' && good.zk != ''" class="have-zk">
                             <span class="zk-price">{{zkPrice(good.price, good.zk)}}€</span>
                             <span class="origin-price">{{good.price}}</span>
-                            <span class="zk">(-{{good.zk}}%)</span>
+                            <span class="zk">-{{good.zk}}%</span>
                         </div>
                         <div class="add-remove">
-                            <i class="el-icon-remove" @click="removeToCart(good)" v-if="good.num > 0"></i>
+                            <i class="el-icon-remove-outline" @click="removeToCart(good)" v-if="good.num > 0"></i>
                             <i class="el-icon-circle-plus" @click="addToCart(good)"></i>
                         </div>
                     </div>
@@ -62,7 +62,7 @@
             <img class="imgDialog-img" v-bind:src="activeGood.url" alt="图片">
             </v-touch>
             <div class="add-remove">
-                <i class="el-icon-remove" @click="removeToCart(activeGood)" v-if="activeGood.num > 0"></i>
+                <i class="el-icon-remove-outline" @click="removeToCart(activeGood)" v-if="activeGood.num > 0"></i>
                 <span class="activeGood-num" v-if="activeGood.num > 0">{{activeGood.num}}</span>
                 <i class="el-icon-circle-plus" @click="addToCart(activeGood)"></i>
             </div>
@@ -182,7 +182,6 @@ export default {
                     let scroll = document.getElementsByClassName('good-item')
                     scroll = scroll[scroll.length - 1]
                     scroll.scrollIntoView(false)
-                    console.log(scroll)
                 })
             }
         },
@@ -286,10 +285,10 @@ export default {
                     loaded('fail')
                     this.$message.error('没有更多！')
                 }
-                setTimeout(() => {
-                    this.loading = false
-                }, 2000)
             }
+            setTimeout(() => {
+                this.loading = false
+            }, 2000)
         },
         async lastRefresh (loaded) {
             this.loading = true
@@ -342,10 +341,10 @@ export default {
                     loaded('fail')
                     this.$message.error('没有更多！')
                 }
-                setTimeout(() => {
-                    this.loading = false
-                }, 2000)
             }
+            setTimeout(() => {
+                this.loading = false
+            }, 2000)
         },
         addToCart (good) {
             good.num += good.bagCount
@@ -455,12 +454,13 @@ export default {
             justify-content: space-around;
             align-items: center;
             @include wh(150px, 40px);
-            @include sc(12px, #555555);
-            border: 1px solid #eb8677;
+            @include sc(12px, $headfc);
+            border: 1px solid #007aff;
             border-radius: 5px;
             i {
                 position: absolute;
                 right: 10px;
+                color: #007aff;
             }
             .category-name {
                 font-size: 14px;
@@ -510,7 +510,7 @@ export default {
                 .active {
                     background-color: #ffffff;
                     span {
-                        border-left: 4px solid #ed706b;
+                        border-left: 4px solid #007aff;
                     }
                 }
             }
@@ -547,12 +547,12 @@ export default {
             display: flex;
             flex-direction: column;
             width: 49%;
-            border: 1px solid #aaaaaa;
+            border: 1px solid #e6e6e6;
             border-radius: 5px;
             margin-top: 7px;
-            padding: 15px 0 10px 0;
+            padding: 15px 0 0 0;
             span {
-                @include sc(12px, #555555);
+                @include sc(12px, #666666);
                 padding: 0 5px;
             }
             .good-num {
@@ -574,11 +574,16 @@ export default {
                 left: 5px;
                 top: 0px;
                 font-size: 12px;
+                color: #666666;
             }
-            div {
+            .good-name {
+                @include sc(14px, #333333);
+            }
+            > div {
                 position: relative;
+                margin: 1px 0;
                 .price {
-                    @include sc(14px, #5eacf0);
+                    @include sc(14px, #ff0000);
                 }
                 .have-zk {
                     display: inline-block;
@@ -587,14 +592,15 @@ export default {
                         padding: 0;
                     }
                     .zk-price {
-                         @include sc(12px, #5eacf0);
+                         @include sc(14px, #ff0000);
                     }
                     .origin-price {
-                        font-size: 12px;
+                        @include sc(12px, #333333);
                         text-decoration: line-through;
                     }
                     .zk {
-                        color: #f56c6c;
+                        color: $white;
+                        background-color: #ff0000;
                     }
                 }
             }
@@ -616,6 +622,7 @@ export default {
     }
     .good-detail {
         display: flex;
+        flex-direction: column;
         justify-content: space-between;
     }
 }
@@ -627,19 +634,20 @@ export default {
 .activeGood-num {
     position: relative;
     top: -2px;
+    font-size: 22px;
 }
 
 .add-remove {
-    float: right;
-    top: 3px;
-    right: 5px;
+    position: absolute;
+    bottom: -2px;
+    right: 0px;
 }
 
-.el-icon-remove {
-    @include sc(22px, #f56c6c);
+.el-icon-remove-outline {
+    @include sc(26px, #009fff);
 }
 .el-icon-circle-plus {
     top: 3px;
-    @include sc(22px, #5eacf0);
+    @include sc(26px, #009fff);
 }
 </style>

@@ -5,12 +5,13 @@
             关于我们
         </div>
         <div class="container">
-            <p>关于我们：</p>
-            <p class="indent">我们是大地软件网络科技有限公司， 专业提供叫货出货一体化软件服务。</p>
-            <p>联系方式：</p>
+            <p class="container-title">关于我们</p>
+            <p class="indent">我们是大地软件网络科技有限公司， 专业提供</p>
+            <p class="indent">叫货出货一体化软件服务。</p>
+            <p class="container-title">联系方式</p>
             <p class="indent">EMAIL: lifengcool@gmail.com</p>
             <p class="indent">MOVIL: 0034-688111845</p>
-            <p>下载二维码</p>
+            <p class="container-title">下载二维码</p>
             <img class="qrd" src="../../static/img/qrd.png" alt="">
         </div>
     </div>
@@ -39,27 +40,34 @@ export default {
     z-index: 100;
     text-align: center;
     border-bottom: 1px solid $borcd;
-    color: $white;
-    background-color: #89c4f4;
+    background-color: $white;
+    color: #333333;
     @include font(16px, 50px);
     a, i {
         position: absolute;
         top: 19px;
-        color: $white;
+        color: #333333;
     }
     .el-icon-arrow-left {
         left: 20px;
     }
 }
+
 .container {
     height: 100%;
-    padding: 71px 10px 0 10px;
-    background-color: $white;
+    padding: 50px 10px 0 10px;
+    color: #333333;
+    text-align: center;
+    background-color: #f5f5f5;
     font-size: 14px;
+    p {
+        padding: 5px 0;
+    }
 }
 
-.indent {
-    text-indent: 2em
+.container-title {
+    font-size: 16px;
+    margin-top: 25px;
 }
 
 .qrd {

@@ -3,7 +3,7 @@
 		<div class="company-switch">
 			<div class="company-menu">
 				<div class="company-active" @click.stop="menuToggle">
-					<img class="company-img" v-bind:src="activeCompany.companyLogo" alt="icon">
+					<!-- <img class="company-img" v-bind:src="activeCompany.companyLogo" alt="icon"> -->
 					<span>{{activeCompany.companyDisplayName}}</span>
 					<i v-show="menuShow" class="el-icon-caret-top"></i>
 					<i v-show="!menuShow" class="el-icon-caret-bottom"></i>
@@ -135,7 +135,10 @@ export default {
 				width: 100%;
 				text-align: center;
 				background-color: $white;
-				@include sc(14px, #e45c28);
+				@include sc(16px, $headfc);
+				i {
+					color: #007aff;
+				}
 			}
 			.companyList {
 				position: absolute;
@@ -156,9 +159,9 @@ export default {
 				}
 				.active {
 					background-color: $white;
-					.company-name {
-						color: #e45c28;
-					}
+					// .company-name {
+					// 	color: #007aff;
+					// }
 				}
 			}
 		}
@@ -185,11 +188,11 @@ export default {
 			i {
 				position: absolute;
 				right: 20px;
-				color: #c7c7cc;
+				color: #333333;
 			}
 			span {
 				margin-left: 10px;
-				@include sc(16px, #000000);
+				@include sc(16px, #333333);
 			}
 		}
 	}

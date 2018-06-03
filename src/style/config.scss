@@ -1,4 +1,4 @@
-$blue: #5eacf0;
+$blue: #007bff;
 $fc: #909399;
 $white: #ffffff;
 $bc: #f8f8f8;
@@ -79,4 +79,12 @@ $headfc: #222222;
 	background: -o-linear-gradient(right, #00abff, #007bff); /* Opera 11.1 - 12.0 */
 	background: -moz-linear-gradient(right, #00abff, #007bff); /* Firefox 3.6 - 15 */
 	background: linear-gradient(to right, #00abff , #007bff); /* 标准的语法 */
+}
+
+// 缺省title背景色
+@mixin dtb {
+	background: -webkit-linear-gradient(#00abff , #007bff); /* Safari 5.1 - 6.0 */
+	background: -o-linear-gradient(#00abff, #007bff); /* Opera 11.1 - 12.0 */
+	background: -moz-linear-gradient(#00abff, #007bff); /* Firefox 3.6 - 15 */
+	background: linear-gradient(#00abff , #007bff); /* 标准的语法 */
 }

@@ -243,7 +243,7 @@ export default {
         .shopping-title {
             position: relative;
             text-align: center;
-            background-color: #89c4f4;
+            @include dtb();
             color: $white;
             @include font(16px, 49px);
             .shopping-continue {
@@ -350,7 +350,7 @@ export default {
 }
 
 .good-price {
-    color: #5eacf0;
+    color: $blue;
 }
 
 .have-zk {
@@ -360,7 +360,7 @@ export default {
         padding: 0;
     }
     .zk-price {
-            @include sc(12px, #5eacf0);
+            @include sc(12px, $blue);
     }
     .origin-price {
         font-size: 12px;
@@ -381,7 +381,7 @@ export default {
     }
     .el-icon-circle-plus {
         top: 3px;
-        @include sc(15px, #5eacf0);
+        @include sc(15px, $blue);
     }
 }
 
@@ -399,7 +399,7 @@ export default {
         margin-bottom: 5px;
         font-size: 14px;
         > span {
-            color: #5eacf0;
+            color: $blue;
         }
     }
     .order-bz {

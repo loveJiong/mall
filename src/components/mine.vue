@@ -1,13 +1,13 @@
 <template>
     <div class="mine">
         <div class="header">
-            <i class="el-icon-ump-gerenzhongxin"></i>
+            <img src="../../static/img/mine_head.png" width="65" alt="头像">
             <span>{{this.userInfo.name}}</span>
         </div>
         <div class="container">
             <ul class="menus">
                 <li class="orange-item" @click="toAddress">
-                    <i class="el-icon-location"></i>
+                    <img src="../../static/img/ico_dizhi@2x.png" width="19" alt="地址">
                     <span>我的收货地址</span>
                     <i class="el-icon-arrow-right"></i>
                 </li>
@@ -17,12 +17,12 @@
                     <i class="el-icon-arrow-right"></i>
                 </li> -->
                 <li class="blue-item" @click="toAboutSoft">
-                    <i class="el-icon-mobile-phone"></i>
+                    <img src="../../static/img/ico_dianhua@2x.png" width="19" alt="软件">
                     <span>关于软件</span>
                     <i class="el-icon-arrow-right"></i>
                 </li>
                 <li class="green-item" @click="toAboutUs">
-                    <i class="el-icon-service"></i>
+                    <img src="../../static/img/ico_yewuyuan@2x.png" width="19" alt="我们">
                     <span>关于我们</span>
                     <i class="el-icon-arrow-right"></i>
                 </li>
@@ -36,7 +36,7 @@
             </ul> -->
             <ul class="menus red-menus">
                 <li class="red-item">
-                    <i class="el-icon-tickets"></i>
+                    <img src="../../static/img/ico_pay@2x.png" width="19" alt="支付">
                     <span>服务与支付</span>
                     <i class="el-icon-arrow-right"></i>
                 </li>
@@ -109,7 +109,7 @@ export default {
         align-items: center;
         height: 150px;
         padding-top: 30px;
-        background-color: #62b1f5;
+        @include dtb();
         i {
             @include sc(60px, $white);
         }
@@ -125,8 +125,10 @@ export default {
             border-top: 1px solid #c8c7cc;
             border-bottom: 1px solid #c8c7cc;
             .logout {
+                margin: 0;
                 justify-content: center;
-                color: #e77d69;
+                color: #ffffff;
+                background-color: #ff0000;
             }
             li {
                 display: flex;
@@ -137,11 +139,11 @@ export default {
                 padding-right: 15px;
                 border-top: 1px solid #c8c7cc;
                 border-bottom: 1px solid #c8c7cc;
-                @include sc(14px, #999999);
+                @include sc(14px, #333333);
                 .el-icon-arrow-right {
                     position: absolute;
                     right: 10px;
-                    color: #999999;
+                    color: #333333;
                 }
                 span {
                     margin-left: 5px;
