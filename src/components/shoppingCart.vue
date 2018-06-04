@@ -20,7 +20,7 @@
         </div>
         <div class="container">
             <div class="no-goods" v-if="!haveGoods">
-                <i class="el-icon-warning"></i>
+                <img src="../../static/img/no_goods.png" alt="没有商品" width="120">
                 <span class="title">当前订单是空的</span>
                 <span class="text">你目前没有订购任何产品，你可以点击左下角的产品图册进行选购！</span>
                 <a @click="toGroupDetail">去看看</a>
@@ -33,23 +33,21 @@
                             删除
                         </div>
                         <div class="good-item">
-                            <img v-bind:src="good.url" alt="图片" width="100" height="70">
+                            <img v-bind:src="good.url" alt="图片" width="100" height="75">
                             <div class="good-introduction">
                                 <span class="good-name">{{good.name}}</span>
                                 <span v-if="good.zk == '0' || good.zk == ''" class="good-price">{{good.price}}€</span>
                                 <div v-if="good.zk != '0' && good.zk != ''" class="have-zk">
                                     <span class="zk-price">{{zkPrice(good.price, good.zk)}}€</span>
-                                    <span class="origin-price">{{good.price}}</span>
-                                    <span class="zk">(-{{good.zk}}%)</span>
+                                    <span class="origin-price">{{good.price}}€</span>
+                                    <span class="zk">-{{good.zk}}%</span>
                                 </div>
-                            </div>
-                            <div class="good-detail">
                                 <span class="good-total-price">总价：{{good.totalPrice}}€</span>
-                                <div class="good-num">
-                                    <i class="el-icon-remove" @click="removeToCart(good)" v-if="good.num > 0"></i>
-                                    <span class="count">{{good.num}}</span>
-                                    <i class="el-icon-circle-plus" @click="addToCart(good)"></i>
-                                </div>
+                            </div>
+                            <div class="good-num">
+                                <span class="icon-plus" @click="removeToCart(good)">-</span>
+                                <span class="count">{{good.num}}</span>
+                                <span class="icon-add" @click="addToCart(good)">+</span>
                             </div>
                         </div>
                         </v-touch>
@@ -232,6 +230,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 @import 'src/style/config';
+@include cartGood();
 .shopping-cart {
     height: 100%;
     overflow-y: auto;
@@ -250,6 +249,7 @@ export default {
                 position: absolute;
                 right: 10px;
                 top: 12px;
+                color: $blue;
             }
         }
         .company-menu {
@@ -259,13 +259,14 @@ export default {
                 width: 100%;
                 text-align: center;
                 background-color: $white;
-                @include sc(14px, #e45c28);
+				@include sc(16px, $headfc);
                 line-height: 40px;
                 border-bottom: 1px solid #dbdbdb;
                 i {
                     position: absolute;
                     right: 10px;
                     top: 12px;
+					color: #007aff;
                 }
             }
             .companyList {
@@ -290,7 +291,7 @@ export default {
                 .active {
                     background-color: $white;
                     .company-name {
-                        color: #e45c28;
+                        color: #007aff;
                     }
                 }
             }
@@ -305,7 +306,7 @@ export default {
             flex-direction: column;
             align-items: center;
             padding: 0 20px;
-            padding-top: 40%;
+            padding-top: 20%;
             i {
                 color: #888888;
                 font-size: 60px;
@@ -314,15 +315,15 @@ export default {
                 text-align: center;
             }
             .title {
-                margin-top: 10px;
-                @include sc(16px, #000000);
+                margin-top: 30px;
+                @include sc(18px, #333333);
             }
             .text {
-                margin-top: 10px;
-                @include sc(14px, #888888);
+                margin-top: 30px;
+                @include sc(14px, #999999);
             }
             a {
-                margin-top: 10px;
+                margin-top: 30px;
                 @include sc(14px, $blue);
             }
         }
@@ -333,57 +334,6 @@ export default {
     padding-bottom: 105px;
 }
 
-.good-item {
-    display: flex;
-    height: 100px;
-    padding: 10px;
-    border-bottom: 1px solid #c8c7cc;
-    font-size: 14px;
-    background: $white;
-}
-
-.good-introduction {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    max-width: 150px;
-}
-
-.good-price {
-    color: $blue;
-}
-
-.have-zk {
-    display: inline-block;
-    padding: 0 5px;
-    span {
-        padding: 0;
-    }
-    .zk-price {
-            @include sc(12px, $blue);
-    }
-    .origin-price {
-        font-size: 12px;
-        text-decoration: line-through;
-    }
-    .zk {
-        color: #f56c6c;
-    }
-}
-
-.good-detail {
-    position: absolute;
-    right: 20px;
-    bottom: 25px;
-    text-align: right;
-    .el-icon-remove {
-        @include sc(15px, #f56c6c);
-    }
-    .el-icon-circle-plus {
-        top: 3px;
-        @include sc(15px, $blue);
-    }
-}
 
 .commit-order {
     display: flex;
@@ -399,19 +349,20 @@ export default {
         margin-bottom: 5px;
         font-size: 14px;
         > span {
-            color: $blue;
+            font-weight: bold;
+            color: #ff0000;
         }
     }
     .order-bz {
         width: calc(100% - 90px - 15px);
-        border: 1px solid #409EFF;
-        border-radius: 10px;
+        border: 1px solid #cccccc;
         margin-right: 10px;
         height: 25px;
         padding: 0 5px;
     }
     .el-button.is-round {
         padding: 6px 16px;
+        @include dbb();
     }
 }
 

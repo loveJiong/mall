@@ -45,7 +45,7 @@
                         <span v-if="good.zk == '0' || good.zk == ''" class="price">{{good.price}}€</span>
                         <div v-if="good.zk != '0' && good.zk != ''" class="have-zk">
                             <span class="zk-price">{{zkPrice(good.price, good.zk)}}€</span>
-                            <span class="origin-price">{{good.price}}</span>
+                            <span class="origin-price">{{good.price}}€</span>
                             <span class="zk">-{{good.zk}}%</span>
                         </div>
                         <div class="add-remove">
@@ -584,6 +584,7 @@ export default {
                 margin: 1px 0;
                 .price {
                     @include sc(14px, #ff0000);
+                    font-weight: bold;
                 }
                 .have-zk {
                     display: inline-block;
@@ -593,6 +594,7 @@ export default {
                     }
                     .zk-price {
                          @include sc(14px, #ff0000);
+                        font-weight: bold;
                     }
                     .origin-price {
                         @include sc(12px, #333333);

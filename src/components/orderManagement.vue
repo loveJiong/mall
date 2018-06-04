@@ -22,18 +22,15 @@
                 <li v-for="(item, index) in tabs" v-bind:key="index" class="tab-item" v-bind:class="{ active: item.isActive}" @click="tabSwitch(item)">{{item.name}}</li>
             </ul>
             <ul class="orders" v-show="active.status === 0">
-                <li class="order" v-for="(order, index) in orders" v-bind:key="index" @click="toOrderDetail(order)">
+                <li class="order" v-for="(order, index) in orders" v-bind:key="index" >
                     <div class="order-text">
-                        <p class="order-bh"><span class="order-title">订单编号：</span>{{order.bh}}</p>
-                        <p class="order-bz"><span class="order-title">备注：</span>{{order.bz}}</p>
+                        <p class="order-bh">订单编号：{{order.bh}}</p>
+                        <p class="order-time">订单时间：{{order.createTime}}</p>
+                        <p class="order-num">数量：{{order.count}}</p>
+                        <p class="order-bz">备注：{{order.bz}}</p>
+                        <p>金额：<span class="order-price">{{order.hj}}€</span></p>
                     </div>
-                    <div class="order-detail">
-                        <div class="num-price">
-                            <p class="order-num"><span class="order-title">数量：</span>{{order.count}}</p>
-                            <p class="order-price"><span class="order-title">金额：</span>{{order.hj}}€</p>
-                        </div>
-                        <span class="order-time">{{order.createTime}}</span>
-                    </div>
+                    <el-button class="detail-button" type="primary" round @click="toOrderDetail(order)">详情</el-button>
                 </li>
             </ul>
             <ul class="unOrders" v-show="active.status === -1">
@@ -49,23 +46,21 @@
                                     删除
                                 </div>
                                 <div class="good-item">
-                                    <img v-bind:src="good.url" alt="图片" width="100" height="70">
+                                    <img v-bind:src="good.url" alt="图片" width="100" height="75">
                                     <div class="good-introduction">
                                         <span class="good-name">{{good.name}}</span>
                                         <span v-if="good.zk == '0' || good.zk == ''" class="good-price">{{good.price}}€</span>
                                         <div v-if="good.zk != '0' && good.zk != ''" class="have-zk">
                                             <span class="zk-price">{{zkPrice(good.price, good.zk)}}€</span>
-                                            <span class="origin-price">{{good.price}}</span>
-                                            <span class="zk">(-{{good.zk}}%)</span>
+                                            <span class="origin-price">{{good.price}}€</span>
+                                            <span class="zk">-{{good.zk}}%</span>
                                         </div>
-                                    </div>
-                                    <div class="good-detail">
                                         <span class="good-total-price">总价：{{good.totalPrice}}€</span>
-                                        <div class="good-num">
-                                            <i class="el-icon-remove" @click="removeToOrder(good, unOrder)" v-if="good.num > 0"></i>
-                                            <span class="count">{{good.num}}</span>
-                                            <i class="el-icon-circle-plus" @click="addToOrder(good, unOrder)"></i>
-                                        </div>
+                                    </div>
+                                    <div class="good-num">
+                                        <span class="icon-plus" @click="removeToOrder(good, unOrder)">-</span>
+                                        <span class="count">{{good.num}}</span>
+                                        <span class="icon-add"  @click="addToOrder(good, unOrder)">+</span>
                                     </div>
                                 </div>
                                 </v-touch>
@@ -74,13 +69,13 @@
                     </transition>
                     <div class="commit-unOrder">
                         <div>
-                            <span class="unOrder-price"><span class="order-title">金额：</span>{{unOrderPrice(unOrder)}}€</span>
+                            <span class="unOrder-price">金额：<span class="order-title">{{unOrderPrice(unOrder)}}€</span></span>
                             <el-button class="shopping-continue" round size="mini" @click="toGroupDetail(unOrder)">继续点货</el-button>
                         </div>
                         <div>
                             <input type="text" class="unOrder-bz" v-model="unOrder.bz" placeholder="在这里写下您的订单备注">
                             <el-button class="delete-unOrder" type="danger" round @click="deleteUnOrder(unOrder)">删除</el-button>
-                            <el-button type="primary" round @click="commitUnOrder(unOrder)">上传</el-button>
+                            <el-button class="commit-button" type="primary" round @click="commitUnOrder(unOrder)">上传</el-button>
                         </div>
                     </div>
                 </li>
@@ -352,6 +347,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 @import 'src/style/config';
+@include cartGood();
 .order-management {
     height: 100%;
     .header {
@@ -373,13 +369,14 @@ export default {
                 width: 100%;
                 text-align: center;
                 background-color: $white;
-                @include sc(14px, #e45c28);
+                @include sc(16px, $headfc);
                 line-height: 40px;
                 border-bottom: 1px solid #dbdbdb;
                 i {
                     position: absolute;
                     right: 10px;
                     top: 12px;
+					color: #007aff;
                 }
             }
             .companyList {
@@ -404,7 +401,7 @@ export default {
                 .active {
                     background-color: $white;
                     .company-name {
-                        color: #e45c28;
+                        color: #007aff;
                     }
                 }
             }
@@ -436,24 +433,29 @@ export default {
         padding-bottom: 80px;
     }
     .order {
+        position: relative;
         background: #ffffff;
         margin-bottom: 10px;
         padding: 10px;
+        color: #666666;
     }
     .order-text {
         font-size: 14px;
-        padding-bottom: 5px;
-        border-bottom: 2px solid #f8f8f8;
-    }
-    .order-detail {
-        padding-top: 5px;
-        font-size: 12px;
-    }
-    .order-title {
-        color: #888;
+        > p {
+            padding: 2px 0;
+        }
     }
     .order-price {
-        color: $blue;
+        color: #ff0000;
+        font-weight: bold;
+    }
+    .detail-button {
+        width: 60px;
+        position: absolute;
+        top: 40%;
+        right: 15px;
+        padding: 5px;
+        @include dbb();
     }
 }
 
@@ -480,6 +482,7 @@ export default {
     height: 25px;
     border-bottom: 2px solid #f8f8f8;
     font-size: 14px;
+    color: #666666;
 }
 
 .delete-button {
@@ -495,58 +498,6 @@ export default {
     line-height: 95px;
 }
 
-.good-item {
-    display: flex;
-    height: 100px;
-    padding: 10px;
-    border-bottom: 2px solid #f8f8f8;
-    font-size: 14px;
-    background: $white;
-}
-
-.good-introduction {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    max-width: 150px;
-}
-
-.good-price {
-    color: $blue;
-}
-
-.have-zk {
-    display: inline-block;
-    padding: 0 5px;
-    span {
-        padding: 0;
-    }
-    .zk-price {
-            @include sc(12px, $blue);
-    }
-    .origin-price {
-        font-size: 12px;
-        text-decoration: line-through;
-    }
-    .zk {
-        color: #f56c6c;
-    }
-}
-
-.good-detail {
-    position: absolute;
-    right: 20px;
-    bottom: 25px;
-    text-align: right;
-    .el-icon-remove {
-        @include sc(15px, #f56c6c);
-    }
-    .el-icon-circle-plus {
-        top: 3px;
-        @include sc(15px, $blue);
-    }
-}
-
 .commit-unOrder {
     display: flex;
     flex-direction: column;
@@ -554,22 +505,27 @@ export default {
     width: 100%;
     background: #fff;
     padding-top: 10px;
-    border-top: 1px solid #c8c7cc;
     > div {
         padding: 3px 0;
     }
     .unOrder-price {
         margin-bottom: 5px;
         font-size: 14px;
-        color: $blue;
+        > .order-title {
+            font-weight: bold;
+            color: #ff0000;
+        }
     }
-    .delete-unOrder, .shopping-continue {
+    .commit-button, .shopping-continue {
         float: right;
+    }
+    .shopping-continue {
+        color: #008eff;
+        border-color: #008eff;
     }
     .unOrder-bz {
         width: calc(100% - 90px - 60px);
-        border: 1px solid #409EFF;
-        border-radius: 10px;
+        border: 1px solid #cccccc;
         margin-right: 10px;
         height: 25px;
         padding: 0 5px;
@@ -577,23 +533,32 @@ export default {
     .el-button.is-round {
         padding: 6px 16px;
     }
+    .commit-button {
+        @include dbb();
+    }
 }
 
-.good-list > li{
-    position: relative;
-    left: 0px;
-}
-
-.good-list > .showDelete {
-    left: -100px;
-    animation:showDelete 0.5s;
-	-webkit-animation:showDelete 0.5s; /* Safari and Chrome */
-}
-
-.good-list > .hideDelete {
-    left: 0px;
-    animation:hideDelete 0.5s;
-	-webkit-animation:hideDelete 0.5s; /* Safari and Chrome */
+.good-list {
+    > li{
+        position: relative;
+        left: 0px;
+    }
+    > .showDelete {
+        left: -100px;
+        animation:showDelete 0.5s;
+        -webkit-animation:showDelete 0.5s; /* Safari and Chrome */
+    }
+    > .hideDelete {
+        left: 0px;
+        animation:hideDelete 0.5s;
+        -webkit-animation:hideDelete 0.5s; /* Safari and Chrome */
+    }
+    .good-item {
+        padding: 10px 0;
+    }
+    .good-num {
+        right: 0px;
+    }
 }
 
 @keyframes showDelete

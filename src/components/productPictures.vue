@@ -10,7 +10,6 @@
 				</div>
 				<ul v-show="menuShow" class="companyList">
 					<li v-for="(company, index) in companyList" v-bind:key="index" v-bind:class="{ active: company.isActive}" @click.stop="companyChoose(company)">
-						<img class="company-img" v-bind:src="company.companyLogo" alt="icon">
 						<span class="company-name">{{company.companyDisplayName}}</span>
 					</li>
 				</ul>
@@ -158,10 +157,10 @@ export default {
 					}
 				}
 				.active {
-					background-color: $white;
-					// .company-name {
-					// 	color: #007aff;
-					// }
+                    background-color: $white;
+                    .company-name {
+                        color: #007aff;
+                    }
 				}
 			}
 		}

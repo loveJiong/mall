@@ -7,32 +7,28 @@
         <div class="container"  v-loading="loading">
             <div class="order">
                 <div class="order-text">
-                    <p class="order-bh"><span class="order-title">订单编号：</span>{{order.bh}}</p>
-                    <p class="order-bz"><span class="order-title">备注：</span>{{order.bz}}</p>
+                    <p class="order-bh">订单编号：{{order.bh}}</p>
+                    <p class="order-time">订单时间：{{order.createTime}}</p>
+                    <p class="order-num">数量：{{order.count}}</p>
                 </div>
                 <ul class="goods">
                     <li v-for="good in goods" :key="good.id">
                         <div class="good-item">
-                            <img v-bind:src="good.url" alt="图片" width="100" height="70">
+                            <img v-bind:src="good.url" alt="图片" width="100" height="75">
                             <div class="good-introduction">
                                 <span class="good-name">{{good.name}}</span>
-                                <span class="good-price">单价：{{good.price}}€</span>
-                            </div>
-                            <div class="good-detail">
+                                <span class="good-price">{{good.price}}€</span>
                                 <span class="good-total-price">总价：{{good.totalPrice}}€</span>
-                                <div class="good-num">
-                                    <span class="count">数量：{{good.count}}</span>
-                                </div>
+                            </div>
+                            <div class="good-num">
+                                <span class="count">数量：{{good.count}}</span>
                             </div>
                         </div>
                     </li>
                 </ul>
                 <div class="order-detail">
-                    <div class="num-price">
-                        <p class="order-num"><span class="order-title">数量：</span>{{order.count}}</p>
-                        <p class="order-price"><span class="order-title">金额：</span>{{order.hj}}€</p>
-                    </div>
-                    <span class="order-time">{{order.createTime}}</span>
+                    <p class="order-bz">备注：{{order.bz}}</p>
+                    <p>金额：<span class="order-price">{{order.hj}}€</span></p>
                 </div>
             </div>
         </div>
@@ -79,6 +75,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 @import 'src/style/config';
+@include cartGood();
 .orderDetail {
     height: 100%;
 }
@@ -113,21 +110,27 @@ export default {
     background: #ffffff;
     margin-bottom: 10px;
     padding: 10px;
+    color: #666666;
 }
 .order-text {
     font-size: 14px;
     padding-bottom: 5px;
     border-bottom: 2px solid #f8f8f8;
+    > p {
+        padding: 2px 0;
+    }
 }
 .order-detail {
     padding-top: 5px;
-    font-size: 12px;
-}
-.order-title {
-    color: #888;
+    font-size: 14px;
+    > p {
+        padding: 2px 0;
+    }
 }
 .order-price {
-    color: $blue;
+    font-size: 14px;
+    color: #ff0000;
+    font-weight: bold;
 }
 
 .good-item {
@@ -140,46 +143,10 @@ export default {
     position: relative;
 }
 
-.good-introduction {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    max-width: 150px;
+.good-num {
+    border: none;
+    width: auto;
+    bottom: 8px;
 }
 
-.good-price {
-    color: $blue;
-}
-
-.have-zk {
-    display: inline-block;
-    padding: 0 5px;
-    span {
-        padding: 0;
-    }
-    .zk-price {
-            @include sc(12px, $blue);
-    }
-    .origin-price {
-        font-size: 12px;
-        text-decoration: line-through;
-    }
-    .zk {
-        color: #f56c6c;
-    }
-}
-
-.good-detail {
-    position: absolute;
-    right: 20px;
-    bottom: 25px;
-    text-align: right;
-    .el-icon-remove {
-        @include sc(15px, #f56c6c);
-    }
-    .el-icon-circle-plus {
-        top: 3px;
-        @include sc(15px, $blue);
-    }
-}
 </style>

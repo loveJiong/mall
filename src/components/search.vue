@@ -22,7 +22,7 @@
                         <span  v-if="good.zk == '0' || good.zk == ''" class="price">{{good.price}}€</span>
                         <div v-if="good.zk != '0' && good.zk != ''" class="have-zk">
                             <span class="zk-price">{{zkPrice(good.price, good.zk)}}€</span>
-                            <span class="origin-price">{{good.price}}</span>
+                            <span class="origin-price">{{good.price}}€</span>
                             <span class="zk">-{{good.zk}}%</span>
                         </div>
                         <div class="add-remove">
