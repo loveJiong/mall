@@ -49,6 +49,7 @@
                             <span class="zk">-{{good.zk}}%</span>
                         </div>
                         <div class="add-remove">
+                            <span v-for="(tip, index) in good.tips" :key="index" class="add-remove-tips">{{tip}}</span>
                             <i class="el-icon-remove-outline" @click="removeToCart(good)" v-if="good.num > 0"></i>
                             <i class="el-icon-circle-plus" @click="addToCart(good)"></i>
                         </div>
@@ -348,6 +349,8 @@ export default {
         },
         addToCart (good) {
             good.num += good.bagCount
+            good.tips || (good.tips = [])
+            good.tips.push(`+${good.bagCount}`)
             if (this.$store.state.activeOrder) {
                 this.$store.commit('addToOrder', {
                     company: this.activeCompany,
@@ -359,6 +362,7 @@ export default {
             }
         },
         removeToCart (good) {
+            good.tips || (good.tips = [])
             if (good.num - good.bagCount === 0) {
                 this.$confirm('确认删除当前商品？', '删除确认', {
                     confirmButtonText: '确认删除',
@@ -366,6 +370,7 @@ export default {
                     type: 'warning'
                 }).then(() => {
                     good.num -= good.bagCount
+                    good.tips.push(`-${good.bagCount}`)
                     if (this.$store.state.activeOrder) {
                         this.$store.commit('deleteGoodToOrder', {
                             company: this.activeCompany,
@@ -381,6 +386,7 @@ export default {
                 })
             } else {
                 good.num -= good.bagCount
+                good.tips.push(`-${good.bagCount}`)
                 if (this.$store.state.activeOrder) {
                     this.$store.commit('removeToOrder', {
                         company: this.activeCompany,
@@ -555,12 +561,16 @@ export default {
                 @include sc(12px, #666666);
                 padding: 0 5px;
             }
+            .add-remove-tips {
+                color: #ff0000;
+                font-size: 14px;
+            }
             .good-num {
                 position: absolute;
                 right: 5px;
                 top: 2px;
                 font-size: 12px;
-                background: red;
+                background: #ff0000;
                 border-radius: 100px;
                 color: white;
                 z-index: 1;
@@ -643,6 +653,29 @@ export default {
     position: absolute;
     bottom: -2px;
     right: 0px;
+}
+
+.add-remove-tips {
+    position: absolute;
+    width: 35px;
+    text-align: center;
+    right: 12px;
+    top: -18px;
+    opacity: 0;
+    animation:showTips 1s;
+    -webkit-animation:showTips 1s; /* Safari and Chrome */
+}
+
+@keyframes showTips
+{
+	from {top: -18px;opacity: 1;}
+	to {top: -40px;opacity: 0;}
+}
+
+@-webkit-keyframes showTips /* Safari and Chrome */
+{
+	from {top: -18px;opacity: 1;}
+	to {top: -40px;opacity: 0;}
 }
 
 .el-icon-remove-outline {

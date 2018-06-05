@@ -10,12 +10,10 @@
         </div>
         <div class="company-info">
             <div class="company-input">
-                编号
-                <input v-model="companyCode" type="text">
+                <input placeholder="编号" v-model="companyCode" type="text">
             </div>
             <div class="company-input">
-                口令
-                <input v-model="customerCode" type="text">
+                <input  placeholder="口令" v-model="customerCode" type="text">
             </div>
             <el-button class="add-btn" round type="primary" @click="addCompany">添加</el-button>
             <el-button class="return-btn" round @click="goBack">返回</el-button>
@@ -112,7 +110,6 @@ export default {
             border: 1px solid #e6e6e6;
             input {
                 font-size: 18px;
-                margin-left: 5px;
             }
         }
     }

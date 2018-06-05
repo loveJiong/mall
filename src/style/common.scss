@@ -5,7 +5,7 @@ body, div, span, header, footer, nav, section, aside, article, ul, dl, dt, dd, l
     font-style: normal;
     text-decoration: none;
     border: none;
-    font-family: "Microsoft Yahei";
+    font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
     box-sizing: border-box;
     -webkit-tap-highlight-color:transparent;
     -webkit-font-smoothing: antialiased;
@@ -70,6 +70,8 @@ body .el-message-box {
     width: 80%;
 }
 
-.el-message {
-    top: 50px;
+body .el-message {
+    top: 100px;
+    max-width: 100%;
+    min-width: 100%;
 }
