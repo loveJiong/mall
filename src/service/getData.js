@@ -88,5 +88,7 @@ export const getOrderDetail = (customerId, companyId, orderGuid) => http('/order
 export const search = (companyId, q) => http('/goods/search', 'GET', headers, {companyId, q})
 
 export const getIosApp = (ver) => http('http://dadisoft.cn:8080/PMBOX/BoxRequest', 'GET', headers, {type: 'checksoftupdate', app: 'phoneios', ver})
+// export const getIosApp = (ver) => http('http://gloriaeuropa.com/PMBOX/BoxRequest', 'GET', headers, {type: 'checksoftupdate', app: 'phoneios', ver})
 
 export const getAndroidApp = (ver) => http('http://dadisoft.cn:8080/PMBOX/BoxRequest', 'GET', headers, {type: 'checksoftupdate', app: 'phoneandroid', ver})
+// export const getAndroidApp = (ver) => http('http://gloriaeuropa.com/PMBOX/BoxRequest', 'GET', headers, {type: 'checksoftupdate', app: 'phoneandroid', ver})
