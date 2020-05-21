@@ -7,11 +7,15 @@ const headers = {
 }
 switch (process.env.NODE_ENV) {
     case 'development':
-        baseUrl = 'http://old.dadisoft.cn/dadi'
+        baseUrl = '/sanggou'
+        // baseUrl = 'http://gloriaeuropa.com/dadi'
+        break
+    case 'test':
+        baseUrl = '/sanggou'
         // baseUrl = 'http://gloriaeuropa.com/dadi'
         break
     case 'production':
-        baseUrl = 'http://old.dadisoft.cn/dadi'
+        baseUrl = '/dadi'
         // baseUrl = 'http://gloriaeuropa.com/dadi'
         break
     default:
