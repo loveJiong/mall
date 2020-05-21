@@ -82,6 +82,7 @@ export default {
             this.loading = false
         },
 		async checkUpdateAndroid () {
+            // eslint-disable-next-line no-undef
             let ver = plus.runtime.version
             let updateRes = await getAndroidApp(ver)
             if (updateRes.success && updateRes.url) {
@@ -95,11 +96,14 @@ export default {
                     } else {
                         this.haveCache = false
                     }
+                    // eslint-disable-next-line no-undef
                     let waiting = plus.nativeUI.showWaiting('开始下载')
+                    // eslint-disable-next-line no-undef
                     let dtask = plus.downloader.createDownload(updateRes.url, {}, (d, status) => {
                         if (status === 200) {
                             alert('下载成功')
                             let path = d.filename
+                            // eslint-disable-next-line no-undef
                             plus.runtime.install(path)
                         } else {
                             alert('下载失败')
@@ -142,6 +146,7 @@ export default {
             }
         },
         async checkUpdateIos () {
+            // eslint-disable-next-line no-undef
             let ver = plus.runtime.version
             let updateRes = await getIosApp(ver)
             if (updateRes.success && updateRes.url) {
@@ -150,6 +155,7 @@ export default {
                     cancelButtonText: '下次再说',
                     type: 'warning'
                 }).then(() => {
+                    // eslint-disable-next-line no-undef
                     plus.runtime.openURL(encodeURI(updateRes.url))
                     if (this.userInfo) {
                         this.getCompanyList(this.userInfo.id)

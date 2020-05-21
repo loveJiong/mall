@@ -324,9 +324,8 @@ export default {
                     this.$router.push('/mine/myAddress')
                 }, () => {
                     console.log('cancel')
-                })                
-            }, 200);
-
+                })
+            }, 200)
         },
         toGroupDetail (unOrder) {
             this.$store.commit('changeAddToOrder', unOrder)

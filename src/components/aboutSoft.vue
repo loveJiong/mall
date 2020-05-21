@@ -19,6 +19,7 @@ export default {
     computed: {
         ver () {
             let result = 'V'
+            // eslint-disable-next-line no-use-before-define
             let plus = plus || null
             if (plus) {
                 result = `${result}${plus.runtime.version}`

@@ -334,7 +334,6 @@ export default {
     padding-bottom: 105px;
 }
 
-
 .commit-order {
     display: flex;
     flex-direction: column;
