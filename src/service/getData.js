@@ -7,7 +7,7 @@ const headers = {
 }
 switch (process.env.NODE_ENV) {
     case 'development':
-        baseUrl = '/sanggou'
+        baseUrl = 'http://114.55.38.155/sanggou'
         // baseUrl = 'http://gloriaeuropa.com/dadi'
         break
     case 'test':
@@ -90,6 +90,8 @@ export const getOrder = (customerId, companyId, status) => http('/order/all', 'G
 export const getOrderDetail = (customerId, companyId, orderGuid) => http('/order/goods', 'GET', headers, {customerId, companyId, orderGuid})
 
 export const search = (companyId, q) => http('/goods/search', 'GET', headers, {companyId, q})
+
+export const getCompanyId = (companyName) => http(`/companyinfo/getCompanyId?companyName=${companyName}`, 'GET', headers)
 
 export const getIosApp = (ver) => http('http://dadisoft.cn:8080/PMBOX/BoxRequest', 'GET', headers, {type: 'checksoftupdate', app: 'phoneios', ver})
 // export const getIosApp = (ver) => http('http://gloriaeuropa.com/PMBOX/BoxRequest', 'GET', headers, {type: 'checksoftupdate', app: 'phoneios', ver})

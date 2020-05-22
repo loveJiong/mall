@@ -12,7 +12,7 @@
     "build": "node build/build.js"
   },
   "dependencies": {
-    "axios": "^0.17.1",
+    "axios": "^0.18.1",
     "element-ui": "^2.0.11",
     "mockjs": "^1.0.1-beta3",
     "node-sass": "^4.7.2",

@@ -5,18 +5,6 @@
                 当前订单
                 <el-button class="shopping-continue" round size="mini" @click="toGroupDetail">继续点货</el-button>
             </div>
-            <div class="company-menu">
-                <div class="company-active" @click.stop="menuToggle">
-                    {{activeCompany.companyDisplayName}}
-                    <i v-show="menuShow" class="el-icon-caret-top"></i>
-                    <i v-show="!menuShow" class="el-icon-caret-bottom"></i>
-                </div>
-                <ul v-show="menuShow" class="companyList">
-                    <li v-for="(company, index) in companyList" v-bind:key="index" v-bind:class="{ active: company.isActive }" @click.stop="companyChoose(company)">
-                        <span class="company-name">{{company.companyDisplayName}}</span>
-                    </li>
-                </ul>
-            </div>
         </div>
         <div class="container">
             <div class="no-goods" v-if="!haveGoods">

@@ -1,20 +1,5 @@
 <template>
 	<div class="product-pictures" v-loading="loading">
-		<div class="company-switch">
-			<div class="company-menu">
-				<div class="company-active" @click.stop="menuToggle">
-					<!-- <img class="company-img" v-bind:src="activeCompany.companyLogo" alt="icon"> -->
-					<span>{{activeCompany.companyDisplayName}}</span>
-					<i v-show="menuShow" class="el-icon-caret-top"></i>
-					<i v-show="!menuShow" class="el-icon-caret-bottom"></i>
-				</div>
-				<ul v-show="menuShow" class="companyList">
-					<li v-for="(company, index) in companyList" v-bind:key="index" v-bind:class="{ active: company.isActive}" @click.stop="companyChoose(company)">
-						<span class="company-name">{{company.companyDisplayName}}</span>
-					</li>
-				</ul>
-			</div>
-		</div>
 		<ul class="container">
 			<li v-for="category in categoryList" :key="category.guid" @click="gotoDeatile(category)">
 				<img v-bind:src="category.url" alt="img">
@@ -41,9 +26,6 @@ export default {
 		}
 	},
     computed: {
-		companyList () {
-            return this.$store.state.companyList
-        },
 		activeCompany () {
 			return this.$store.state.activeCompany
 		}
@@ -52,12 +34,7 @@ export default {
 		footGuide
     },
 	mounted () {
-		if (this.companyList.length > 0) {
-			this.getCategoryList()
-		} else {
-			this.$message.error('你当前没有添加商家，请先添加商家！')
-			this.$router.push('/addCompany')
-		}
+		this.getCategoryList()
 		document.addEventListener('click', this.menuHide)
 	},
 	beforeDestroy () {
@@ -112,7 +89,6 @@ export default {
 @import 'src/style/config';
 .product-pictures {
 	height: 100%;
-	padding-top: $headH;
 	overflow: auto;
 	.company-switch {
         position: absolute;

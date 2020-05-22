@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import {accountLogin, getCompanyList, getAndroidApp, getIosApp} from './../service/getData'
+import {accountLogin, getCompanyId, getAndroidApp, getIosApp} from './../service/getData'
 export default {
     name: 'login',
     data () {
@@ -70,12 +70,15 @@ export default {
         },
         async getCompanyList (customerId) {
             this.loading = true
-            let companyListRes = await getCompanyList(customerId)
+            let companyListRes = await getCompanyId('dadisoft')
             if (companyListRes.success) {
-                this.$store.commit('setCompanyList', companyListRes.data)
-                this.$router.push('/home')
+                this.$store.commit('setCompanyList', [ {
+                    companyId: companyListRes.data,
+                    companyDisplayName: '要删除的内容'
+                }])
+                this.$router.push('/productPictures')
             } else if (companyListRes.code === '0001') {
-                this.$router.push('/home')
+                this.$router.push('/productPictures')
             } else {
                 this.$message.error(companyListRes.msg)
             }
